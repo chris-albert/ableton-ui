@@ -1,4 +1,3 @@
-import React from 'react'
 
 export type Step = {
   on: boolean
@@ -39,13 +38,3 @@ export const emptyProject = (): Project => ({
     newTrack(8)
   ]
 })
-
-let project: Project = emptyProject()
-
-export const useProject = (): Project => {
-  return project
-}
-
-export const setProject = (f: (p: Project) => Project): void => {
-  project = f(project)
-}

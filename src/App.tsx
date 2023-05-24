@@ -3,6 +3,9 @@ import './styles.scss'
 import {Nav} from "./Nav";
 import {Body} from "./Body";
 import {createTheme, ThemeProvider} from "@mui/material";
+import { Provider } from 'react-redux'
+import {ApplicationStore} from "./model/ApplicationStore";
+
 
 const darkTheme = createTheme({
   palette: {
@@ -16,10 +19,12 @@ const darkTheme = createTheme({
 function App() {
   return (
     <div className="App">
-      <ThemeProvider theme={darkTheme}>
-        <Nav />
-        <Body />
-      </ThemeProvider>
+      <Provider store={ApplicationStore}>
+        <ThemeProvider theme={darkTheme}>
+          <Nav />
+          <Body />
+        </ThemeProvider>
+      </Provider>
     </div>
   );
 }
