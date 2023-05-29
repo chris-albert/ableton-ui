@@ -5,8 +5,10 @@ import {Body} from "./Body";
 import {createTheme, ThemeProvider} from "@mui/material";
 import { Provider } from 'react-redux'
 import {ApplicationStore} from "./model/ApplicationStore";
-import {MidiComponent} from "./components/MidiComponent";
-
+import {NoMidiPage} from "./pages/NoMidiPage";
+import {useMidiContext} from "./contexts/MidiContext";
+import {MidiInput} from "./midi/WindowMidi";
+import {NoMidiInputPage} from "./pages/NoMidiInputPage";
 
 const darkTheme = createTheme({
   palette: {
@@ -18,12 +20,27 @@ const darkTheme = createTheme({
 });
 
 function App() {
+
+  const midi = useMidiContext()
+  const [midiInput, setMidiInput] = React.useState<MidiInput | undefined>(undefined)
+
   return (
     <div className="App">
       <Provider store={ApplicationStore}>
         <ThemeProvider theme={darkTheme}>
-          <Nav />
-          <Body />
+          {midi === undefined ?
+              (<NoMidiPage />):
+              (<>
+                <Nav
+                    midi={midi}
+                    onInputSelect={setMidiInput}
+                />
+                {midiInput === undefined ?
+                    (<NoMidiInputPage />):
+                    (<Body midiInput={midiInput} />)
+                }
+              </>)
+          }
         </ThemeProvider>
       </Provider>
     </div>

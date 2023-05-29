@@ -6,12 +6,17 @@ import {
 } from "@mui/material";
 import {TransportComponent} from "./components/TransportComponent";
 import {MidiInputComponent} from "./components/MidiInputComponent";
+import {MidiInput, WindowMidi} from "./midi/WindowMidi";
 
 export type NavProps = {
-
+  midi: WindowMidi
+  onInputSelect: (i: MidiInput) => void
 }
 
-export const Nav: React.FC<NavProps> = () => {
+export const Nav: React.FC<NavProps> = ({
+    midi,
+    onInputSelect
+}) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -19,13 +24,16 @@ export const Nav: React.FC<NavProps> = () => {
 
           <Grid container >
             <Grid item xs={4}>
-              <MidiInputComponent />
+              <MidiInputComponent
+                  midi={midi}
+                  onInputSelect={onInputSelect}
+              />
             </Grid>
             <Grid item xs={4} container justifyContent="center">
-              Center
+              {/*Center*/}
             </Grid>
             <Grid item xs={4} container justifyContent="right">
-              Right
+              {/*Right*/}
             </Grid>
           </Grid>
 
