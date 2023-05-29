@@ -10,13 +10,7 @@ export type BodyProps = {}
 export const Body: React.FC<BodyProps> = () => {
   return (
     <Box>
-      {/*<ProjectComponent />*/}
-      {/*<Divider sx={{m: 4}} />*/}
-      {/*<ReduxTrackComponent />*/}
 
-      {/*<ZustandTrackComponent />*/}
-      {/*<Divider sx={{m: 4}} />*/}
-      <JotaiTrackComponent />
     </Box>
   )
 }

@@ -5,6 +5,7 @@ import {Body} from "./Body";
 import {createTheme, ThemeProvider} from "@mui/material";
 import { Provider } from 'react-redux'
 import {ApplicationStore} from "./model/ApplicationStore";
+import {MidiComponent} from "./components/MidiComponent";
 
 
 const darkTheme = createTheme({
