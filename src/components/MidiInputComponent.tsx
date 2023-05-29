@@ -1,7 +1,6 @@
 import React from 'react'
 import {SelectComponent, SelectItem} from "./SelectComponent";
 import {MidiInput, WindowMidi} from "../midi/WindowMidi";
-import {useMidi} from "../contexts/MidiContext";
 
 export type MidiInputComponentProps = {
     midi: WindowMidi,
@@ -26,11 +25,6 @@ export const MidiInputComponent: React.FC<MidiInputComponentProps> = ({
 
     const onMidiSelect = (input: MidiInput | undefined) => {
         if(input !== undefined) {
-
-            // input.on('sysex', sysex => {
-            //     const json = byteArrayToJson(sysex.data)
-            //     console.log('message json', json)
-            // })
             onInputSelect(input)
         }
     }
