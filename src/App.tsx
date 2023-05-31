@@ -1,14 +1,16 @@
 import React from 'react';
 import './styles.scss'
-import {Nav} from "./Nav";
-import {Body} from "./Body";
 import {createTheme, ThemeProvider} from "@mui/material";
 import { Provider } from 'react-redux'
 import {ApplicationStore} from "./model/ApplicationStore";
-import {NoMidiPage} from "./pages/NoMidiPage";
 import {useMidiContext} from "./contexts/MidiContext";
 import {MidiInput} from "./midi/WindowMidi";
-import {NoMidiInputPage} from "./pages/NoMidiInputPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {Layout} from "./pages/Layout";
+import {IndexPage} from "./pages/IndexPage";
+import {LogPage} from "./pages/LogPage";
+import {MidiInputRequiredComponent} from "./components/MidiInputRequiredComponent";
+
 
 const darkTheme = createTheme({
   palette: {
@@ -26,23 +28,38 @@ function App() {
 
   return (
     <div className="App">
-      <Provider store={ApplicationStore}>
-        <ThemeProvider theme={darkTheme}>
-          {midi === undefined ?
-              (<NoMidiPage />):
-              (<>
-                <Nav
-                    midi={midi}
-                    onInputSelect={setMidiInput}
-                />
-                {midiInput === undefined ?
-                    (<NoMidiInputPage />):
-                    (<Body midiInput={midiInput} />)
+      <BrowserRouter>
+        <Provider store={ApplicationStore}>
+          <ThemeProvider theme={darkTheme}>
+            <Routes>
+              <Route
+                path='/'
+                element={
+                  <Layout midi={midi} onInputSelect={setMidiInput}/>
                 }
-              </>)
-          }
-        </ThemeProvider>
-      </Provider>
+              >
+                <Route
+                  index
+                  element={
+                    <MidiInputRequiredComponent
+                      midiInput={midiInput}
+                      element={(mi) => (
+                        <IndexPage midiInput={mi} />
+                      )}
+                    />
+                  }
+                />
+                <Route
+                  path='log'
+                  element={
+                    <LogPage />
+                  }
+                />
+              </Route>
+            </Routes>
+          </ThemeProvider>
+        </Provider>
+      </BrowserRouter>
     </div>
   );
 }

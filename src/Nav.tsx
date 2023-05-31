@@ -9,7 +9,7 @@ import {MidiInputComponent} from "./components/MidiInputComponent";
 import {MidiInput, WindowMidi} from "./midi/WindowMidi";
 
 export type NavProps = {
-  midi: WindowMidi
+  midi: WindowMidi | undefined
   onInputSelect: (i: MidiInput) => void
 }
 
