@@ -8,9 +8,8 @@ import {MidiInput} from "./midi/WindowMidi";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {Layout} from "./pages/Layout";
 import {IndexPage} from "./pages/IndexPage";
-import {LogPage} from "./pages/LogPage";
 import {MidiInputRequiredComponent} from "./components/MidiInputRequiredComponent";
-
+import {MonitorPage} from "./pages/MonitorPage";
 
 const darkTheme = createTheme({
   palette: {
@@ -50,9 +49,14 @@ function App() {
                   }
                 />
                 <Route
-                  path='log'
+                  path='monitor'
                   element={
-                    <LogPage />
+                    <MidiInputRequiredComponent
+                      midiInput={midiInput}
+                      element={(mi) => (
+                        <MonitorPage midiInput={mi} />
+                      )}
+                    />
                   }
                 />
               </Route>

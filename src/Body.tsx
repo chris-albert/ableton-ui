@@ -23,17 +23,17 @@ export const Body: React.FC<BodyProps> = ({
 
   React.useEffect(() => {
     midiInput.on('sysex', sysex => {
-      const json = byteArrayToJson(sysex.data)
-      console.log('SysEx', json)
-      if(json.type === 'clipChange') {
-        if (json.status === 'active') {
-          setActiveClip(json.clip.name)
-          setActiveColor(json.clip.color.toString(16))
-        } else {
-          setActiveClip(INACTIVE_CLIP_NAME)
-          setActiveColor(INACTIVE_COLOR)
-        }
-      }
+      // const json = byteArrayToJson(sysex.data)
+      // console.log('SysEx', json)
+      // if(json.type === 'clipChange') {
+      //   if (json.status === 'active') {
+      //     setActiveClip(json.clip.name)
+      //     setActiveColor(json.clip.color.toString(16))
+      //   } else {
+      //     setActiveClip(INACTIVE_CLIP_NAME)
+      //     setActiveColor(INACTIVE_COLOR)
+      //   }
+      // }
     })
   }, [])
 
