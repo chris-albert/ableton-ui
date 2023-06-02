@@ -1,6 +1,6 @@
 import React from 'react';
 import './styles.scss'
-import {createTheme, ThemeProvider} from "@mui/material";
+import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 import { Provider } from 'react-redux'
 import {ApplicationStore} from "./model/ApplicationStore";
 import {useMidiContext} from "./contexts/MidiContext";
@@ -30,6 +30,7 @@ function App() {
       <BrowserRouter>
         <Provider store={ApplicationStore}>
           <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
             <Routes>
               <Route
                 path='/'

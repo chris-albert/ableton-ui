@@ -20,7 +20,7 @@ export const MonitorPage: React.FC<MonitorPageProps> = ({
 
 
   React.useEffect(() => {
-    midiInput.on('*', message => {
+    return midiInput.on('*', message => {
       setListenEnabled(enabled => {
         console.log('message', message, enabled)
         if(enabled) {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {MidiMessage} from "../midi/WindowMidi";
+import {MidiMessage, renderRawAsHex, renderRawAsInt} from "../midi/WindowMidi";
 import {
   Box,
   Grid,
@@ -37,6 +37,7 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
   let values = (
     <Box></Box>
   )
+
 
   if(message.type === 'sysex') {
     try {
@@ -82,7 +83,7 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
         <Box>Unable to parse JSON, raw sysex data [{message.data}]</Box>
       )
     }
-  } else if(message.type === 'noteon') {
+  } else if(message.type === 'noteon' || message.type === 'noteoff') {
     values = (
       <Box>
         <Chip
@@ -106,7 +107,7 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
     )
   } else if(message.type === 'unknown') {
     detail = (
-      <Box>Unable to parse JSON {JSON.stringify(message.data.data, null, 2)}</Box>
+      <Box>Unable to parse JSON </Box>
     )
   }
 
@@ -150,6 +151,12 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
         <AccordionDetails>
           <Typography>
             {detail}
+            <Box>
+              Raw Int: {renderRawAsInt(message.raw)}
+            </Box>
+            <Box>
+              RawHex: {renderRawAsHex(message.raw)}
+            </Box>
           </Typography>
         </AccordionDetails>
       </Accordion>
