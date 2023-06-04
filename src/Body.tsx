@@ -1,11 +1,6 @@
 import React from 'react'
-import {Box, Divider, Typography} from "@mui/material";
-import {ProjectComponent} from "./components/ProjectComponent";
-import {ProjectComponent as ReduxTrackComponent} from "./components/redux/ProjectComponent";
-import {ProjectComponent as JotaiTrackComponent} from "./components/jotai/ProjectComponent";
-import {ProjectComponent as ZustandTrackComponent} from "./components/zustand/ProjectComponent";
+import {Box, Typography} from "@mui/material";
 import {MidiInput} from "./midi/WindowMidi";
-import {byteArrayToJson} from "./utils/Converters";
 
 const INACTIVE_COLOR = "777777"
 const INACTIVE_CLIP_NAME = 'Inactive'
@@ -23,17 +18,7 @@ export const Body: React.FC<BodyProps> = ({
 
   React.useEffect(() => {
     midiInput.on('sysex', sysex => {
-      // const json = byteArrayToJson(sysex.data)
-      // console.log('SysEx', json)
-      // if(json.type === 'clipChange') {
-      //   if (json.status === 'active') {
-      //     setActiveClip(json.clip.name)
-      //     setActiveColor(json.clip.color.toString(16))
-      //   } else {
-      //     setActiveClip(INACTIVE_CLIP_NAME)
-      //     setActiveColor(INACTIVE_COLOR)
-      //   }
-      // }
+
     })
   }, [])
 

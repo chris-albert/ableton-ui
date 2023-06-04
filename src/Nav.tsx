@@ -4,7 +4,6 @@ import {
   Box,
   Toolbar, Grid,
 } from "@mui/material";
-import {TransportComponent} from "./components/TransportComponent";
 import {MidiInputComponent} from "./components/MidiInputComponent";
 import {MidiInput, WindowMidi} from "./midi/WindowMidi";
 

@@ -1,8 +1,6 @@
 import React from 'react';
 import './styles.scss'
 import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
-import { Provider } from 'react-redux'
-import {ApplicationStore} from "./model/ApplicationStore";
 import {useMidiContext} from "./contexts/MidiContext";
 import {MidiInput} from "./midi/WindowMidi";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -28,7 +26,6 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Provider store={ApplicationStore}>
           <ThemeProvider theme={darkTheme}>
             <CssBaseline />
             <Routes>
@@ -63,7 +60,6 @@ function App() {
               </Route>
             </Routes>
           </ThemeProvider>
-        </Provider>
       </BrowserRouter>
     </div>
   );
