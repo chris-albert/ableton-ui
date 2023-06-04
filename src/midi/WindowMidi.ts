@@ -1,17 +1,29 @@
-import _ from 'lodash'
 import {EventEmitter, EventRecord} from "../utils/EventEmitter";
 
-const CHANNEL_MASK = 0x0F
+const CHANNEL_MASK          = 0x0F
 
-const SYSEX_STATUS = 0xF0
-const NOTE_ON_STATUS = 0x90
-const NOTE_OFF_STATUS = 0x80
+const SYSEX_STATUS          = 0xF0
+const NOTE_ON_STATUS        = 0x90
+const NOTE_OFF_STATUS       = 0x80
+const CONTROL_CHANGE_STATUS = 0xB0
+const PROGRAM_CHANGE_STATUS = 0xC0
 
-const MIDI_MESSAGE = 'midimessage'
+const MTC_QUARTER_FRAME_STATUS = 0xF1
+const TIMING_CLOCK_STATUS      = 0xF8
+const MEASURE_END_STATUS       = 0xF9
+const START_STATUS             = 0xFA
+const CONTINUE_STATUS          = 0xFB
+const STOP_STATUS              = 0xFC
+const ACTIVE_SENSING_STATUS    = 0xFE
+const RESET_STATUS             = 0xFF
 
 export type CommonMidiMessage = {
     raw: Uint8Array
     time: Date
+}
+
+export type MidiChannel = {
+    channel: number
 }
 
 export type SysExMessage = {
@@ -21,16 +33,58 @@ export type SysExMessage = {
 
 export type NoteOnMessage = {
     type: 'noteon',
-    channel: number,
     note: number
     velocity: number
-} & CommonMidiMessage
+} & CommonMidiMessage & MidiChannel
 
 export type NoteOffMessage = {
     type: 'noteoff',
-    channel: number,
     note: number
     velocity: number
+} & CommonMidiMessage & MidiChannel
+
+export type ControlChangeMessage = {
+    type: 'cc',
+    controllerNumber: number
+    data: number
+} & CommonMidiMessage & MidiChannel
+
+export type ProgramChangeMessage = {
+    type: 'pc',
+    programNumber: number
+} & CommonMidiMessage & MidiChannel
+
+export type ClockMessage = {
+    type: 'clock',
+} & CommonMidiMessage
+
+export type MeasureEndMessage = {
+    type: 'measureend',
+} & CommonMidiMessage
+
+export type StartMessage = {
+    type: 'start',
+} & CommonMidiMessage
+
+export type ContinueMessage = {
+    type: 'continue',
+} & CommonMidiMessage
+
+export type StopMessage = {
+    type: 'stop',
+} & CommonMidiMessage
+
+export type ResetMessage = {
+    type: 'reset',
+} & CommonMidiMessage
+
+export type ActiveSensingMessage = {
+    type: 'activesensing',
+} & CommonMidiMessage
+
+export type MTCQuarterFrameMessage = {
+    type: 'mtcquarterframe',
+    data: number
 } & CommonMidiMessage
 
 export type UnknownMessage = {
@@ -45,7 +99,17 @@ export type ErrorMessage = {
 export type MidiMessage =
   SysExMessage |
   NoteOnMessage |
-  NoteOffMessage|
+  NoteOffMessage |
+  ControlChangeMessage |
+  ProgramChangeMessage |
+  ClockMessage |
+  MeasureEndMessage |
+  StartMessage |
+  ContinueMessage |
+  StopMessage |
+  ResetMessage |
+  ActiveSensingMessage |
+  MTCQuarterFrameMessage |
   UnknownMessage |
   ErrorMessage
 
@@ -78,6 +142,62 @@ export const parseMidiInput = (input: any): MidiMessage => {
                 channel: (CHANNEL_MASK & status) + 1,
                 note: data[1],
                 velocity: data[2],
+                ...common
+            }
+        } else if((status & CONTROL_CHANGE_STATUS) === CONTROL_CHANGE_STATUS) {
+            return {
+                type: 'cc',
+                channel: (CHANNEL_MASK & status) + 1,
+                controllerNumber: data[1],
+                data: data[2],
+                ...common
+            }
+        } else if((status & PROGRAM_CHANGE_STATUS) === PROGRAM_CHANGE_STATUS) {
+            return {
+                type: 'pc',
+                channel: (CHANNEL_MASK & status) + 1,
+                programNumber: data[1],
+                ...common
+            }
+        } else if(status === TIMING_CLOCK_STATUS) {
+            return {
+                type: 'clock',
+                ...common
+            }
+        } else if(status === MEASURE_END_STATUS) {
+            return {
+                type: 'measureend',
+                ...common
+            }
+        } else if(status === START_STATUS) {
+            return {
+                type: 'start',
+                ...common
+            }
+        } else if(status === CONTINUE_STATUS) {
+            return {
+                type: 'continue',
+                ...common
+            }
+        } else if(status === STOP_STATUS) {
+            return {
+                type: 'stop',
+                ...common
+            }
+        } else if(status === RESET_STATUS) {
+            return {
+                type: 'reset',
+                ...common
+            }
+        } else if(status === ACTIVE_SENSING_STATUS) {
+            return {
+                type: 'activesensing',
+                ...common
+            }
+        } else if(status === MTC_QUARTER_FRAME_STATUS) {
+            return {
+                type: 'mtcquarterframe',
+                data: data[1],
                 ...common
             }
         } else {
