@@ -17,9 +17,7 @@ export const Body: React.FC<BodyProps> = ({
   const [activeColor, setActiveColor] = React.useState(INACTIVE_COLOR)
 
   React.useEffect(() => {
-    midiInput.on('sysex', sysex => {
 
-    })
   }, [])
 
   return (

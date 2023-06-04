@@ -13,7 +13,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {byteArrayToJson} from "../utils/Converters";
 import {JSONEditor} from "./JSONEditor";
-import {parseAbletonUIMessage} from "../data/AbletonUIMessage";
+import {parseAbletonUIMessage} from "../model/AbletonUIMessage";
 import _ from 'lodash'
 
 export type MidiMessageDetailProps = {
