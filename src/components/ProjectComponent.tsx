@@ -6,7 +6,7 @@ export const ProjectComponent: React.FC<ProjectComponentProps> = ({
 
 }) => {
 
-  
+
   return (
     <>ProjectComponent</>
   )
