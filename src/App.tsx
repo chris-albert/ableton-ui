@@ -8,6 +8,7 @@ import {Layout} from "./pages/Layout";
 import {IndexPage} from "./pages/IndexPage";
 import {MidiInputRequiredComponent} from "./components/MidiInputRequiredComponent";
 import {MonitorPage} from "./pages/MonitorPage";
+import {SettingsPage} from "./pages/SettingsPage";
 
 const darkTheme = createTheme({
   palette: {
@@ -55,6 +56,12 @@ function App() {
                         <MonitorPage midiInput={mi} />
                       )}
                     />
+                  }
+                />
+                <Route
+                  path='settings'
+                  element={
+                    <SettingsPage />
                   }
                 />
               </Route>

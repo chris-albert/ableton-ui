@@ -1,16 +1,25 @@
 import {atomWithStorage, splitAtom} from "jotai/utils";
-import {Track} from "./AbletonUIMessage";
+import {Clip, Track} from "./AbletonUIMessage";
 import _ from 'lodash'
 import {produce} from "immer"
 import {focusAtom} from "jotai-optics";
-import {useAtomValue} from "jotai/esm";
+import {PrimitiveAtom} from "jotai";
 
-export type UIClip = {
+export type UIRealClip = {
+  type: 'real'
   name: string
   color: number
   startTime: number
+  endTime: number
+}
+
+export type UIBlankClip = {
+  type: 'blank'
+  startTime: number
   endTime: number | undefined
 }
+
+export type UIClip = UIRealClip | UIBlankClip
 
 export type UITrack = {
   name: string
@@ -30,18 +39,41 @@ export const emptyProject = (): UIProject => ({
 export const projectAtom = atomWithStorage('project', emptyProject())
 
 export const tracksAtom = focusAtom(projectAtom, o => o.prop('tracks'))
+
 export const tracksAtoms = splitAtom(tracksAtom)
+
+export const clipsAtom = (trackAtom: PrimitiveAtom<UITrack>) =>
+  focusAtom(trackAtom, o => o.prop('clips'))
+
+const buildContiguousClips = (clips: Array<Clip>): Array<UIClip> => {
+
+  let lastEndTime = 0
+  const uiClips: Array<UIClip> = []
+  _.forEach(clips, clip => {
+    if(lastEndTime !== clip.startTime) {
+      uiClips.push({
+        type: 'blank',
+        startTime: lastEndTime,
+        endTime: clip.startTime,
+      })
+    }
+    uiClips.push({...clip, type: 'real'})
+    lastEndTime = clip.endTime
+  })
+  uiClips.push({
+    type: 'blank',
+    startTime: lastEndTime,
+    endTime: undefined,
+  })
+
+  return uiClips
+}
 
 export const fromUIMessage = (track: Track): UITrack => {
   return {
     name: track.name,
     color: track.color,
-    clips: track.clips.map(clip => ({
-      name: clip.name,
-      color: clip.color,
-      startTime: clip.startTime,
-      endTime: clip.endTime
-    })),
+    clips: buildContiguousClips(track.clips),
     activeClipIndex: undefined
   }
 }

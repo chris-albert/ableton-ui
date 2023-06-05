@@ -1,3 +1,4 @@
+import {byteArrayToJson} from "../utils/Converters";
 
 export type BeatMessage = {
   type: 'beat'
@@ -9,7 +10,7 @@ export type Clip = {
   name: string
   color: number,
   startTime: number
-  endTime: number | undefined
+  endTime: number
 }
 
 export type Track = {
@@ -27,10 +28,5 @@ export type InitMessage = {
 export type AbletonUIMessage = BeatMessage | InitMessage
 
 export const parseAbletonUIMessage = (data: Uint8Array): AbletonUIMessage => {
-  const arr: Array<string> = []
-  data.forEach(n => {
-    arr.push(String.fromCharCode(n))
-  })
-
-  return JSON.parse(arr.join('')) as AbletonUIMessage
+  return byteArrayToJson(data) as AbletonUIMessage
 }

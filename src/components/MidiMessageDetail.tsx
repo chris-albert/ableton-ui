@@ -41,7 +41,7 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
 
   if(message.type === 'sysex') {
     try {
-      var json = parseAbletonUIMessage(byteArrayToJson(message.data))
+      var json = parseAbletonUIMessage(message.data)
       detail = (
         <JSONEditor
           height={json.type === 'beat' ? '100px' : '500px'}

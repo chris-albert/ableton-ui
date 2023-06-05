@@ -45,6 +45,11 @@ export const Nav: React.FC<NavProps> = ({
                 label='MIDI Monitor'
                 onClick={() => setMenuOpen(false)}
               />
+              <NavLinkItem
+                path='/settings'
+                label='Settings'
+                onClick={() => setMenuOpen(false)}
+              />
             </List>
           </Box>
         </Drawer>
