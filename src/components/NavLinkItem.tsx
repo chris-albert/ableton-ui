@@ -18,7 +18,11 @@ export const NavLinkItem: React.FC<NavLinkItemProps> = ({
         <NavLink
           onClick={onClick}
           to={path}
-          style={{textDecoration: "none", color: 'white', width: '100%'}}>
+          style={({isActive}) => ({
+            textDecoration: isActive ? 'underline' : "none",
+            color: 'white',
+            width: '100%'
+          })}>
             <ListItemButton>
                 <ListItemText primary={label} />
             </ListItemButton>

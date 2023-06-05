@@ -1,7 +1,9 @@
-import {atomWithStorage} from "jotai/utils";
+import {atomWithStorage, splitAtom} from "jotai/utils";
 import {Track} from "./AbletonUIMessage";
 import _ from 'lodash'
 import {produce} from "immer"
+import {focusAtom} from "jotai-optics";
+import {useAtomValue} from "jotai/esm";
 
 export type UIClip = {
   name: string
@@ -26,6 +28,9 @@ export const emptyProject = (): UIProject => ({
 })
 
 export const projectAtom = atomWithStorage('project', emptyProject())
+
+export const tracksAtom = focusAtom(projectAtom, o => o.prop('tracks'))
+export const tracksAtoms = splitAtom(tracksAtom)
 
 export const fromUIMessage = (track: Track): UITrack => {
   return {

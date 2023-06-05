@@ -26,5 +26,11 @@ export type InitMessage = {
 
 export type AbletonUIMessage = BeatMessage | InitMessage
 
-export const parseAbletonUIMessage = (data: any): AbletonUIMessage =>
-  data as AbletonUIMessage
+export const parseAbletonUIMessage = (data: Uint8Array): AbletonUIMessage => {
+  const arr: Array<string> = []
+  data.forEach(n => {
+    arr.push(String.fromCharCode(n))
+  })
+
+  return JSON.parse(arr.join('')) as AbletonUIMessage
+}

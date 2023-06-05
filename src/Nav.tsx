@@ -2,13 +2,12 @@ import React from 'react'
 import {
   AppBar,
   Box,
-  Toolbar, Grid, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText
+  Toolbar, Grid, Drawer, List
 } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {MidiInputComponent} from "./components/MidiInputComponent";
 import {MidiInput, WindowMidi} from "./midi/WindowMidi";
-import { NavLink } from "react-router-dom"
 import {NavLinkItem} from "./components/NavLinkItem";
 
 export type NavProps = {
