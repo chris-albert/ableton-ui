@@ -1,7 +1,9 @@
 import React from 'react'
-import {Box} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import {getHexColor, UITrack} from "../model/UIStateDisplay";
 import {useActiveClip} from "../hooks/ActiveClipHook";
+const INACTIVE_COLOR = "#777777"
+const INACTIVE_CLIP_NAME = ''
 
 export type ActiveTrackClipComponentProps = {
   track: UITrack
@@ -13,6 +15,22 @@ export const ActiveTrackClipComponent: React.FC<ActiveTrackClipComponentProps> =
 
   const clip = useActiveClip(track)
 
+  const activeColor = React.useMemo(() => {
+    if(clip !== undefined && clip.type === 'real') {
+      return getHexColor(clip)
+    } else {
+      return INACTIVE_COLOR
+    }
+  }, [clip])
+
+  const activeClipName = React.useMemo(() => {
+    if(clip !== undefined && clip.type === 'real') {
+      return clip.name
+    } else {
+      return INACTIVE_CLIP_NAME
+    }
+  }, [clip])
+
   return (
     <Box
       sx={{
@@ -22,10 +40,12 @@ export const ActiveTrackClipComponent: React.FC<ActiveTrackClipComponentProps> =
         },
         height: 100,
         width: '100%',
-        backgroundColor: getHexColor(track)
+        backgroundColor: `${activeColor}`
       }}
     >
-      {track.name}
+      <Typography variant="h1" align='center'>
+        {activeClipName}
+      </Typography>
     </Box>
   )
 }

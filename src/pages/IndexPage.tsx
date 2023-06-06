@@ -2,6 +2,7 @@ import React from 'react'
 import {MidiInput} from "../midi/WindowMidi";
 import {Box} from "@mui/material";
 
+
 export type IndexPageProps = {
   midiInput: MidiInput
 }
