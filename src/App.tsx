@@ -15,6 +15,7 @@ import {useSetAtom} from "jotai";
 import {ProjectComponent} from "./components/ProjectComponent";
 import {ActiveTrackClipPage} from "./pages/ActiveTrackClipPage";
 import {beatsAtom} from "./model/RealTime";
+import {BeatCounterComponent} from "./components/BeatCounterComponent";
 
 const darkTheme = createTheme({
   palette: {
@@ -83,6 +84,12 @@ function App() {
                   path='project/tracks/:trackName'
                   element={
                     <ActiveTrackClipPage />
+                  }
+                />
+                <Route
+                  path='beat'
+                  element={
+                    <BeatCounterComponent />
                   }
                 />
                 <Route
