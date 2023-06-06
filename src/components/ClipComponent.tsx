@@ -2,6 +2,7 @@ import React from 'react'
 import {PrimitiveAtom, useAtomValue} from "jotai";
 import {getHexColor, UIClip} from "../model/UIStateDisplay";
 import {Box} from "@mui/material";
+import {zoomAtom} from "../model/Settings";
 
 export type ClipComponentProps = {
   clipAtom: PrimitiveAtom<UIClip>
@@ -12,6 +13,7 @@ export const ClipComponent: React.FC<ClipComponentProps> = ({
 }) => {
 
   const clip = useAtomValue(clipAtom)
+  const zoom = useAtomValue(zoomAtom)
 
   if(clip.type === 'real') {
     return (
@@ -21,7 +23,7 @@ export const ClipComponent: React.FC<ClipComponentProps> = ({
             border: '1px solid white',
             cursor: 'pointer'
           },
-          width: 100,
+          width: 100 + (zoom * 10),
           height: '100%',
           backgroundColor: getHexColor(clip),
         }}
