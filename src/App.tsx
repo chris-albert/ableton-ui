@@ -9,6 +9,12 @@ import {IndexPage} from "./pages/IndexPage";
 import {MidiInputRequiredComponent} from "./components/MidiInputRequiredComponent";
 import {MonitorPage} from "./pages/MonitorPage";
 import {SettingsPage} from "./pages/SettingsPage";
+import {parseAbletonUIMessage} from "./model/AbletonUIMessage";
+import {addTracksToProject, projectAtom} from "./model/UIStateDisplay";
+import {useSetAtom} from "jotai";
+import {ProjectComponent} from "./components/ProjectComponent";
+import {ActiveTrackClipPage} from "./pages/ActiveTrackClipPage";
+import {beatsAtom} from "./model/RealTime";
 
 const darkTheme = createTheme({
   palette: {
@@ -23,6 +29,26 @@ function App() {
 
   const midi = useMidiContext()
   const [midiInput, setMidiInput] = React.useState<MidiInput | undefined>(undefined)
+  const setProject = useSetAtom(projectAtom)
+  const setBeats = useSetAtom(beatsAtom)
+
+  React.useEffect(() => {
+    if(midiInput !== undefined) {
+      return midiInput.on('sysex', sysex => {
+        const msg = parseAbletonUIMessage(sysex.data)
+        if (msg.type === 'init') {
+          setProject(project =>
+            addTracksToProject(
+              project,
+              msg.tracks
+            )
+          )
+        } else if(msg.type === 'beat') {
+          setBeats(msg.value)
+        }
+      })
+    }
+  }, [setProject, setBeats, midiInput])
 
   return (
     <div className="App">
@@ -45,6 +71,18 @@ function App() {
                         <IndexPage midiInput={mi} />
                       )}
                     />
+                  }
+                />
+                <Route
+                  path='project'
+                  element={
+                    <ProjectComponent />
+                  }
+                />
+                <Route
+                  path='project/tracks/:trackName'
+                  element={
+                    <ActiveTrackClipPage />
                   }
                 />
                 <Route

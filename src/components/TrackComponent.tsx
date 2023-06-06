@@ -4,6 +4,7 @@ import {clipsAtom, getHexColor, UITrack} from "../model/UIStateDisplay";
 import {Box, Grid} from "@mui/material";
 import {splitAtom} from "jotai/utils";
 import {ClipComponent} from "./ClipComponent";
+import { useNavigate } from "react-router-dom"
 
 export type TrackComponentProps = {
   trackAtom: PrimitiveAtom<UITrack>
@@ -13,7 +14,9 @@ export const TrackComponent: React.FC<TrackComponentProps> = ({
   trackAtom
 }) => {
 
+  const navigate = useNavigate()
   const track = useAtomValue(trackAtom)
+
 
   const clips = useAtomValue(React.useMemo(() => {
     return splitAtom(clipsAtom(trackAtom))
@@ -46,6 +49,9 @@ export const TrackComponent: React.FC<TrackComponentProps> = ({
               height: 100,
               width: '100%',
               backgroundColor: getHexColor(track)
+            }}
+            onClick={() => {
+              navigate(`/project/tracks/${track.name}`)
             }}
           >
             <Box sx={{p: 1}}>

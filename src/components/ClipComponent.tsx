@@ -15,6 +15,10 @@ export const ClipComponent: React.FC<ClipComponentProps> = ({
   const clip = useAtomValue(clipAtom)
   const zoom = useAtomValue(zoomAtom)
 
+  const width = clip.endTime === undefined ?
+    100 :
+    ((clip.endTime - clip.startTime) * 10) * (1 + (zoom / 10))
+
   if(clip.type === 'real') {
     return (
       <Box
@@ -23,7 +27,7 @@ export const ClipComponent: React.FC<ClipComponentProps> = ({
             border: '1px solid white',
             cursor: 'pointer'
           },
-          width: 100 + (zoom * 10),
+          width: width,
           height: '100%',
           backgroundColor: getHexColor(clip),
         }}
@@ -35,9 +39,15 @@ export const ClipComponent: React.FC<ClipComponentProps> = ({
     )
   } else {
     return (
-      <Box></Box>
+      <Box
+        sx={{
+          width: width,
+          height: '100%'
+        }}
+      >
+        <Box sx={{p: 1}}>
+        </Box>
+      </Box>
     )
   }
-
-
 }
