@@ -68,12 +68,12 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
               sx={{mr: 1}}
               color='info'
               size="small"
-              label={`Track: ${json.track.name}`}
+              label={`Tracks: ${_.size(json.tracks)}`}
             />
             <Chip
               color='info'
               size="small"
-              label={`Clips: ${_.size(json.track.clips)}`}
+              label={`Clips: ${_.sum(_.map(json.tracks, t => _.size(t.clips)))}`}
             />
           </Box>
         )

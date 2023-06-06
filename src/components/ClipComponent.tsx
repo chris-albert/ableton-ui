@@ -12,13 +12,18 @@ export const ClipComponent: React.FC<ClipComponentProps> = ({
 }) => {
 
   const clip = useAtomValue(clipAtom)
+
   if(clip.type === 'real') {
     return (
       <Box
         sx={{
+          '&:hover': {
+            border: '1px solid white',
+            cursor: 'pointer'
+          },
           width: 100,
           height: '100%',
-          backgroundColor: getHexColor(clip)
+          backgroundColor: getHexColor(clip),
         }}
       >
         <Box sx={{p: 1}}>

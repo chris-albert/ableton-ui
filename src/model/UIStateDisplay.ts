@@ -69,23 +69,18 @@ const buildContiguousClips = (clips: Array<Clip>): Array<UIClip> => {
   return uiClips
 }
 
-export const fromUIMessage = (track: Track): UITrack => {
-  return {
+export const fromTracks = (tracks: Array<Track>): Array<UITrack> => {
+  return _.map(tracks, track => ({
     name: track.name,
     color: track.color,
     clips: buildContiguousClips(track.clips),
     activeClipIndex: undefined
-  }
+  }))
 }
 
-export const addTrackToProject = (project: UIProject, track: UITrack): UIProject => {
+export const addTracksToProject = (project: UIProject, tracks: Array<Track>): UIProject => {
   return produce<UIProject>(project => {
-    const trackIndex = _.findIndex(project.tracks, t => t.name === track.name)
-    if(trackIndex === -1) {
-      project.tracks.push(track)
-    } else {
-      project.tracks[trackIndex] = track
-    }
+    project.tracks = fromTracks(tracks)
   })(project)
 }
 

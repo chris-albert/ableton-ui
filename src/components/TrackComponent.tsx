@@ -20,7 +20,15 @@ export const TrackComponent: React.FC<TrackComponentProps> = ({
   }, [trackAtom]))
 
   return (
-    <Grid container spacing={1}>
+    <Grid
+      sx={{
+        borderTop: '1px solid white',
+        borderBottom: '1px solid white',
+        borderColor: 'divider'
+      }}
+      container
+      spacing={0}
+    >
       <Grid item xs={10} container>
         {clips.map((clip, index) => (
           <Box key={`track-${track.name}-clip-${index}`}>
@@ -31,6 +39,10 @@ export const TrackComponent: React.FC<TrackComponentProps> = ({
       <Grid item xs={2}>
           <Box
             sx={{
+              '&:hover': {
+                border: '1px solid white',
+                cursor: 'pointer'
+              },
               height: 100,
               width: '100%',
               backgroundColor: getHexColor(track)

@@ -2,7 +2,7 @@ import React from 'react'
 import {MidiInput} from "../midi/WindowMidi";
 import {parseAbletonUIMessage} from "../model/AbletonUIMessage";
 import {useSetAtom} from "jotai";
-import {addTrackToProject, fromUIMessage, projectAtom} from "../model/UIStateDisplay";
+import {addTracksToProject, projectAtom} from "../model/UIStateDisplay";
 import {Box} from "@mui/material";
 import {ProjectComponent} from "../components/ProjectComponent";
 
@@ -22,9 +22,9 @@ export const IndexPage: React.FC<IndexPageProps> = ({
       console.log('msg', msg)
       if(msg.type === 'init') {
         setProject(project =>
-          addTrackToProject(
+          addTracksToProject(
             project,
-            fromUIMessage(msg.track)
+            msg.tracks
           )
         )
       }

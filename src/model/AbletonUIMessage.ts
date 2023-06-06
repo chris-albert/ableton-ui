@@ -22,7 +22,7 @@ export type Track = {
 
 export type InitMessage = {
   type: 'init'
-  track: Track
+  tracks: Array<Track>
 }
 
 export type AbletonUIMessage = BeatMessage | InitMessage
