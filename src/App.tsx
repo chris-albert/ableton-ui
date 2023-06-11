@@ -14,8 +14,11 @@ import {addTracksToProject, projectAtom} from "./model/UIStateDisplay";
 import {useSetAtom} from "jotai";
 import {ProjectComponent} from "./components/ProjectComponent";
 import {ActiveTrackClipPage} from "./pages/ActiveTrackClipPage";
-import {beatsAtom} from "./model/RealTime";
+import {barBeatsAtom, beatsAtom, tempoAtom, timeSignatureAtom} from "./model/RealTime";
 import {BeatCounterComponent} from "./components/BeatCounterComponent";
+import {BarBeatComponent} from "./components/BarBeatComponent";
+import {TimeSignatureComponent} from "./components/TimeSignatureComponent";
+import {TempoComponent} from "./components/TempoComponent";
 
 const darkTheme = createTheme({
   palette: {
@@ -32,6 +35,9 @@ function App() {
   const [midiInput, setMidiInput] = React.useState<MidiInput | undefined>(undefined)
   const setProject = useSetAtom(projectAtom)
   const setBeats = useSetAtom(beatsAtom)
+  const setBarBeats = useSetAtom(barBeatsAtom)
+  const setTimeSignature = useSetAtom(timeSignatureAtom)
+  const setTempo = useSetAtom(tempoAtom)
 
   React.useEffect(() => {
     if(midiInput !== undefined) {
@@ -46,6 +52,15 @@ function App() {
           )
         } else if(msg.type === 'beat') {
           setBeats(msg.value)
+        } else if(msg.type === 'sig') {
+          setTimeSignature({
+            noteCount: msg.numer,
+            noteLength: msg.denom
+          })
+        } else if(msg.type === 'barBeat') {
+          setBarBeats(msg.value)
+        } else if(msg.type === 'tempo') {
+          setTempo(msg.value)
         }
       })
     }
@@ -90,6 +105,24 @@ function App() {
                   path='beat'
                   element={
                     <BeatCounterComponent />
+                  }
+                />
+                <Route
+                  path='barbeat'
+                  element={
+                    <BarBeatComponent />
+                  }
+                />
+                <Route
+                  path='sig'
+                  element={
+                    <TimeSignatureComponent />
+                  }
+                />
+                <Route
+                  path='tempo'
+                  element={
+                    <TempoComponent />
                   }
                 />
                 <Route

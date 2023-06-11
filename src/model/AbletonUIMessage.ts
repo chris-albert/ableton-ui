@@ -5,6 +5,22 @@ export type BeatMessage = {
   value: number
 }
 
+export type BarBeatMessage = {
+  type: 'barBeat'
+  value: number
+}
+
+export type TimeSignatureMessage = {
+  type: 'sig'
+  numer: number
+  denom: number
+}
+
+export type TempoMessage = {
+  type: 'tempo'
+  value: number
+}
+
 export type Clip = {
   type: 'clip'
   name: string
@@ -25,7 +41,11 @@ export type InitMessage = {
   tracks: Array<Track>
 }
 
-export type AbletonUIMessage = BeatMessage | InitMessage
+export type AbletonUIMessage = BeatMessage |
+  InitMessage |
+  BarBeatMessage |
+  TimeSignatureMessage |
+  TempoMessage
 
 export const parseAbletonUIMessage = (data: Uint8Array): AbletonUIMessage => {
   return byteArrayToJson(data) as AbletonUIMessage

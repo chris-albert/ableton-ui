@@ -77,6 +77,36 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
             />
           </Box>
         )
+      } else if(json.type === 'barBeat') {
+        values = (
+          <Box>
+            <Chip
+              color='info'
+              size="small"
+              label={json.value}
+            />
+          </Box>
+        )
+      } else if(json.type === 'sig') {
+        values = (
+          <Box>
+            <Chip
+              color='info'
+              size="small"
+              label={`${json.numer}/${json.denom}`}
+            />
+          </Box>
+        )
+      } else if(json.type === 'tempo') {
+        values = (
+          <Box>
+            <Chip
+              color='info'
+              size="small"
+              label={json.value}
+            />
+          </Box>
+        )
       }
     } catch (e) {
       detail = (
