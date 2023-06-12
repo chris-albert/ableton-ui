@@ -19,6 +19,7 @@ import {BeatCounterComponent} from "./components/BeatCounterComponent";
 import {BarBeatComponent} from "./components/BarBeatComponent";
 import {TimeSignatureComponent} from "./components/TimeSignatureComponent";
 import {TempoComponent} from "./components/TempoComponent";
+import {SectionsTrackClipPage} from "./pages/SectionsTrackClipPage";
 
 const darkTheme = createTheme({
   palette: {
@@ -96,9 +97,15 @@ function App() {
                   }
                 />
                 <Route
-                  path='project/tracks/:trackName'
+                  path='project/tracks/:trackName/active'
                   element={
                     <ActiveTrackClipPage />
+                  }
+                />
+                <Route
+                  path='project/tracks/:trackName/sections'
+                  element={
+                    <SectionsTrackClipPage />
                   }
                 />
                 <Route

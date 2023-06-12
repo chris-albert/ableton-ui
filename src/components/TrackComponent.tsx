@@ -51,7 +51,7 @@ export const TrackComponent: React.FC<TrackComponentProps> = ({
               backgroundColor: getHexColor(track)
             }}
             onClick={() => {
-              navigate(`/project/tracks/${track.name}`)
+              navigate(`/project/tracks/${track.name}/sections`)
             }}
           >
             <Box sx={{p: 1}}>
