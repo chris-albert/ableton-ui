@@ -122,7 +122,7 @@ export const parseMidiInput = (input: any): MidiMessage => {
         }
         const data: Uint8Array = input.data
         const status = data[0]
-        console.log('status', status, status & NOTE_ON_STATUS, NOTE_ON_STATUS)
+        // console.log('status', status, status & NOTE_ON_STATUS, NOTE_ON_STATUS)
         if(status === SYSEX_STATUS) {
             return {
                 type: 'sysex',

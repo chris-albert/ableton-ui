@@ -22,7 +22,7 @@ export const MonitorPage: React.FC<MonitorPageProps> = ({
   React.useEffect(() => {
     return midiInput.on('*', message => {
       setListenEnabled(enabled => {
-        console.log('message', message, enabled)
+        // console.log('message', message, enabled)
         if(enabled) {
           setTotalCount(count => {
             setMessages(m => _.take([[message, count], ...m], maxMessages))
@@ -49,7 +49,10 @@ export const MonitorPage: React.FC<MonitorPageProps> = ({
         </Button>
         <Button
           variant='outlined'
-          onClick={() => setMessages([])}
+          onClick={() => {
+            setTotalCount(0)
+            setMessages([])
+          }}
         >
           Clear
         </Button>

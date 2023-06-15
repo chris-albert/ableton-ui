@@ -61,22 +61,6 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
             />
           </Box>
         )
-      } else if(json.type === 'init') {
-        values = (
-          <Box>
-            <Chip
-              sx={{mr: 1}}
-              color='info'
-              size="small"
-              label={`Tracks: ${_.size(json.tracks)}`}
-            />
-            <Chip
-              color='info'
-              size="small"
-              label={`Clips: ${_.sum(_.map(json.tracks, t => _.size(t.clips)))}`}
-            />
-          </Box>
-        )
       } else if(json.type === 'barBeat') {
         values = (
           <Box>

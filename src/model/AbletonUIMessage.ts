@@ -21,28 +21,46 @@ export type TempoMessage = {
   value: number
 }
 
-export type Clip = {
-  type: 'clip'
+export type InitProjectMessage = {
+  type: 'init-project'
+  tracksCount: number
+}
+
+export type InitTrack = {
+    trackIndex: number
+    name: string
+    color: number
+    clipsCount: number
+}
+
+export type InitTracksMessage = {
+  type: 'init-tracks'
+  tracks: Array<InitTrack>
+}
+
+export type InitClip = {
+  trackIndex: number
+  clipIndex: number
   name: string
-  color: number,
+  color: number
   startTime: number
   endTime: number
 }
 
-export type Track = {
-  type: 'track'
-  name: string
-  color: number
-  clips: Array<Clip>
+export type InitClipsMessage = {
+  type: 'init-clips'
+  clips: Array<InitClip>
 }
 
-export type InitMessage = {
-  type: 'init'
-  tracks: Array<Track>
+export type InitDoneMessage = {
+  type: 'init-done'
 }
 
 export type AbletonUIMessage = BeatMessage |
-  InitMessage |
+  InitProjectMessage |
+  InitTracksMessage |
+  InitClipsMessage |
+  InitDoneMessage |
   BarBeatMessage |
   TimeSignatureMessage |
   TempoMessage

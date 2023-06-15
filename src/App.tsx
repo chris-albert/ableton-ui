@@ -10,8 +10,15 @@ import {MidiInputRequiredComponent} from "./components/MidiInputRequiredComponen
 import {MonitorPage} from "./pages/MonitorPage";
 import {SettingsPage} from "./pages/SettingsPage";
 import {parseAbletonUIMessage} from "./model/AbletonUIMessage";
-import {addTracksToProject, projectAtom} from "./model/UIStateDisplay";
-import {useSetAtom} from "jotai";
+import {
+  initClip,
+  initDone,
+  initProject,
+  initProjectAtom,
+  initTrack,
+  projectAtom
+} from "./model/UIStateDisplay";
+import {useAtomValue, useSetAtom} from "jotai";
 import {ProjectComponent} from "./components/ProjectComponent";
 import {ActiveTrackClipPage} from "./pages/ActiveTrackClipPage";
 import {barBeatsAtom, beatsAtom, tempoAtom, timeSignatureAtom} from "./model/RealTime";
@@ -35,6 +42,8 @@ function App() {
   const midi = useMidiContext()
   const [midiInput, setMidiInput] = React.useState<MidiInput | undefined>(undefined)
   const setProject = useSetAtom(projectAtom)
+  const setInitProject = useSetAtom(initProjectAtom)
+  const initProjectValue = useAtomValue(initProjectAtom)
   const setBeats = useSetAtom(beatsAtom)
   const setBarBeats = useSetAtom(barBeatsAtom)
   const setTimeSignature = useSetAtom(timeSignatureAtom)
@@ -44,13 +53,14 @@ function App() {
     if(midiInput !== undefined) {
       return midiInput.on('sysex', sysex => {
         const msg = parseAbletonUIMessage(sysex.data)
-        if (msg.type === 'init') {
-          setProject(project =>
-            addTracksToProject(
-              project,
-              msg.tracks
-            )
-          )
+        if(msg.type === 'init-project') {
+          setInitProject(initProject(msg))
+        } else if (msg.type === 'init-tracks') {
+          setInitProject(initTrack(msg))
+        } else if (msg.type === 'init-clips') {
+          setInitProject(initClip(msg))
+        } else if (msg.type === 'init-done') {
+          setProject(initDone(initProjectValue))
         } else if(msg.type === 'beat') {
           setBeats(msg.value)
         } else if(msg.type === 'sig') {
@@ -65,7 +75,7 @@ function App() {
         }
       })
     }
-  }, [setProject, setBeats, midiInput])
+  }, [setProject, setInitProject, initProjectValue, setBeats, midiInput])
 
   return (
     <div className="App">
