@@ -32,12 +32,19 @@ export const TrackComponent: React.FC<TrackComponentProps> = ({
       container
       spacing={0}
     >
-      <Grid item xs={10} container>
-        {clips.map((clip, index) => (
-          <Box key={`track-${track.name}-clip-${index}`}>
-            <ClipComponent clipAtom={clip} />
-          </Box>
-        ))}
+      <Grid item xs={10} container sx={{}}>
+        <Box
+          sx={{
+            display: 'flex',
+            overflow: 'auto'
+          }}
+        >
+          {clips.map((clip, index) => (
+            <Box key={`track-${track.name}-clip-${index}`}>
+              <ClipComponent clipAtom={clip} />
+            </Box>
+          ))}
+        </Box>
       </Grid>
       <Grid item xs={2}>
           <Box

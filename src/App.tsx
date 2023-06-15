@@ -27,6 +27,9 @@ import {BarBeatComponent} from "./components/BarBeatComponent";
 import {TimeSignatureComponent} from "./components/TimeSignatureComponent";
 import {TempoComponent} from "./components/TempoComponent";
 import {SectionsTrackClipPage} from "./pages/SectionsTrackClipPage";
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const darkTheme = createTheme({
   palette: {
@@ -54,13 +57,16 @@ function App() {
       return midiInput.on('sysex', sysex => {
         const msg = parseAbletonUIMessage(sysex.data)
         if(msg.type === 'init-project') {
+          toast.info('Importing new project.')
           setInitProject(initProject(msg))
         } else if (msg.type === 'init-tracks') {
           setInitProject(initTrack(msg))
         } else if (msg.type === 'init-clips') {
           setInitProject(initClip(msg))
         } else if (msg.type === 'init-done') {
-          setProject(initDone(initProjectValue))
+          const project = initDone(initProjectValue)
+          setProject(project)
+          toast.success(`Imported project with ${project.tracks.length} tracks.`)
         } else if(msg.type === 'beat') {
           setBeats(msg.value)
         } else if(msg.type === 'sig') {
@@ -81,6 +87,9 @@ function App() {
     <div className="App">
       <BrowserRouter>
           <ThemeProvider theme={darkTheme}>
+            <ToastContainer
+              position='bottom-right'
+            />
             <CssBaseline />
             <Routes>
               <Route
