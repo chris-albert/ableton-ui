@@ -7,8 +7,8 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import {Box} from "@mui/material";
 
 export type JSONEditorProps = {
-    value: string
-    onChange?: (s: string) => void
+  value: string
+  onChange?: (s: string) => void
   height?: string
   readonly?: boolean
 }

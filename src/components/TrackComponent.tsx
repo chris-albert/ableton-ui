@@ -32,7 +32,7 @@ export const TrackComponent: React.FC<TrackComponentProps> = ({
       container
       spacing={0}
     >
-      <Grid item xs={10} container sx={{}}>
+      <Grid item xs={10} container>
         <Box
           sx={{
             display: 'flex',

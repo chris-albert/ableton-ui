@@ -101,12 +101,7 @@ function App() {
                 <Route
                   index
                   element={
-                    <MidiInputRequiredComponent
-                      midiInput={midiInput}
-                      element={(mi) => (
-                        <IndexPage midiInput={mi} />
-                      )}
-                    />
+                    <IndexPage />
                   }
                 />
                 <Route
