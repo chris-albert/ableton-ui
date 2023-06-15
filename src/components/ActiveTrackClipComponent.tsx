@@ -38,6 +38,7 @@ export const ActiveTrackClipComponent: React.FC<ActiveTrackClipComponentProps> =
           border: '1px solid white',
           cursor: 'pointer'
         },
+        overflow: 'auto',
         height: 100,
         width: '100%',
         backgroundColor: `${activeColor}`
