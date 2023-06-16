@@ -1,0 +1,16 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  label_issue:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Yarn Install
+      uses: CultureHQ/actions-yarn@master
+      with:
+        args: install
+    - name: Yarn Build
+      uses: CultureHQ/actions-yarn@master
+      with:
+        args: build
