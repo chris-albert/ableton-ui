@@ -1,8 +1,10 @@
+name: 'Deploy to S3'
+
 on:
   workflow_dispatch:
 
 jobs:
-  label_issue:
+  deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
@@ -15,4 +17,6 @@ jobs:
       run: yarn install
 
     - name: Build Project
+      env:
+        CI: false
       run: yarn build
