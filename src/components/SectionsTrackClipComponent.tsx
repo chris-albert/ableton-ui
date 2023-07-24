@@ -2,15 +2,17 @@ import React from 'react'
 import {getHexColor, UIClip, UITrack} from "../model/UIStateDisplay";
 import {useActiveClip} from "../hooks/ActiveClipHook";
 import {Box, Typography} from "@mui/material";
-
+import _ from 'lodash'
 const INACTIVE_COLOR = "#777777"
 
 export type SectionsTrackClipComponentProps = {
-  track: UITrack
+  track: UITrack,
+  size: number
 }
 
 export const SectionsTrackClipComponent: React.FC<SectionsTrackClipComponentProps> = ({
-  track
+  track,
+  size
 }) => {
 
   const activeClip = useActiveClip(track)
@@ -18,7 +20,7 @@ export const SectionsTrackClipComponent: React.FC<SectionsTrackClipComponentProp
   const visibleClips = React.useMemo(() => {
 
     if(activeClip === undefined) {
-      return track.clips
+      return _.take(track.clips, size)
     } else {
       const tmpClips: Array<UIClip> = []
       track.clips.forEach(clip => {
@@ -26,7 +28,7 @@ export const SectionsTrackClipComponent: React.FC<SectionsTrackClipComponentProp
           tmpClips.push(clip)
         }
       })
-      return tmpClips
+      return _.take(tmpClips, size)
     }
   }, [activeClip, track])
 
@@ -42,7 +44,7 @@ export const SectionsTrackClipComponent: React.FC<SectionsTrackClipComponentProp
           key={`section-track-${track.name}-clip-${clipIndex}`}
           sx={{
             border:
-              clip === activeClip ? '2px solid white': '2px solid transparent',
+              clip === activeClip ? '2px solid white': `2px solid ${INACTIVE_COLOR}`,
             width: 100,
             backgroundColor: clip.type === 'real' ? getHexColor(clip) : INACTIVE_COLOR
           }}

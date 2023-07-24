@@ -1,9 +1,8 @@
 import {atomWithStorage, splitAtom} from "jotai/utils";
 import {
-  InitClip,
-  InitClipsMessage,
-  InitProjectMessage, InitTrack,
-  InitTracksMessage
+  InitClipMessage,
+  InitProjectMessage,
+  InitTrackMessage
 } from "./AbletonUIMessage";
 import _ from 'lodash'
 import {produce} from "immer"
@@ -40,7 +39,7 @@ export const emptyProject = (): UIProject => ({
   tracks: []
 })
 
-export type InitProject = Array<InitTracksMessage | InitClipsMessage>
+export type InitProject = Array<InitTrackMessage | InitClipMessage>
 
 export const initProjectAtom = atom<InitProject>([])
 
@@ -53,7 +52,7 @@ export const tracksAtoms = splitAtom(tracksAtom)
 export const clipsAtom = (trackAtom: PrimitiveAtom<UITrack>) =>
   focusAtom(trackAtom, o => o.prop('clips'))
 
-const buildContiguousClips = (clips: Array<InitClip>): Array<UIClip> => {
+const buildContiguousClips = (clips: Array<InitClipMessage>): Array<UIClip> => {
 
   let lastEndTime = 0
   const uiClips: Array<UIClip> = []
@@ -80,20 +79,18 @@ const buildContiguousClips = (clips: Array<InitClip>): Array<UIClip> => {
 
 export const buildProject = (initProject: InitProject): UIProject => {
 
-  const tracksMessages: Array<InitTracksMessage> = []
-  const clipsMessages: Array<InitClipsMessage> = []
+  const tracksMessages: Array<InitTrackMessage> = []
+  const clipsMessages: Array<InitClipMessage> = []
   _.forEach(initProject, message => {
-    if(message.type === 'init-tracks') {
+    if(message.type === 'init-track') {
       tracksMessages.push(message)
     } else {
       clipsMessages.push(message)
     }
   })
-  const tracks: Array<InitTrack> = _.flatMap(tracksMessages, t => t.tracks)
-  const clips: Array<InitClip> = _.flatMap(clipsMessages, t => t.clips)
 
-  const orderedTracks = _.sortBy(tracks, t => t.trackIndex)
-  const groupedClips = _.groupBy(clips, c => c.trackIndex)
+  const orderedTracks = _.sortBy(tracksMessages, t => t.trackIndex)
+  const groupedClips = _.groupBy(clipsMessages, c => c.trackIndex)
 
   return {
     tracks: _.map(orderedTracks, track => {
@@ -113,13 +110,13 @@ export const initProject = (message: InitProjectMessage): (p: InitProject) => In
   }
 }
 
-export const initTrack = (message: InitTracksMessage): (p: InitProject) => InitProject => {
+export const initTrack = (message: InitTrackMessage): (p: InitProject) => InitProject => {
   return produce<InitProject>(project => {
     project.push(message)
   })
 }
 
-export const initClip = (message: InitClipsMessage): (p: InitProject) => InitProject => {
+export const initClip = (message: InitClipMessage): (p: InitProject) => InitProject => {
   return produce<InitProject>(project => {
     project.push(message)
   })

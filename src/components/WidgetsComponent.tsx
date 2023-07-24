@@ -15,7 +15,8 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({}) => {
     <Box
       sx={{
         display: 'flex',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        gap: 1
       }}
     >
       {_.map(widgets, (widget, i) => (

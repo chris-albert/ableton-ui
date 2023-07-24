@@ -3,6 +3,8 @@ import {Box, Button, Drawer} from "@mui/material";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {AddWidgetComponent} from "../components/AddWidgetComponent";
 import {WidgetsComponent} from "../components/WidgetsComponent";
+import {editWidgetsAtom} from "../model/Widgets";
+import {useAtom} from "jotai";
 
 
 export type IndexPageProps = {}
@@ -10,6 +12,7 @@ export type IndexPageProps = {}
 export const IndexPage: React.FC<IndexPageProps> = ({}) => {
 
   const [widgetOpen, setWidgetOpen] = React.useState(false)
+  const [editWidgets, setEditWidgets] = useAtom(editWidgetsAtom)
 
   return (
     <Box>
@@ -27,6 +30,17 @@ export const IndexPage: React.FC<IndexPageProps> = ({}) => {
           p: 2
         }}
       >
+        <Button
+          sx={{mr: 2}}
+          variant="outlined"
+          color={editWidgets? 'error' : 'success'}
+          startIcon={
+            <AddCircleOutlineIcon />
+          }
+          onClick={() => setEditWidgets(e => !e)}
+        >
+          {editWidgets? 'Done Editing' : 'Edit Widgets'}
+        </Button>
         <Button
           variant="outlined"
           startIcon={

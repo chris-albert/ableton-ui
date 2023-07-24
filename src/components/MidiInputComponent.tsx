@@ -1,33 +1,31 @@
 import React from 'react'
 import {SelectComponent, SelectItem} from "./SelectComponent";
-import {MidiInput, WindowMidi} from "../midi/WindowMidi";
+import {MidiInput} from "../midi/WindowMidi";
+import {useSetMidiInput, useWindowMidi} from "../hooks/Midi";
 
-export type MidiInputComponentProps = {
-  midi: WindowMidi | undefined,
-  onInputSelect: (i: MidiInput) => void
-}
+export type MidiInputComponentProps = {}
 
-export const MidiInputComponent: React.FC<MidiInputComponentProps> = ({
-  midi,
-  onInputSelect
-}) => {
+export const MidiInputComponent: React.FC<MidiInputComponentProps> = () => {
 
   const [items, setItems] = React.useState<Array<SelectItem<MidiInput>>>([])
 
+  const windowMidi = useWindowMidi()
+  const setMidiInput = useSetMidiInput()
+
   React.useEffect(() => {
-    if(midi !== undefined) {
-      setItems(midi.inputs.map((device, i) => {
+    if(windowMidi !== undefined) {
+      setItems(windowMidi.inputs.map((device, i) => {
         return {
           label: device.name,
           value: device
         }
       }))
     }
-  }, [midi])
+  }, [windowMidi])
 
   const onMidiSelect = (input: MidiInput | undefined) => {
     if(input !== undefined) {
-      onInputSelect(input)
+      setMidiInput(input)
     }
   }
 

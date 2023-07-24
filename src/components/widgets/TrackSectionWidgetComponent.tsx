@@ -30,7 +30,7 @@ export const TrackSectionWidgetComponent: React.FC<TrackSectionWidgetComponentPr
     )
   } else {
     return (
-      <SectionsTrackClipComponent track={track} />
+      <SectionsTrackClipComponent track={track} size={widget.size}/>
     )
   }
 }

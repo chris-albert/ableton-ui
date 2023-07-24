@@ -18,7 +18,6 @@ export const MonitorPage: React.FC<MonitorPageProps> = ({
   const [totalCount, setTotalCount] = React.useState(0)
   const [listenEnabled, setListenEnabled] = React.useState(false)
 
-
   React.useEffect(() => {
     return midiInput.on('*', message => {
       setListenEnabled(enabled => {

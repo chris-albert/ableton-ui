@@ -7,18 +7,11 @@ import {
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {MidiInputComponent} from "./components/MidiInputComponent";
-import {MidiInput, WindowMidi} from "./midi/WindowMidi";
 import {NavLinkItem} from "./components/NavLinkItem";
 
-export type NavProps = {
-  midi: WindowMidi | undefined
-  onInputSelect: (i: MidiInput) => void
-}
+export type NavProps = {}
 
-export const Nav: React.FC<NavProps> = ({
-    midi,
-    onInputSelect
-}) => {
+export const Nav: React.FC<NavProps> = () => {
 
   const [menuOpen, setMenuOpen] = React.useState(false)
 
@@ -91,10 +84,7 @@ export const Nav: React.FC<NavProps> = ({
           </IconButton>
           <Grid container >
             <Grid item xs={4}>
-              <MidiInputComponent
-                  midi={midi}
-                  onInputSelect={onInputSelect}
-              />
+              <MidiInputComponent />
             </Grid>
             <Grid item xs={4} container justifyContent="center">
               {/*Center*/}

@@ -42,55 +42,59 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
   if(message.type === 'sysex') {
     try {
       var json = parseAbletonUIMessage(message.data)
-      detail = (
-        <JSONEditor
-          height={json.type === 'beat' ? '100px' : '500px'}
-          value={JSON.stringify(json, null, 2)}
-        />
-      )
-      jsonType = (
-        <Box>{json.type}</Box>
-      )
-      if(json.type === 'beat') {
-        values = (
-          <Box>
-            <Chip
-              color='info'
-              size="small"
-              label={json.value}
-            />
-          </Box>
+      if(json !== undefined) {
+
+
+        detail = (
+          <JSONEditor
+            height={json.type === 'beat' ? '100px' : '500px'}
+            value={JSON.stringify(json, null, 2)}
+          />
         )
-      } else if(json.type === 'barBeat') {
-        values = (
-          <Box>
-            <Chip
-              color='info'
-              size="small"
-              label={json.value}
-            />
-          </Box>
+        jsonType = (
+          <Box>{json.type}</Box>
         )
-      } else if(json.type === 'sig') {
-        values = (
-          <Box>
-            <Chip
-              color='info'
-              size="small"
-              label={`${json.numer}/${json.denom}`}
-            />
-          </Box>
-        )
-      } else if(json.type === 'tempo') {
-        values = (
-          <Box>
-            <Chip
-              color='info'
-              size="small"
-              label={json.value}
-            />
-          </Box>
-        )
+        if (json.type === 'beat') {
+          values = (
+            <Box>
+              <Chip
+                color='info'
+                size="small"
+                label={json.value}
+              />
+            </Box>
+          )
+        } else if (json.type === 'bar-beat') {
+          values = (
+            <Box>
+              <Chip
+                color='info'
+                size="small"
+                label={json.value}
+              />
+            </Box>
+          )
+        } else if (json.type === 'sig') {
+          values = (
+            <Box>
+              <Chip
+                color='info'
+                size="small"
+                label={`${json.numer}/${json.denom}`}
+              />
+            </Box>
+          )
+        } else if (json.type === 'tempo') {
+          values = (
+            <Box>
+              <Chip
+                color='info'
+                size="small"
+                label={json.value}
+              />
+            </Box>
+          )
+        }
       }
     } catch (e) {
       detail = (

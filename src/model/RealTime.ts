@@ -15,3 +15,5 @@ export const timeSignatureAtom = atom<TimeSignature>({
 })
 
 export const tempoAtom = atom(0)
+
+export const isPlayingAtom = atom(false)

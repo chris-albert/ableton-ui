@@ -3,7 +3,7 @@ import {Box, Typography} from "@mui/material";
 import {getHexColor, UITrack} from "../model/UIStateDisplay";
 import {useActiveClip} from "../hooks/ActiveClipHook";
 const INACTIVE_COLOR = "#777777"
-const INACTIVE_CLIP_NAME = ''
+const INACTIVE_CLIP_NAME = 'None'
 
 export type ActiveTrackClipComponentProps = {
   track: UITrack
@@ -34,6 +34,7 @@ export const ActiveTrackClipComponent: React.FC<ActiveTrackClipComponentProps> =
   return (
     <Box
       sx={{
+        border: '1px solid transparent',
         '&:hover': {
           border: '1px solid white',
           cursor: 'pointer'

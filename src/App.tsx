@@ -21,7 +21,7 @@ import {
 import {useAtomValue, useSetAtom} from "jotai";
 import {ProjectComponent} from "./components/ProjectComponent";
 import {ActiveTrackClipPage} from "./pages/ActiveTrackClipPage";
-import {barBeatsAtom, beatsAtom, tempoAtom, timeSignatureAtom} from "./model/RealTime";
+import {barBeatsAtom, beatsAtom, isPlayingAtom, tempoAtom, timeSignatureAtom} from "./model/RealTime";
 import {BeatCounterComponent} from "./components/BeatCounterComponent";
 import {BarBeatComponent} from "./components/BarBeatComponent";
 import {TimeSignatureComponent} from "./components/TimeSignatureComponent";
@@ -30,6 +30,7 @@ import {SectionsTrackClipPage} from "./pages/SectionsTrackClipPage";
 import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
+import {useMidiInit, useMidiInput} from "./hooks/Midi";
 
 const darkTheme = createTheme({
   palette: {
@@ -42,46 +43,53 @@ const darkTheme = createTheme({
 
 function App() {
 
-  const midi = useMidiContext()
-  const [midiInput, setMidiInput] = React.useState<MidiInput | undefined>(undefined)
-  const setProject = useSetAtom(projectAtom)
-  const setInitProject = useSetAtom(initProjectAtom)
-  const initProjectValue = useAtomValue(initProjectAtom)
-  const setBeats = useSetAtom(beatsAtom)
-  const setBarBeats = useSetAtom(barBeatsAtom)
-  const setTimeSignature = useSetAtom(timeSignatureAtom)
-  const setTempo = useSetAtom(tempoAtom)
-
-  React.useEffect(() => {
-    if(midiInput !== undefined) {
-      return midiInput.on('sysex', sysex => {
-        const msg = parseAbletonUIMessage(sysex.data)
-        if(msg.type === 'init-project') {
-          toast.info('Importing new project.')
-          setInitProject(initProject(msg))
-        } else if (msg.type === 'init-tracks') {
-          setInitProject(initTrack(msg))
-        } else if (msg.type === 'init-clips') {
-          setInitProject(initClip(msg))
-        } else if (msg.type === 'init-done') {
-          const project = initDone(initProjectValue)
-          setProject(project)
-          toast.success(`Imported project with ${project.tracks.length} tracks.`)
-        } else if(msg.type === 'beat') {
-          setBeats(msg.value)
-        } else if(msg.type === 'sig') {
-          setTimeSignature({
-            noteCount: msg.numer,
-            noteLength: msg.denom
-          })
-        } else if(msg.type === 'barBeat') {
-          setBarBeats(msg.value)
-        } else if(msg.type === 'tempo') {
-          setTempo(msg.value)
-        }
-      })
-    }
-  }, [setProject, setInitProject, initProjectValue, setBeats, midiInput])
+  useMidiInit()
+  const midiInput = useMidiInput()
+  // const midi = useMidiContext()
+  // const [midiInput, setMidiInput] = React.useState<MidiInput | undefined>(undefined)
+  // const setProject = useSetAtom(projectAtom)
+  // const setInitProject = useSetAtom(initProjectAtom)
+  // const initProjectValue = useAtomValue(initProjectAtom)
+  // const setBeats = useSetAtom(beatsAtom)
+  // const setBarBeats = useSetAtom(barBeatsAtom)
+  // const setTimeSignature = useSetAtom(timeSignatureAtom)
+  // const setTempo = useSetAtom(tempoAtom)
+  // const setIsPlaying = useSetAtom(isPlayingAtom)
+  //
+  // React.useEffect(() => {
+  //   if(midiInput !== undefined) {
+  //     return midiInput.on('sysex', sysex => {
+  //       const msg = parseAbletonUIMessage(sysex.data)
+  //       if(msg !== undefined) {
+  //         if (msg.type === 'init-project') {
+  //           toast.info('Importing new project.')
+  //           setInitProject(initProject(msg))
+  //         } else if (msg.type === 'init-track') {
+  //           setInitProject(initTrack(msg))
+  //         } else if (msg.type === 'init-clip') {
+  //           setInitProject(initClip(msg))
+  //         } else if (msg.type === 'init-done') {
+  //           const project = initDone(initProjectValue)
+  //           setProject(project)
+  //           toast.success(`Imported project with ${project.tracks.length} tracks.`)
+  //         } else if (msg.type === 'beat') {
+  //           setBeats(msg.value)
+  //         } else if (msg.type === 'sig') {
+  //           setTimeSignature({
+  //             noteCount: msg.numer,
+  //             noteLength: msg.denom
+  //           })
+  //         } else if (msg.type === 'bar-beat') {
+  //           setBarBeats(msg.value)
+  //         } else if (msg.type === 'tempo') {
+  //           setTempo(msg.value)
+  //         } else if(msg.type === 'is-playing') {
+  //           setIsPlaying(msg.value)
+  //         }
+  //       }
+  //     })
+  //   }
+  // }, [setProject, setInitProject, initProjectValue, setBeats, midiInput])
 
   return (
     <div className="App">
@@ -95,7 +103,7 @@ function App() {
               <Route
                 path='/'
                 element={
-                  <Layout midi={midi} onInputSelect={setMidiInput}/>
+                  <Layout />
                 }
               >
                 <Route
