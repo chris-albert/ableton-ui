@@ -1,4 +1,5 @@
 import _ from "lodash";
+import {SysExMessage} from "../midi/WindowMidi";
 
 const DATA_DELIMITER = 0x01
 const MANUFACTURER_ID = 0x02
@@ -8,7 +9,7 @@ type MessageParser = {
   parse: (input: Array<any>) => AbletonUIMessage
 }
 
-const STATUS: Record<string, MessageParser> = {
+const RX_STATUS: Record<string, MessageParser> = {
   INIT: {
     statusByte: 0x03,
     parse: (input: Array<any>) => {
@@ -100,7 +101,7 @@ const STATUS: Record<string, MessageParser> = {
   }
 }
 
-const STATUS_LOOKUP: Record<number, MessageParser> = _.fromPairs(_.map(STATUS, (messageParser) => {
+const RX_STATUS_LOOKUP: Record<number, MessageParser> = _.fromPairs(_.map(RX_STATUS, (messageParser) => {
   return [
     messageParser.statusByte,
     messageParser
@@ -176,7 +177,7 @@ export const parseAbletonUIMessage = (data: Uint8Array): AbletonUIMessage | unde
     const message = parseRawSysex(data)
 
     if(message.manufacturer === MANUFACTURER_ID) {
-      const parser = STATUS_LOOKUP[message.statusByte]
+      const parser = RX_STATUS_LOOKUP[message.statusByte]
       if(parser !== undefined) {
           return parser.parse(message.body)
       } else {
@@ -204,5 +205,34 @@ const parseRawSysex = (data: Uint8Array): RawSysexMessage => {
     manufacturer: data[0],
     statusByte: _.toNumber(splitStr[0]),
     body: splitStr.splice(1)
+  }
+}
+
+export const generateRawSysex = (sysex: RawSysexMessage): Uint8Array => {
+  const arr = [0xF0, sysex.manufacturer, sysex.statusByte]
+  const withBody = arr.concat(sysex.body)
+  withBody.push(0xF7)
+  return withBody as any as Uint8Array
+}
+
+export const TX_MESSAGE = {
+  base: (statusByte: number, body: Array<any>): SysExMessage => {
+    const raw = generateRawSysex({
+      manufacturer: MANUFACTURER_ID,
+      statusByte,
+      body
+    })
+    return {
+      type: 'sysex',
+      data: raw,
+      raw,
+      time: new Date()
+    }
+  },
+  play: () => {
+    return TX_MESSAGE.base(0x50, [1])
+  },
+  stop: () => {
+    return TX_MESSAGE.base(0x50, [0])
   }
 }

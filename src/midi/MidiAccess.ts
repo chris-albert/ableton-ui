@@ -1,4 +1,4 @@
-import {buildInputDevice, WindowMidi} from "./WindowMidi";
+import {buildInputDevice, buildOutputDevice, WindowMidi} from "./WindowMidi";
 
 const mapToArray = (map: any): Array<any> => {
     const arr: Array<any> = []
@@ -12,7 +12,7 @@ const mapToArray = (map: any): Array<any> => {
 const buildWindowMidi = (access: any): WindowMidi => {
     return {
         inputs: mapToArray(access.inputs).map(buildInputDevice),
-        outputs: mapToArray(access.outputs)
+        outputs: mapToArray(access.outputs).map(buildOutputDevice)
     }
 }
 

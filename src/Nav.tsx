@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {MidiInputComponent} from "./components/MidiInputComponent";
 import {NavLinkItem} from "./components/NavLinkItem";
+import {MidiOutputComponent} from "./components/MidiOutputComponent";
 
 export type NavProps = {}
 
@@ -83,10 +84,11 @@ export const Nav: React.FC<NavProps> = () => {
             <MenuIcon />
           </IconButton>
           <Grid container >
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <MidiInputComponent />
+              <MidiOutputComponent />
             </Grid>
-            <Grid item xs={4} container justifyContent="center">
+            <Grid item xs={2} container justifyContent="center">
               {/*Center*/}
             </Grid>
             <Grid item xs={4} container justifyContent="right">

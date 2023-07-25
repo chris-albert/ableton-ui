@@ -261,6 +261,23 @@ export const buildInputDevice = (input: any): MidiInput => {
     }
 }
 
+export const buildOutputDevice = (output: any): MidiOutput => {
+    return {
+        id: output.id,
+        name: output.name,
+        manufacturer: output.manufacturer,
+        onstatechange: output.onstatechange,
+        state: output.state,
+        connection: output.connection,
+        version: output.version,
+        type: 'output',
+        send: (msg: MidiMessage) => {
+            output.send(msg.raw)
+            // output.send([0x90, 60, 0x7f])
+        }
+    }
+}
+
 export type WindowMidi = {
     inputs: Array<MidiInput>
     outputs: Array<MidiOutput>

@@ -27,6 +27,12 @@ export const useSetMidiInput = () =>
 export const useMidiInput = () =>
   useAtomValue(midiInputAtom)
 
+export const useSetMidiOutput = () =>
+  useSetAtom(midiOutputAtom)
+
+export const useMidiOutput = () =>
+  useAtomValue(midiOutputAtom)
+
 export const useMidiInit = (): void => {
 
   const [windowMidi, setWindowMidi] = useAtom(windowMidiAtom)
@@ -51,7 +57,6 @@ export const useMidiInit = (): void => {
 
   React.useEffect(() => {
     if(midiInput !== undefined) {
-      console.log('Listening for sysex messages')
       return midiInput.on('sysex', sysex => {
         const msg = parseAbletonUIMessage(sysex.data)
         if(msg !== undefined) {
@@ -83,5 +88,5 @@ export const useMidiInit = (): void => {
         }
       })
     }
-  }, [midiInput])
+  }, [setProject, setInitProject, initProjectValue, setBeats, midiInput])
 }

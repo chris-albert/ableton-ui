@@ -2,14 +2,28 @@ import React from 'react'
 import {Box} from "@mui/material";
 import {PlayButtonComponent} from "../PlayButtonComponent";
 import {StopButtonComponent} from "../StopButtonComponent";
-import {useAtomValue, useSetAtom} from "jotai";
+import {useAtomValue} from "jotai";
 import {isPlayingAtom} from "../../model/RealTime";
+import {useMidiOutput} from "../../hooks/Midi";
+import {generateRawSysex, TX_MESSAGE} from "../../model/AbletonUIMessage";
 
 export type PlayStopWidgetComponentProps = {}
 
 export const PlayStopWidgetComponent: React.FC<PlayStopWidgetComponentProps> = ({}) => {
 
   const isPlaying = useAtomValue(isPlayingAtom)
+
+  const midiOutput = useMidiOutput()
+
+  const onClick = (isPlaying: boolean) => {
+    if(midiOutput !== undefined) {
+      if(isPlaying) {
+        midiOutput.send(TX_MESSAGE.stop())
+      } else {
+        midiOutput.send(TX_MESSAGE.play())
+      }
+    }
+  }
 
   return (
     <Box
@@ -20,10 +34,10 @@ export const PlayStopWidgetComponent: React.FC<PlayStopWidgetComponentProps> = (
     >
       {isPlaying ?
         (<StopButtonComponent
-          onStop={() => {}}
+          onStop={() => onClick(false)}
         />) :
         (<PlayButtonComponent
-          onPlay={() => {}}
+          onPlay={() => onClick(true)}
         />)
       }
     </Box>
