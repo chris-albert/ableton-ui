@@ -175,7 +175,6 @@ export const parseAbletonUIMessage = (data: Uint8Array): AbletonUIMessage | unde
 
   try {
     const message = parseRawSysex(data)
-
     if(message.manufacturer === MANUFACTURER_ID) {
       const parser = RX_STATUS_LOOKUP[message.statusByte]
       if(parser !== undefined) {

@@ -273,7 +273,7 @@ export const buildOutputDevice = (output: any): MidiOutput => {
         type: 'output',
         send: (msg: MidiMessage) => {
             output.send(msg.raw)
-            // output.send([0x90, 60, 0x7f])
+
         }
     }
 }

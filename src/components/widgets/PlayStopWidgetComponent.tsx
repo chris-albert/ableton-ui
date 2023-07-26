@@ -15,12 +15,12 @@ export const PlayStopWidgetComponent: React.FC<PlayStopWidgetComponentProps> = (
 
   const midiOutput = useMidiOutput()
 
-  const onClick = (isPlaying: boolean) => {
+  const onClick = (play: boolean) => {
     if(midiOutput !== undefined) {
-      if(isPlaying) {
-        midiOutput.send(TX_MESSAGE.stop())
-      } else {
+      if(play) {
         midiOutput.send(TX_MESSAGE.play())
+      } else {
+        midiOutput.send(TX_MESSAGE.stop())
       }
     }
   }
