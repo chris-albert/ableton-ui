@@ -1,7 +1,10 @@
 import React from 'react'
 import {SelectComponent, SelectItem} from "./SelectComponent";
 import {MidiInput} from "../midi/WindowMidi";
-import {useSetMidiInput, useWindowMidi} from "../hooks/Midi";
+import {midiRXStatusAtom, useSetMidiInput, useWindowMidi} from "../hooks/Midi";
+import {Box, Radio} from "@mui/material";
+import {StatusLedComponent} from "./StatusLedComponent";
+import {useAtomValue} from "jotai";
 
 export type MidiInputComponentProps = {}
 
@@ -29,11 +32,19 @@ export const MidiInputComponent: React.FC<MidiInputComponentProps> = () => {
     }
   }
 
+  const midiStatus = useAtomValue(midiRXStatusAtom)
+
   return (
-    <SelectComponent
-      label='MIDI Input'
-      items={items}
-      onChange={onMidiSelect}
-    />
+    <Box sx={{
+      display: 'flex',
+      alignItems: 'center'
+    }}>
+      <SelectComponent
+        label='MIDI Input'
+        items={items}
+        onChange={onMidiSelect}
+      />
+      <StatusLedComponent on={midiStatus}/>
+    </Box>
   )
 }

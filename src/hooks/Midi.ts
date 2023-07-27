@@ -14,6 +14,9 @@ import {
 } from "../model/UIStateDisplay";
 import {barBeatsAtom, beatsAtom, isPlayingAtom, tempoAtom, timeSignatureAtom} from "../model/RealTime";
 
+export const midiRXStatusAtom = atom(false)
+export const midiTXStatusAtom = atom(false)
+
 export const windowMidiAtom = atom<WindowMidi | undefined>(undefined)
 export const midiInputAtom = atom<MidiInput | undefined>(undefined)
 export const midiOutputAtom = atom<MidiOutput | undefined>(undefined)
@@ -54,10 +57,18 @@ export const useMidiInit = (): void => {
   const setTimeSignature = useSetAtom(timeSignatureAtom)
   const setTempo = useSetAtom(tempoAtom)
   const setIsPlaying = useSetAtom(isPlayingAtom)
+  const [midiStatus, setMidiStatus] = useAtom(midiRXStatusAtom)
+
+  React.useEffect(() => {
+    if(midiStatus) {
+      setMidiStatus(false)
+    }
+  }, [midiStatus])
 
   React.useEffect(() => {
     if(midiInput !== undefined) {
       return midiInput.on('sysex', sysex => {
+        setMidiStatus(true)
         const msg = parseAbletonUIMessage(sysex.data)
         if(msg !== undefined) {
           if (msg.type === 'init-project') {

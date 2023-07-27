@@ -1,7 +1,10 @@
 import React from 'react'
 import {SelectComponent, SelectItem} from "./SelectComponent";
 import {MidiOutput} from "../midi/WindowMidi";
-import {useSetMidiOutput, useWindowMidi} from "../hooks/Midi";
+import {midiTXStatusAtom, useSetMidiOutput, useWindowMidi} from "../hooks/Midi";
+import {StatusLedComponent} from "./StatusLedComponent";
+import {Box} from "@mui/material";
+import {useAtomValue} from "jotai";
 
 export type MidiOutputComponentProps = {}
 
@@ -29,11 +32,19 @@ export const MidiOutputComponent: React.FC<MidiOutputComponentProps> = ({}) => {
     }
   }
 
+  const midiStatus = useAtomValue(midiTXStatusAtom)
+
   return (
-    <SelectComponent
-      label='MIDI Output'
-      items={items}
-      onChange={onMidiSelect}
-    />
+    <Box sx={{
+      display: 'flex',
+      alignItems: 'center'
+    }}>
+      <SelectComponent
+        label='MIDI Output'
+        items={items}
+        onChange={onMidiSelect}
+      />
+      <StatusLedComponent on={midiStatus}/>
+    </Box>
   )
 }

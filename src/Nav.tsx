@@ -85,8 +85,10 @@ export const Nav: React.FC<NavProps> = () => {
           </IconButton>
           <Grid container >
             <Grid item xs={6}>
-              <MidiInputComponent />
-              <MidiOutputComponent />
+              <Box sx={{display: 'flex'}}>
+                <MidiInputComponent />
+                <MidiOutputComponent />
+              </Box>
             </Grid>
             <Grid item xs={2} container justifyContent="center">
               {/*Center*/}
