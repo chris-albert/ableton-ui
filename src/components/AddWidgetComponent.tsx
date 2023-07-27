@@ -6,7 +6,7 @@ import {
   addWidget,
   barBeat,
   beatCount,
-  beatCounter, playStop,
+  beatCounter, clipNav, playStop,
   tempo,
   timeSignature, trackSections,
   widgetsAtom
@@ -61,6 +61,11 @@ export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({}) => {
         setWidgets(addWidget(playStop()))
       }}>
         Play/Stop
+      </WidgetButtonComponent>
+      <WidgetButtonComponent onClick={() => {
+        setWidgets(addWidget(clipNav('')))
+      }}>
+        Clip Nav
       </WidgetButtonComponent>
     </Box>
   )

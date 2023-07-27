@@ -43,10 +43,13 @@ export const SectionsTrackClipComponent: React.FC<SectionsTrackClipComponentProp
         <Box
           key={`section-track-${track.name}-clip-${clipIndex}`}
           sx={{
+            display: 'flex',
             border:
               clip === activeClip ? '2px solid white': `2px solid ${INACTIVE_COLOR}`,
             width: 100,
-            backgroundColor: clip.type === 'real' ? getHexColor(clip) : INACTIVE_COLOR
+            backgroundColor: clip.type === 'real' ? getHexColor(clip) : INACTIVE_COLOR,
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
           <Typography align='center'>

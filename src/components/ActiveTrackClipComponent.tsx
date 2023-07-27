@@ -34,6 +34,7 @@ export const ActiveTrackClipComponent: React.FC<ActiveTrackClipComponentProps> =
   return (
     <Box
       sx={{
+        display: 'flex',
         border: '1px solid transparent',
         '&:hover': {
           border: '1px solid white',
@@ -42,7 +43,9 @@ export const ActiveTrackClipComponent: React.FC<ActiveTrackClipComponentProps> =
         overflow: 'auto',
         height: 100,
         width: '100%',
-        backgroundColor: `${activeColor}`
+        backgroundColor: `${activeColor}`,
+        alignItems: 'center',
+        justifyContent: 'center'
       }}
     >
       <Typography variant="h1" align='center'>

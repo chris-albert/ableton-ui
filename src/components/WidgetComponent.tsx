@@ -21,6 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowRightIcon from '@mui/icons-material/ArrowRightOutlined';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeftOutlined';
 import {PlayStopWidgetComponent} from "./widgets/PlayStopWidgetComponent";
+import {ClipNavWidgetComponent} from "./widgets/ClipNavWidgetComponent";
 
 export type WidgetComponentProps = {
   widget: Widget
@@ -53,6 +54,8 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
     el = (<TrackSectionWidgetComponent widget={widget} />)
   } else if(widget.type === 'play-stop') {
     el = (<PlayStopWidgetComponent />)
+  } else if(widget.type === 'clip-nav') {
+    el = (<ClipNavWidgetComponent widget={widget} />)
   }
 
   const label = widget.label === undefined ? null : (
@@ -71,7 +74,6 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
           marginTop: '-16px',
           backgroundColor: '#777777',
           border: '1px solid white',
-          // borderRadius: '5px',
           lineHeight: 1,
           borderBottomLeftRadius: '5px',
           borderBottomRightRadius: '5px',

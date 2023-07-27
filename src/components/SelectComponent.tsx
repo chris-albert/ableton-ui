@@ -33,7 +33,7 @@ export const SelectComponent = <A,>({
     }
 
     return (
-        <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
+        <FormControl sx={{ m: 1, minWidth: 140 }} size='small'>
             <InputLabel id="demo-simple-select-label">{label}</InputLabel>
             <Select
                 labelId="demo-simple-select-label"
@@ -41,6 +41,7 @@ export const SelectComponent = <A,>({
                 value={value}
                 label={label}
                 onChange={onChangeLocal}
+                autoWidth
             >
                 {items.map((item, index) => (
                     <MenuItem

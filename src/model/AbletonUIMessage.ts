@@ -180,7 +180,7 @@ export const parseAbletonUIMessage = (data: Uint8Array): AbletonUIMessage | unde
       if(parser !== undefined) {
           return parser.parse(message.body)
       } else {
-        console.error("Did not find parser for message", message)
+        console.warn("Did not find parser for message", message)
       }
     }
   } catch (err) {

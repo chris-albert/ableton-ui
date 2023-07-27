@@ -135,6 +135,19 @@ export const playStop = (): PlayStopWidget => ({
 
 export type PlayStopWidget = t.TypeOf<typeof PlayStopWidget>
 
+export const ClipNavWidget = t.intersection([WidgetSettings, t.type({
+  type: t.literal('clip-nav'),
+  track: t.string
+})])
+
+export type ClipNavWidget = t.TypeOf<typeof ClipNavWidget>
+
+export const clipNav = (track: string): ClipNavWidget => ({
+  type: 'clip-nav',
+  track,
+  ...defaultWidgetSettings()
+})
+
 export const Widget = t.union([
   TimeSignatureWidget,
   TempoWidget,
@@ -143,7 +156,8 @@ export const Widget = t.union([
   BeatCountWidget,
   ActiveTrackClipWidget,
   TrackSectionsWidget,
-  PlayStopWidget
+  PlayStopWidget,
+  ClipNavWidget
 ])
 
 export type Widget = t.TypeOf<typeof Widget>
