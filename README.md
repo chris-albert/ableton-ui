@@ -14,7 +14,6 @@ yarn build
 aws s3 sync build s3://lbert.io/
 ```
 
-
 ## MIDI Implementation
 
 ### Sysex
@@ -27,18 +26,20 @@ Message format: `0xF0 MID SB message 0xF7`
 
 #### Received (rx)
 | Status Byte | Message Type   | Message fields                                                                                           |
-| ----------- |----------------|----------------------------------------------------------------------------------------------------------|
-| `0x03` | Init project   | (trackCount: number)                                                                                     |
-| `0x04` | Done project   | ()                                                                                                       |
-| `0x05` | Init track     | (name: string, trackIndex: number, color: number)                                                        |
-| `0x06` | Init clip      | (name: string, trackIndex: number, clipIndex: number, color: number, startTime: number, endTime: number) |
-| `0x07` | Beat           | (value: number)                                                                                          | 
-| `0x08` | Bar Beat       | (value: number)                                                                                          |
-| `0x09` | Time Signature | (beats: number, division: number)                                                                        |
-| `0x0A` | Tempo          | (bpm: number)                                                                                            |
-| `0x0B` | Is Playing     | (isPlaying: number)                                                                                      |
+|-------------|----------------|----------------------------------------------------------------------------------------------------------|
+| `0x03`      | Init project   | (trackCount: number)                                                                                     |
+| `0x04`      | Done project   | ()                                                                                                       |
+| `0x05`      | Init track     | (name: string, trackIndex: number, color: number)                                                        |
+| `0x06`      | Init clip      | (name: string, trackIndex: number, clipIndex: number, color: number, startTime: number, endTime: number) |
+| `0x07`      | Beat           | (value: number)                                                                                          | 
+| `0x08`      | Bar Beat       | (value: number)                                                                                          |
+| `0x09`      | Time Signature | (beats: number, division: number)                                                                        |
+| `0x0A`      | Tempo          | (bpm: number)                                                                                            |
+| `0x0B`      | Is Playing     | (isPlaying: number)                                                                                      |
+                                                                                       |
 
 #### Transmit (tx)
-| Status Byte | Message Type | Message fields                                                                                           |
-|-------------|------------- |----------------------------------------------------------------------------------------------------------|
-| `0x50`      | Play/Pause | () |    
+| Status Byte | Message Type | Message fields                    |
+|-------------|------------- |-----------------------------------|
+| `0x50`      | Play/Pause | (play: number) [0: stop, 1: play] |    
+| `0x51`      | Jump To Beat   | (beat: number)    

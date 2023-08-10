@@ -28,6 +28,11 @@ export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({}) => {
       }}
     >
       <WidgetButtonComponent onClick={() => {
+        setWidgets(addWidget(beatCounter()))
+      }}>
+        Beat Counter
+      </WidgetButtonComponent>
+      <WidgetButtonComponent onClick={() => {
         setWidgets(addWidget(beatCount()))
       }}>
         Beat Count

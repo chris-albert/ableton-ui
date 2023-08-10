@@ -1,11 +1,11 @@
 import {atom, useAtom, useAtomValue, useSetAtom} from "jotai";
-import {MidiInput, MidiOutput, WindowMidi} from "../midi/WindowMidi";
+import {MidiInput, MidiOutput, SysExMessage, WindowMidi} from "../midi/WindowMidi";
 import React from "react";
 import getMidiAccess from "../midi/MidiAccess";
 import {parseAbletonUIMessage} from "../model/AbletonUIMessage";
 import {toast} from "react-toastify";
 import {
-  initClip,
+  initClip, initCue,
   initDone,
   initProject,
   initProjectAtom,
@@ -36,6 +36,8 @@ export const useSetMidiOutput = () =>
 export const useMidiOutput = () =>
   useAtomValue(midiOutputAtom)
 
+type ProjectImportStatus = 'none' | 'importing' | 'finalizing' | 'done' | 'error'
+
 export const useMidiInit = (): void => {
 
   const [windowMidi, setWindowMidi] = useAtom(windowMidiAtom)
@@ -58,6 +60,7 @@ export const useMidiInit = (): void => {
   const setTempo = useSetAtom(tempoAtom)
   const setIsPlaying = useSetAtom(isPlayingAtom)
   const [midiStatus, setMidiStatus] = useAtom(midiRXStatusAtom)
+  const [projectImportStatus, setProjectImportStatus] = React.useState<ProjectImportStatus>('none')
 
   React.useEffect(() => {
     if(midiStatus) {
@@ -66,38 +69,50 @@ export const useMidiInit = (): void => {
   }, [midiStatus])
 
   React.useEffect(() => {
-    if(midiInput !== undefined) {
-      return midiInput.on('sysex', sysex => {
-        setMidiStatus(true)
-        const msg = parseAbletonUIMessage(sysex.data)
-        if(msg !== undefined) {
-          if (msg.type === 'init-project') {
-            toast.info('Importing new project.')
-            setInitProject(initProject(msg))
-          } else if (msg.type === 'init-track') {
-            setInitProject(initTrack(msg))
-          } else if (msg.type === 'init-clip') {
-            setInitProject(initClip(msg))
-          } else if (msg.type === 'init-done') {
-            const project = initDone(initProjectValue)
-            setProject(project)
-            toast.success(`Imported project with ${project.tracks.length} tracks.`)
-          } else if (msg.type === 'beat') {
-            setBeats(msg.value)
-          } else if (msg.type === 'sig') {
-            setTimeSignature({
-              noteCount: msg.numer,
-              noteLength: msg.denom
-            })
-          } else if (msg.type === 'bar-beat') {
-            setBarBeats(msg.value)
-          } else if (msg.type === 'tempo') {
-            setTempo(msg.value)
-          } else if(msg.type === 'is-playing') {
-            setIsPlaying(msg.value)
-          }
-        }
-      })
+    if(projectImportStatus === 'finalizing') {
+      const project = initDone(initProjectValue)
+      setProject(project)
+      setProjectImportStatus('done')
+      toast.success(`Imported project with ${project.tracks.length} tracks.`)
     }
-  }, [setProject, setInitProject, initProjectValue, setBeats, midiInput])
+  }, [projectImportStatus, initProjectValue])
+
+  const onSysex = React.useCallback((sysex: SysExMessage) => {
+    setMidiStatus(true)
+    const msg = parseAbletonUIMessage(sysex.data)
+    if(msg !== undefined) {
+      if (msg.type === 'init-project') {
+        toast.info('Importing new project.')
+        setProjectImportStatus('importing')
+        setInitProject(initProject(msg))
+      } else if (msg.type === 'init-track') {
+        setInitProject(initTrack(msg))
+      } else if (msg.type === 'init-clip') {
+        setInitProject(initClip(msg))
+      } else if (msg.type === 'init-cue') {
+        setInitProject(initCue(msg))
+      } else if (msg.type === 'init-done') {
+        setProjectImportStatus('finalizing')
+      } else if (msg.type === 'beat') {
+        setBeats(msg.value)
+      } else if (msg.type === 'sig') {
+        setTimeSignature({
+          noteCount: msg.numer,
+          noteLength: msg.denom
+        })
+      } else if (msg.type === 'bar-beat') {
+        setBarBeats(msg.value)
+      } else if (msg.type === 'tempo') {
+        setTempo(msg.value)
+      } else if(msg.type === 'is-playing') {
+        setIsPlaying(msg.value)
+      }
+    }
+  }, [])
+
+  React.useEffect(() => {
+    if(midiInput !== undefined) {
+      return midiInput.on('sysex', onSysex)
+    }
+  }, [midiInput, onSysex])
 }

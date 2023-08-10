@@ -6,7 +6,7 @@ import _ from 'lodash'
 
 const isClipActive = (clip: UIClip, beat: number): boolean => {
   return beat >= clip.startTime &&
-    (clip.endTime === undefined || beat <= clip.endTime)
+    (clip.endTime === undefined || beat < clip.endTime)
 }
 
 const searchActiveClip = (clips: Array<UIClip>, beat: number): UIClip => {

@@ -1,5 +1,6 @@
 import _ from "lodash";
 import {SysExMessage} from "../midi/WindowMidi";
+import {UIRealClip} from "./UIStateDisplay";
 
 const DATA_DELIMITER = 0x01
 const MANUFACTURER_ID = 0x02
@@ -98,6 +99,17 @@ const RX_STATUS: Record<string, MessageParser> = {
         value: _.toNumber(input[0]) === 1
       }
     }
+  },
+  CUE: {
+    statusByte: 0x0C,
+    parse: (input: Array<any>) => {
+      return {
+        type: 'init-cue',
+        id: _.toNumber(input[0]),
+        name: input[1],
+        time: _.toNumber(input[2])
+      }
+    }
   }
 }
 
@@ -156,6 +168,12 @@ export type InitClipMessage = {
   endTime: number
 }
 
+export type InitCueMessage = {
+  type: 'init-cue'
+  id: number
+  name: string,
+  time: number
+}
 
 export type InitDoneMessage = {
   type: 'init-done'
@@ -169,7 +187,8 @@ export type AbletonUIMessage = BeatMessage |
   BarBeatMessage |
   TimeSignatureMessage |
   TempoMessage |
-  IsPlayingMessage
+  IsPlayingMessage |
+  InitCueMessage
 
 export const parseAbletonUIMessage = (data: Uint8Array): AbletonUIMessage | undefined => {
 
@@ -214,12 +233,20 @@ export const generateRawSysex = (sysex: RawSysexMessage): Uint8Array => {
   return withBody as any as Uint8Array
 }
 
+const charCodesFromString = (str: string): Array<number> => {
+  const codes: Array<number> = []
+  _.forEach(str, (s, i) => {
+    codes.push(str.charCodeAt(i))
+  })
+  return codes
+}
+
 export const TX_MESSAGE = {
-  base: (statusByte: number, body: Array<any>): SysExMessage => {
+  base: (statusByte: number, body: number): SysExMessage => {
     const raw = generateRawSysex({
       manufacturer: MANUFACTURER_ID,
       statusByte,
-      body
+      body: charCodesFromString(body.toString())
     })
     return {
       type: 'sysex',
@@ -229,9 +256,12 @@ export const TX_MESSAGE = {
     }
   },
   play: () => {
-    return TX_MESSAGE.base(0x50, [1])
+    return TX_MESSAGE.base(0x50, 1)
   },
   stop: () => {
-    return TX_MESSAGE.base(0x50, [0])
+    return TX_MESSAGE.base(0x50, 0)
+  },
+  jumpTo: (relativeBeat: number) => {
+    return TX_MESSAGE.base(0x51, relativeBeat)
   }
 }

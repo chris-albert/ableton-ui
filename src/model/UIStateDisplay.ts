@@ -1,6 +1,6 @@
 import {atomWithStorage, splitAtom} from "jotai/utils";
 import {
-  InitClipMessage,
+  InitClipMessage, InitCueMessage,
   InitProjectMessage,
   InitTrackMessage
 } from "./AbletonUIMessage";
@@ -31,15 +31,22 @@ export type UITrack = {
   clips: Array<UIClip>
 }
 
+export type UICue = {
+  id: number,
+  name: string
+}
+
 export type UIProject = {
-  tracks: Array<UITrack>
+  tracks: Array<UITrack>,
+  cues: Array<UICue>
 }
 
 export const emptyProject = (): UIProject => ({
-  tracks: []
+  tracks: [],
+  cues: []
 })
 
-export type InitProject = Array<InitTrackMessage | InitClipMessage>
+export type InitProject = Array<InitTrackMessage | InitClipMessage | InitCueMessage>
 
 export const initProjectAtom = atom<InitProject>([])
 
@@ -79,13 +86,17 @@ const buildContiguousClips = (clips: Array<InitClipMessage>): Array<UIClip> => {
 
 export const buildProject = (initProject: InitProject): UIProject => {
 
+  console.log(initProject)
   const tracksMessages: Array<InitTrackMessage> = []
   const clipsMessages: Array<InitClipMessage> = []
+  const cueMessages: Array<InitCueMessage> = []
   _.forEach(initProject, message => {
     if(message.type === 'init-track') {
       tracksMessages.push(message)
-    } else {
+    } else if(message.type === 'init-clip'){
       clipsMessages.push(message)
+    } else {
+      cueMessages.push(message)
     }
   })
 
@@ -100,7 +111,8 @@ export const buildProject = (initProject: InitProject): UIProject => {
         color: track.color,
         clips: buildContiguousClips(trackClips)
       }
-    })
+    }),
+    cues: cueMessages
   }
 }
 
@@ -117,6 +129,12 @@ export const initTrack = (message: InitTrackMessage): (p: InitProject) => InitPr
 }
 
 export const initClip = (message: InitClipMessage): (p: InitProject) => InitProject => {
+  return produce<InitProject>(project => {
+    project.push(message)
+  })
+}
+
+export const initCue = (message: InitCueMessage): (p: InitProject) => InitProject => {
   return produce<InitProject>(project => {
     project.push(message)
   })
