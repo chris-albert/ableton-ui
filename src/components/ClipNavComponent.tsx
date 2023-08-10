@@ -1,11 +1,18 @@
 import React from 'react'
-import {getHexColor, UIRealClip, UITrack} from "../model/UIStateDisplay";
+import {
+  getHexColor,
+  NavigateableClip,
+  projectAtom,
+  UIRealClip,
+  UITrack
+} from "../model/UIStateDisplay";
 import {useActiveClip} from "../hooks/ActiveClipHook";
 import {Box, Typography} from "@mui/material";
 import {useMidiOutput} from "../hooks/Midi";
 import {TX_MESSAGE} from "../model/AbletonUIMessage";
 import {beatsAtom} from "../model/RealTime";
 import {useAtomValue} from "jotai";
+import _ from 'lodash'
 
 export type ClipNavComponentProps = {
   track: UITrack,
@@ -18,21 +25,29 @@ export const ClipNavComponent: React.FC<ClipNavComponentProps> = ({
   const midiOutput = useMidiOutput()
   const activeClip = useActiveClip(track)
   const currentBeat = useAtomValue(beatsAtom)
+  const project = useAtomValue(projectAtom)
+
+  const cueHash = React.useMemo(() => {
+    return _.fromPairs(_.map(project.cues, cue => [cue.time, cue]))
+  }, [project.cues])
 
   const clips = React.useMemo(() => {
 
-    const tmpClips: Array<UIRealClip> = []
+    const tmpClips: Array<NavigateableClip> = []
     track.clips.forEach(clip => {
       if (clip.type === 'real') {
-        tmpClips.push(clip)
+        const cue = _.get(cueHash, clip.startTime, undefined)
+        if(cue !== undefined) {
+          tmpClips.push({clip, cue})
+        }
       }
     })
     return tmpClips
-  }, [track])
+  }, [track, cueHash])
 
-  const onClick = (clip: UIRealClip) => {
+  const onClick = (clip: NavigateableClip) => {
     if(midiOutput !== undefined) {
-      midiOutput.send(TX_MESSAGE.jumpTo(clip.startTime - currentBeat))
+      midiOutput.send(TX_MESSAGE.jumpToCue(clip.cue.index))
     }
   }
 
@@ -43,7 +58,7 @@ export const ClipNavComponent: React.FC<ClipNavComponentProps> = ({
         display: 'flex'
       }}
     >
-      {clips.map((clip, clipIndex) => (
+      {clips.map((navClip, clipIndex) => (
         <Box
           key={`section-track-${track.name}-clip-${clipIndex}`}
           sx={{
@@ -53,16 +68,16 @@ export const ClipNavComponent: React.FC<ClipNavComponentProps> = ({
               cursor: 'pointer'
             },
             border:
-              clip === activeClip ? '2px solid white': `2px solid transparent`,
+              navClip.clip === activeClip ? '2px solid white': `2px solid transparent`,
             width: 100,
-            backgroundColor: getHexColor(clip),
+            backgroundColor: getHexColor(navClip.clip),
             alignItems: 'center',
             justifyContent: 'center'
           }}
-          onClick={() => onClick(clip)}
+          onClick={() => onClick(navClip)}
         >
           <Typography align='center'>
-            {clip.name}
+            {navClip.clip.name}
           </Typography>
         </Box>
       ))}

@@ -107,7 +107,8 @@ const RX_STATUS: Record<string, MessageParser> = {
         type: 'init-cue',
         id: _.toNumber(input[0]),
         name: input[1],
-        time: _.toNumber(input[2])
+        time: _.toNumber(input[2]),
+        index: _.toNumber(input[3])
       }
     }
   }
@@ -171,8 +172,9 @@ export type InitClipMessage = {
 export type InitCueMessage = {
   type: 'init-cue'
   id: number
-  name: string,
+  name: string
   time: number
+  index: number
 }
 
 export type InitDoneMessage = {
@@ -261,7 +263,7 @@ export const TX_MESSAGE = {
   stop: () => {
     return TX_MESSAGE.base(0x50, 0)
   },
-  jumpTo: (relativeBeat: number) => {
-    return TX_MESSAGE.base(0x51, relativeBeat)
+  jumpToCue: (cueIndex: number) => {
+    return TX_MESSAGE.base(0x52, cueIndex)
   }
 }

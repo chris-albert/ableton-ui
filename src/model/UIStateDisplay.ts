@@ -32,8 +32,15 @@ export type UITrack = {
 }
 
 export type UICue = {
-  id: number,
+  id: number
   name: string
+  time: number
+  index: number
+}
+
+export type NavigateableClip = {
+  clip: UIRealClip,
+  cue: UICue
 }
 
 export type UIProject = {
@@ -86,7 +93,6 @@ const buildContiguousClips = (clips: Array<InitClipMessage>): Array<UIClip> => {
 
 export const buildProject = (initProject: InitProject): UIProject => {
 
-  console.log(initProject)
   const tracksMessages: Array<InitTrackMessage> = []
   const clipsMessages: Array<InitClipMessage> = []
   const cueMessages: Array<InitCueMessage> = []
