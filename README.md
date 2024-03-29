@@ -14,6 +14,14 @@ yarn build
 aws s3 sync build s3://lbert.io/
 ```
 
+## Setting up MIDI IN/OUT
+
+You must use different in and out interfaces, for some reason if you use the same one, 
+you can't get in/out to work at the same time.
+
+You should set up an IAC Driver with AUI TX and AUI RX, and wire those into both the UI 
+and Ableton.
+
 ## MIDI Implementation
 
 ### Sysex
@@ -39,7 +47,9 @@ Message format: `0xF0 MID SB message 0xF7`
                                                                                        |
 
 #### Transmit (tx)
-| Status Byte | Message Type | Message fields                    |
-|-------------|------------- |-----------------------------------|
-| `0x50`      | Play/Pause | (play: number) [0: stop, 1: play] |    
-| `0x51`      | Jump To Beat   | (beat: number)    
+| Status Byte | Message Type | Message fields     |
+|-------------|--------------|--------------------|
+| `0x50`      | Play         | ()                 |
+| `0x51`      | Stop         | ()                 |
+| `0x52`      | Jump To Cue  | (cueIndex: number) |
+| `0x53`      | Jump By      | (beat: number)     |

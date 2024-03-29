@@ -261,9 +261,12 @@ export const TX_MESSAGE = {
     return TX_MESSAGE.base(0x50, 1)
   },
   stop: () => {
-    return TX_MESSAGE.base(0x50, 0)
+    return TX_MESSAGE.base(0x51, 1)
   },
   jumpToCue: (cueIndex: number) => {
     return TX_MESSAGE.base(0x52, cueIndex)
+  },
+  jumpBy: (beat: number) => {
+    return TX_MESSAGE.base(0x54, beat)
   }
 }

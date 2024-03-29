@@ -43,7 +43,7 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
     try {
       var json = parseAbletonUIMessage(message.data)
       if(json !== undefined) {
-
+        console.log('json message', json)
 
         detail = (
           <JSONEditor

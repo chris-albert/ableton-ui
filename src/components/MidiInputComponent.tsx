@@ -18,6 +18,7 @@ export const MidiInputComponent: React.FC<MidiInputComponentProps> = () => {
   React.useEffect(() => {
     if(windowMidi !== undefined) {
       setItems(windowMidi.inputs.map((device, i) => {
+        console.log(device)
         return {
           label: device.name,
           value: device
