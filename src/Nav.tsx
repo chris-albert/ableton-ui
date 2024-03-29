@@ -40,26 +40,6 @@ export const Nav: React.FC<NavProps> = () => {
                 onClick={() => setMenuOpen(false)}
               />
               <NavLinkItem
-                path='/beat'
-                label='Beat Counter'
-                onClick={() => setMenuOpen(false)}
-              />
-              <NavLinkItem
-                path='/sig'
-                label='Time Signature'
-                onClick={() => setMenuOpen(false)}
-              />
-              <NavLinkItem
-                path='/barbeat'
-                label='Bar Beat Counter'
-                onClick={() => setMenuOpen(false)}
-              />
-              <NavLinkItem
-                path='/tempo'
-                label='Tempo'
-                onClick={() => setMenuOpen(false)}
-              />
-              <NavLinkItem
                 path='/monitor'
                 label='MIDI Monitor'
                 onClick={() => setMenuOpen(false)}

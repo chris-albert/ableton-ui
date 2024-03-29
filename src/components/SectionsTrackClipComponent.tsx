@@ -3,6 +3,7 @@ import {getHexColor, UIClip, UITrack} from "../model/UIStateDisplay";
 import {useActiveClip} from "../hooks/ActiveClipHook";
 import {Box, Typography} from "@mui/material";
 import _ from 'lodash'
+import {useBeat} from "../hooks/RealTimeHooks";
 const INACTIVE_COLOR = "#777777"
 
 export type SectionsTrackClipComponentProps = {
@@ -16,6 +17,7 @@ export const SectionsTrackClipComponent: React.FC<SectionsTrackClipComponentProp
 }) => {
 
   const activeClip = useActiveClip(track)
+  const beat = useBeat()
 
   const visibleClips = React.useMemo(() => {
 
@@ -30,7 +32,19 @@ export const SectionsTrackClipComponent: React.FC<SectionsTrackClipComponentProp
       })
       return _.take(tmpClips, size)
     }
-  }, [activeClip, track])
+  }, [activeClip, track, size])
+
+  const progress: number | undefined = React.useMemo(() => {
+
+    if(activeClip && activeClip.endTime !== undefined) {
+      const total = activeClip.endTime - activeClip.startTime
+      const fromStart = beat - activeClip.startTime
+      return (fromStart / total) * 100
+    } else {
+      return undefined
+    }
+
+  }, [activeClip, beat])
 
   return (
     <Box
@@ -52,9 +66,25 @@ export const SectionsTrackClipComponent: React.FC<SectionsTrackClipComponentProp
             justifyContent: 'center'
           }}
         >
-          <Typography align='center'>
-            {clip.type === 'real' ? clip.name : ''}
-          </Typography>
+          <Box sx={{
+            position: 'relative',
+            height: '100%',
+            width: '100%'
+          }}>
+            {clip === activeClip && progress !== undefined ? (
+              <Box sx={{
+                position: 'absolute',
+                top: 0,
+                left: progress,
+                height: '100%',
+                width: '5px',
+                backgroundColor: 'black'
+              }} />
+            ) : null}
+            <Typography align='center'>
+              {clip.type === 'real' ? clip.name : ''}
+            </Typography>
+          </Box>
         </Box>
       ))}
     </Box>

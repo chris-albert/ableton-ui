@@ -1,13 +1,12 @@
 import React from 'react'
-import {useAtomValue} from "jotai";
-import {tempoAtom} from "../model/RealTime";
 import {Box, Typography} from "@mui/material";
+import {useTempo} from "../hooks/RealTimeHooks";
 
 export type TempoComponentProps = {}
 
 export const TempoComponent: React.FC<TempoComponentProps> = ({}) => {
 
-  const tempo = useAtomValue(tempoAtom)
+  const tempo = useTempo()
 
   return (
     <Box

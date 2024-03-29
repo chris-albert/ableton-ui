@@ -1,7 +1,7 @@
 import React from 'react'
 import {useAtomValue} from "jotai";
 import {barBeatsAtom, timeSignatureAtom} from "../model/RealTime";
-import {Box} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import _ from 'lodash'
 
 const beatOneColor = 'red'
@@ -33,7 +33,9 @@ export const BarBeatComponent: React.FC<BarBeatComponentProps> = ({}) => {
           }}
           key={`bar-beat-${index}`}
         >
-
+          <Typography align='center' variant='h1'>
+            {index}
+          </Typography>
         </Box>
       ))}
     </Box>
