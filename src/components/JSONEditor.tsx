@@ -10,12 +10,14 @@ export type JSONEditorProps = {
   value: string
   onChange?: (s: string) => void
   height?: string
+  width?: string
   readonly?: boolean
 }
 
 export const JSONEditor: React.FC<JSONEditorProps> = ({
   value, onChange = () => {},
   height = '100px',
+  width = '500px',
   readonly = true
 }) => {
 
@@ -25,6 +27,7 @@ export const JSONEditor: React.FC<JSONEditorProps> = ({
           readOnly={readonly}
           mode="json"
           height={height}
+          width={width}
           theme="monokai"
           value={value}
           onChange={onChange}

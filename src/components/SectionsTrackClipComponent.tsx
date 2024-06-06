@@ -8,12 +8,14 @@ const INACTIVE_COLOR = "#777777"
 
 export type SectionsTrackClipComponentProps = {
   track: UITrack,
-  size: number
+  size: number,
+  fontSize: string
 }
 
 export const SectionsTrackClipComponent: React.FC<SectionsTrackClipComponentProps> = ({
   track,
-  size
+  size,
+  fontSize
 }) => {
 
   const activeClip = useActiveClip(track)
@@ -69,7 +71,10 @@ export const SectionsTrackClipComponent: React.FC<SectionsTrackClipComponentProp
           <Box sx={{
             position: 'relative',
             height: '100%',
-            width: '100%'
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
           }}>
             {clip === activeClip && progress !== undefined ? (
               <Box sx={{
@@ -81,7 +86,7 @@ export const SectionsTrackClipComponent: React.FC<SectionsTrackClipComponentProp
                 backgroundColor: 'black'
               }} />
             ) : null}
-            <Typography align='center'>
+            <Typography sx={{fontSize}}>
               {clip.type === 'real' ? clip.name : ''}
             </Typography>
           </Box>

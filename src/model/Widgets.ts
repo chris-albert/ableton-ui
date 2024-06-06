@@ -9,7 +9,8 @@ import {atom} from "jotai";
 export const WidgetSettings = t.type({
   borderSizePx: t.number,
   borderColor: t.string,
-  label: t.union([t.undefined, t.string])
+  label: t.union([t.undefined, t.string]),
+  visible: t.boolean
 })
 
 export type WidgetSettings = t.TypeOf<typeof WidgetSettings>
@@ -17,7 +18,8 @@ export type WidgetSettings = t.TypeOf<typeof WidgetSettings>
 export const defaultWidgetSettings = (): WidgetSettings => ({
   borderSizePx: 1,
   borderColor: 'white',
-  label: undefined
+  label: undefined,
+  visible: false
 })
 
 /**
@@ -112,7 +114,8 @@ export const activeTrackClip = (track: string): ActiveTrackClipWidget => ({
 export const TrackSectionsWidget = t.intersection([WidgetSettings, t.type({
   type: t.literal('track-sections'),
   track: t.string,
-  size: t.number
+  size: t.number,
+  fontSize: t.string
 })])
 
 export type TrackSectionsWidget = t.TypeOf<typeof TrackSectionsWidget>
@@ -121,6 +124,7 @@ export const trackSections = (track: string): TrackSectionsWidget => ({
   type: 'track-sections',
   track,
   size: 8,
+  fontSize: '1em',
   ...defaultWidgetSettings()
 })
 
@@ -148,6 +152,20 @@ export const clipNav = (track: string): ClipNavWidget => ({
   ...defaultWidgetSettings()
 })
 
+export const SpacerWidget = t.intersection([WidgetSettings, t.type({
+  type: t.literal('spacer'),
+  width: t.number
+})])
+
+export type SpacerWidget = t.TypeOf<typeof SpacerWidget>
+
+export const spacer = (): SpacerWidget => ({
+  type: 'spacer',
+  width: 100,
+  ...defaultWidgetSettings(),
+  visible: false
+})
+
 export const Widget = t.union([
   TimeSignatureWidget,
   TempoWidget,
@@ -157,7 +175,8 @@ export const Widget = t.union([
   ActiveTrackClipWidget,
   TrackSectionsWidget,
   PlayStopWidget,
-  ClipNavWidget
+  ClipNavWidget,
+  SpacerWidget
 ])
 
 export type Widget = t.TypeOf<typeof Widget>
@@ -171,6 +190,13 @@ export const emptyWidgets: Widgets = []
 export const widgetsAtom = atomWithStorage('widgets', emptyWidgets)
 
 export const editWidgetsAtom = atom(false)
+
+export const replaceWidget = (origWidget: Widget, updatedWidget: Widget): (w: Widgets) => Widgets => {
+  return produce<Widgets>(widgets => {
+    const widgetIndex = current(widgets).indexOf(origWidget)
+    widgets[widgetIndex] = updatedWidget
+  })
+}
 
 export const addWidget = (widget: Widget): (w: Widgets) => Widgets => {
   return produce<Widgets>(widgets => {

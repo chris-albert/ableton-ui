@@ -26,7 +26,7 @@ export const SectionsTrackClipPage: React.FC<SectionsTrackClipPageProps> = ({}) 
     )
   } else {
     return (
-      <SectionsTrackClipComponent track={track} size={8} />
+      <SectionsTrackClipComponent track={track} size={8} fontSize='1em'/>
     )
   }
 }
