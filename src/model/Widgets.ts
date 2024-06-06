@@ -2,6 +2,7 @@ import * as t from 'io-ts'
 import {atomWithStorage} from "jotai/utils";
 import {produce, current} from "immer"
 import {atom} from "jotai";
+import {MidiMessage} from "../midi/WindowMidi";
 
 /**
  * Common widget settings
@@ -171,7 +172,7 @@ export const ButtonWidget = t.intersection([WidgetSettings, t.type({
   color: t.string,
   fontSize: t.string,
   content: t.union([t.string,t.undefined]),
-  midi: t.array(t.string)
+  midi: t.array(MidiMessage)
 })])
 
 export type ButtonWidget = t.TypeOf<typeof ButtonWidget>

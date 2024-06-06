@@ -21,107 +21,124 @@ const RESET_STATUS             = 0xFF
 
 const DATA_DELIMITER = 0x01
 
-// export const CommonMidiMessage = t.type({
-//     raw: t.string,
-//     // time:
-// })
-// export type CommonMidiMessage = {
-//     raw: Uint8Array
-//     time: Date
-// }
 
-export type MidiChannel = {
-    channel: number
-}
+export const MidiChannel = t.type({
+    channel: t.number
+})
+export type MidiChannel = t.TypeOf<typeof MidiChannel>
 
-export type SysExMessage = {
-    type: 'sysex',
-    manufacturer: number
-    statusByte: number
-    body: Array<any>
-}
+export const SysExMessage = t.type({
+    type: t.literal('sysex'),
+    manufacturer: t.number,
+    statusByte: t.number,
+    body: t.array(t.any)
+})
 
-export type NoteOnMessage = {
-    type: 'noteon',
-    note: number
-    velocity: number
-} & MidiChannel
+export type SysExMessage = t.TypeOf<typeof SysExMessage>
 
-export type NoteOffMessage = {
-    type: 'noteoff',
-    note: number
-    velocity: number
-} & MidiChannel
+export const NoteOnMessage = t.intersection([MidiChannel, t.type({
+    type: t.literal('noteon'),
+    note: t.number,
+    velocity: t.number
+})])
 
-export type ControlChangeMessage = {
-    type: 'cc',
-    controllerNumber: number
-    data: number
-} & MidiChannel
+export type NoteOnMessage = t.TypeOf<typeof NoteOnMessage>
 
-export type ProgramChangeMessage = {
-    type: 'pc',
-    programNumber: number
-} & MidiChannel
+export const NoteOffMessage = t.intersection([MidiChannel, t.type({
+    type: t.literal('noteoff'),
+    note: t.number,
+    velocity: t.number
+})])
 
-export type ClockMessage = {
-    type: 'clock',
-}
+export type NoteOffMessage = t.TypeOf<typeof NoteOffMessage>
 
-export type MeasureEndMessage = {
-    type: 'measureend',
-}
+export const ControlChangeMessage = t.intersection([MidiChannel, t.type({
+    type: t.literal('cc'),
+    controllerNumber: t.number,
+    data: t.number
+})])
 
-export type StartMessage = {
-    type: 'start',
-}
+export type ControlChangeMessage = t.TypeOf<typeof ControlChangeMessage>
 
-export type ContinueMessage = {
-    type: 'continue',
-}
+export const ProgramChangeMessage = t.intersection([MidiChannel, t.type({
+    type: t.literal('pc'),
+    programNumber: t.number
+})])
 
-export type StopMessage = {
-    type: 'stop',
-}
+export type ProgramChangeMessage = t.TypeOf<typeof ProgramChangeMessage>
 
-export type ResetMessage = {
-    type: 'reset',
-}
+export const ClockMessage = t.type({
+    type: t.literal('clock'),
+})
+export type ClockMessage = t.TypeOf<typeof ClockMessage>
 
-export type ActiveSensingMessage = {
-    type: 'activesensing',
-}
+export const MeasureEndMessage = t.type({
+    type: t.literal('measureend')
+})
+export type MeasureEndMessage = t.TypeOf<typeof MeasureEndMessage>
 
-export type MTCQuarterFrameMessage = {
-    type: 'mtcquarterframe',
-    data: number
-}
+export const StartMessage = t.type({
+    type: t.literal('start')
+})
+export type StartMessage = t.TypeOf<typeof StartMessage>
 
-export type UnknownMessage = {
-    type: 'unknown',
-}
+export const ContinueMessage = t.type({
+    type: t.literal('continue')
+})
+export type ContinueMessage = t.TypeOf<typeof ContinueMessage>
 
-export type ErrorMessage = {
-    type: 'error',
-    message: string
-}
+export const StopMessage = t.type({
+    type: t.literal('stop')
+})
+export type StopMessage = t.TypeOf<typeof StopMessage>
 
-export type MidiMessage =
-  SysExMessage |
-  NoteOnMessage |
-  NoteOffMessage |
-  ControlChangeMessage |
-  ProgramChangeMessage |
-  ClockMessage |
-  MeasureEndMessage |
-  StartMessage |
-  ContinueMessage |
-  StopMessage |
-  ResetMessage |
-  ActiveSensingMessage |
-  MTCQuarterFrameMessage |
-  UnknownMessage |
-  ErrorMessage
+export const ResetMessage = t.type({
+    type: t.literal('reset')
+})
+export type ResetMessage = t.TypeOf<typeof ResetMessage>
+
+export const ActiveSensingMessage = t.type({
+    type: t.literal('activesensing')
+})
+export type ActiveSensingMessage = t.TypeOf<typeof ActiveSensingMessage>
+
+export const MTCQuarterFrameMessage = t.type({
+    type: t.literal('mtcquarterframe'),
+    data: t.number
+})
+export type MTCQuarterFrameMessage = t.TypeOf<typeof MTCQuarterFrameMessage>
+
+export const UnknownMessage = t.type({
+    type: t.literal('unknown')
+})
+export type UnknownMessage = t.TypeOf<typeof UnknownMessage>
+
+export const ErrorMessage = t.type({
+    type: t.literal('error'),
+    message: t.string
+})
+export type ErrorMessage = t.TypeOf<typeof ErrorMessage>
+
+
+export const MidiMessage = t.union([
+    SysExMessage,
+    NoteOnMessage,
+    NoteOffMessage,
+    ControlChangeMessage,
+    ProgramChangeMessage,
+    ClockMessage,
+    MeasureEndMessage,
+    StartMessage,
+    ContinueMessage,
+    StopMessage,
+    ResetMessage,
+    ActiveSensingMessage,
+    MTCQuarterFrameMessage,
+    UnknownMessage,
+    ErrorMessage
+])
+
+export type MidiMessage = t.TypeOf<typeof MidiMessage>
 
 export type MidiMessageWithRaw = MidiMessage & {
     raw: Uint8Array
@@ -275,12 +292,36 @@ export const generateRawSysex = (sysex: SysExMessage): Uint8Array => {
 
 export const generateRawMidiMessage = (message: MidiMessage): Uint8Array => {
 
-    if(message.type == 'sysex') {
+    if(message.type === 'sysex') {
         return generateRawSysex(message)
+    } else if(message.type === 'noteon' || message.type === 'noteoff') {
+        return generateNoteMessage(message)
+    } else if(message.type === 'cc') {
+        return generateControlChange(message)
+    } else if(message.type === 'pc') {
+        return generateProgramChange(message)
     } else {
         return [] as any as Uint8Array
     }
+}
 
+export const generateNoteMessage = (message: NoteOnMessage | NoteOffMessage): Uint8Array => {
+    const status = message.type === 'noteon' ? NOTE_ON_STATUS : NOTE_OFF_STATUS
+    const arr = [status | (message.channel - 1), message.note, message.velocity]
+
+    return arr as any as Uint8Array
+}
+
+export const generateControlChange = (message: ControlChangeMessage): Uint8Array => {
+    const arr = [CONTROL_CHANGE_STATUS | (message.channel - 1), message.controllerNumber, message.data]
+
+    return arr as any as Uint8Array
+}
+
+export const generateProgramChange = (message: ProgramChangeMessage): Uint8Array => {
+    const arr = [PROGRAM_CHANGE_STATUS | (message.channel - 1), message.programNumber]
+
+    return arr as any as Uint8Array
 }
 
 export const buildInputDevice = (input: any): MidiInput => {
@@ -315,7 +356,9 @@ export const buildOutputDevice = (output: any): MidiOutput => {
         version: output.version,
         type: 'output',
         send: (msg: MidiMessage) => {
-            output.send(generateRawMidiMessage(msg))
+            const raw = generateRawMidiMessage(msg)
+            console.debug("Sending midi message", raw)
+            output.send(raw)
         }
     }
 }
