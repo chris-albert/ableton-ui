@@ -1,4 +1,5 @@
 import {atom, useAtom, useAtomValue, useSetAtom} from "jotai";
+import { atomWithStorage } from 'jotai/utils'
 import {MidiInput, MidiOutput, SysExMessage, WindowMidi} from "../midi/WindowMidi";
 import React from "react";
 import getMidiAccess from "../midi/MidiAccess";
@@ -35,6 +36,12 @@ export const useSetMidiOutput = () =>
 
 export const useMidiOutput = () =>
   useAtomValue(midiOutputAtom)
+
+const midiInputSelectedAtom = atomWithStorage<string | undefined>('midi-input-selected', undefined)
+const midiOutputSelectedAtom = atomWithStorage<string | undefined>('midi-output-selected', undefined)
+
+export const useMidiInputSelected = () => useAtom(midiInputSelectedAtom)
+export const useMidiOutputSelected = () => useAtom(midiOutputSelectedAtom)
 
 type ProjectImportStatus = 'none' | 'importing' | 'finalizing' | 'done' | 'error'
 

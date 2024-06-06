@@ -1,10 +1,11 @@
 import React from 'react'
 import {SelectComponent, SelectItem} from "./SelectComponent";
 import {MidiInput} from "../midi/WindowMidi";
-import {midiRXStatusAtom, useSetMidiInput, useWindowMidi} from "../hooks/Midi";
+import {midiRXStatusAtom, useMidiInputSelected, useSetMidiInput, useWindowMidi} from "../hooks/Midi";
 import {Box, Radio} from "@mui/material";
 import {StatusLedComponent} from "./StatusLedComponent";
 import {useAtomValue} from "jotai";
+import _ from 'lodash'
 
 export type MidiInputComponentProps = {}
 
@@ -14,6 +15,16 @@ export const MidiInputComponent: React.FC<MidiInputComponentProps> = () => {
 
   const windowMidi = useWindowMidi()
   const setMidiInput = useSetMidiInput()
+  const [midiInputSelected, setMidiInputSelected] = useMidiInputSelected()
+
+  React.useEffect(() => {
+    if(midiInputSelected !== undefined && windowMidi !== undefined) {
+      const selectedInput = _.find(windowMidi.inputs, i => i.name === midiInputSelected)
+      if(selectedInput !== undefined) {
+        setMidiInput(selectedInput)
+      }
+    }
+  }, [midiInputSelected, windowMidi])
 
   React.useEffect(() => {
     if(windowMidi !== undefined) {
@@ -28,7 +39,7 @@ export const MidiInputComponent: React.FC<MidiInputComponentProps> = () => {
 
   const onMidiSelect = (input: MidiInput | undefined) => {
     if(input !== undefined) {
-      setMidiInput(input)
+      setMidiInputSelected(input.name)
     }
   }
 
@@ -43,6 +54,7 @@ export const MidiInputComponent: React.FC<MidiInputComponentProps> = () => {
         label='MIDI Input'
         items={items}
         onChange={onMidiSelect}
+        activeLabel={midiInputSelected}
       />
       <StatusLedComponent on={midiStatus}/>
     </Box>

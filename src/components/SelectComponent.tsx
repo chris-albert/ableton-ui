@@ -11,15 +11,27 @@ export type SelectComponentProps<A> = {
     label: string
     items: Array<SelectItem<A>>
     onChange: ((a: A | undefined) => void)
+    activeLabel?: string
 }
 
 export const SelectComponent = <A,>({
     label,
     items,
-    onChange
+    onChange,
+    activeLabel
 }: SelectComponentProps<A>): ReactElement<any, any> => {
 
     const [value, setValue] = React.useState<number | ''>('')
+
+    React.useEffect(() => {
+        if(activeLabel !== undefined) {
+            const activeItem = _.find(items, i => i.label === activeLabel)
+            const activeIndex = _.indexOf(items, activeItem)
+            if(activeIndex >= 0) {
+                setValue(activeIndex)
+            }
+        }
+    }, [activeLabel, items])
 
     const onChangeLocal = (event: SelectChangeEvent<number>) => {
 
