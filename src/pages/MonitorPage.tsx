@@ -1,5 +1,5 @@
 import React from 'react'
-import {MidiInput, MidiMessage} from "../midi/WindowMidi";
+import {MidiInput, MidiMessageWithRaw} from "../midi/WindowMidi";
 import {Box, Button, Card, CardContent, Grid} from "@mui/material";
 import _ from 'lodash'
 import {MidiMessageDetail} from "../components/MidiMessageDetail";
@@ -14,7 +14,7 @@ export const MonitorPage: React.FC<MonitorPageProps> = ({
 
   const maxMessages = 25
 
-  const [messages, setMessages] = React.useState<Array<[MidiMessage, number]>>([])
+  const [messages, setMessages] = React.useState<Array<[MidiMessageWithRaw, number]>>([])
   const [totalCount, setTotalCount] = React.useState(0)
   const [listenEnabled, setListenEnabled] = React.useState(false)
 

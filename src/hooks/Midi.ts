@@ -79,7 +79,7 @@ export const useMidiInit = (): void => {
 
   const onSysex = React.useCallback((sysex: SysExMessage) => {
     setMidiStatus(true)
-    const msg = parseAbletonUIMessage(sysex.data)
+    const msg = parseAbletonUIMessage(sysex)
     if(msg !== undefined) {
       if (msg.type === 'init-project') {
         toast.info('Importing new project.')

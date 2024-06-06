@@ -5,7 +5,7 @@ import {StopButtonComponent} from "../StopButtonComponent";
 import {useAtomValue} from "jotai";
 import {isPlayingAtom} from "../../model/RealTime";
 import {useMidiOutput} from "../../hooks/Midi";
-import {generateRawSysex, TX_MESSAGE} from "../../model/AbletonUIMessage";
+import {TX_MESSAGE} from "../../model/AbletonUIMessage";
 
 export type PlayStopWidgetComponentProps = {}
 

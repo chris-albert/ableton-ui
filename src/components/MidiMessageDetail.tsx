@@ -1,5 +1,5 @@
 import React from 'react'
-import {MidiMessage, renderRawAsHex, renderRawAsInt} from "../midi/WindowMidi";
+import {MidiMessageWithRaw, renderRawAsHex, renderRawAsInt} from "../midi/WindowMidi";
 import {
   Box,
   Grid,
@@ -11,13 +11,12 @@ import {
   Chip
 } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import {byteArrayToJson} from "../utils/Converters";
 import {JSONEditor} from "./JSONEditor";
 import {parseAbletonUIMessage} from "../model/AbletonUIMessage";
 import _ from 'lodash'
 
 export type MidiMessageDetailProps = {
-  message: MidiMessage
+  message: MidiMessageWithRaw
   messageNumber: number
 }
 
@@ -41,7 +40,7 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
 
   if(message.type === 'sysex') {
     try {
-      var json = parseAbletonUIMessage(message.data)
+      var json = parseAbletonUIMessage(message)
       if(json !== undefined) {
         console.log('json message', json)
 
@@ -98,7 +97,7 @@ export const MidiMessageDetail: React.FC<MidiMessageDetailProps> = ({
       }
     } catch (e) {
       detail = (
-        <Box>Unable to parse JSON, raw sysex data [{message.data}]</Box>
+        <Box>Unable to parse JSON, raw sysex data [{message.raw}]</Box>
       )
     }
   } else if(message.type === 'noteon' || message.type === 'noteoff') {

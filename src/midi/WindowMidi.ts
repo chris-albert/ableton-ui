@@ -1,5 +1,6 @@
 import {EventEmitter, EventRecord} from "../utils/EventEmitter";
 import * as t from 'io-ts'
+import _ from "lodash";
 
 const CHANNEL_MASK          = 0x0F
 
@@ -18,14 +19,16 @@ const STOP_STATUS              = 0xFC
 const ACTIVE_SENSING_STATUS    = 0xFE
 const RESET_STATUS             = 0xFF
 
+const DATA_DELIMITER = 0x01
+
 // export const CommonMidiMessage = t.type({
 //     raw: t.string,
 //     // time:
 // })
-export type CommonMidiMessage = {
-    raw: Uint8Array
-    time: Date
-}
+// export type CommonMidiMessage = {
+//     raw: Uint8Array
+//     time: Date
+// }
 
 export type MidiChannel = {
     channel: number
@@ -33,73 +36,75 @@ export type MidiChannel = {
 
 export type SysExMessage = {
     type: 'sysex',
-    data: Uint8Array
-} & CommonMidiMessage
+    manufacturer: number
+    statusByte: number
+    body: Array<any>
+}
 
 export type NoteOnMessage = {
     type: 'noteon',
     note: number
     velocity: number
-} & CommonMidiMessage & MidiChannel
+} & MidiChannel
 
 export type NoteOffMessage = {
     type: 'noteoff',
     note: number
     velocity: number
-} & CommonMidiMessage & MidiChannel
+} & MidiChannel
 
 export type ControlChangeMessage = {
     type: 'cc',
     controllerNumber: number
     data: number
-} & CommonMidiMessage & MidiChannel
+} & MidiChannel
 
 export type ProgramChangeMessage = {
     type: 'pc',
     programNumber: number
-} & CommonMidiMessage & MidiChannel
+} & MidiChannel
 
 export type ClockMessage = {
     type: 'clock',
-} & CommonMidiMessage
+}
 
 export type MeasureEndMessage = {
     type: 'measureend',
-} & CommonMidiMessage
+}
 
 export type StartMessage = {
     type: 'start',
-} & CommonMidiMessage
+}
 
 export type ContinueMessage = {
     type: 'continue',
-} & CommonMidiMessage
+}
 
 export type StopMessage = {
     type: 'stop',
-} & CommonMidiMessage
+}
 
 export type ResetMessage = {
     type: 'reset',
-} & CommonMidiMessage
+}
 
 export type ActiveSensingMessage = {
     type: 'activesensing',
-} & CommonMidiMessage
+}
 
 export type MTCQuarterFrameMessage = {
     type: 'mtcquarterframe',
     data: number
-} & CommonMidiMessage
+}
 
 export type UnknownMessage = {
     type: 'unknown',
-} & CommonMidiMessage
+}
 
 export type ErrorMessage = {
     type: 'error',
     message: string
-} & CommonMidiMessage
+}
 
 export type MidiMessage =
   SysExMessage |
@@ -118,7 +123,12 @@ export type MidiMessage =
   UnknownMessage |
   ErrorMessage
 
-export const parseMidiInput = (input: any): MidiMessage => {
+export type MidiMessageWithRaw = MidiMessage & {
+    raw: Uint8Array
+    time: Date
+}
+
+export const parseMidiInput = (input: any): MidiMessageWithRaw => {
     const time = new Date()
     if(input.data !== undefined) {
         const common = {
@@ -130,8 +140,7 @@ export const parseMidiInput = (input: any): MidiMessage => {
         // console.log('status', status, status & NOTE_ON_STATUS, NOTE_ON_STATUS)
         if(status === SYSEX_STATUS) {
             return {
-                type: 'sysex',
-                data: data.slice(1, -1),
+                ...parseRawSysex(data.slice(1, -1)),
                 ...common
             }
         } else if((status & NOTE_ON_STATUS) === NOTE_ON_STATUS) {
@@ -234,7 +243,7 @@ export type MidiPort = {
 
 export type MidiMessageType = MidiMessage['type'] | '*'
 
-type MidiEventRecord = EventRecord<MidiMessage>
+type MidiEventRecord = EventRecord<MidiMessageWithRaw>
 
 export type MidiInput = MidiPort & {
     type: 'input'
@@ -243,6 +252,35 @@ export type MidiInput = MidiPort & {
 export type MidiOutput = MidiPort & {
     type: 'output'
     send: (i: MidiMessage) => void
+}
+
+const parseRawSysex = (data: Uint8Array): SysExMessage => {
+    const contents = data.slice(1)
+    const str = _.join(_.map(contents, value => String.fromCharCode(value)), '')
+    const splitStr = _.split(str, String.fromCharCode(DATA_DELIMITER))
+    return {
+        type: 'sysex',
+        manufacturer: data[0],
+        statusByte: _.toNumber(splitStr[0]),
+        body: splitStr.splice(1)
+    }
+}
+
+export const generateRawSysex = (sysex: SysExMessage): Uint8Array => {
+    const arr = [0xF0, sysex.manufacturer, sysex.statusByte]
+    const withBody = arr.concat(sysex.body)
+    withBody.push(0xF7)
+    return withBody as any as Uint8Array
+}
+
+export const generateRawMidiMessage = (message: MidiMessage): Uint8Array => {
+
+    if(message.type == 'sysex') {
+        return generateRawSysex(message)
+    } else {
+        return [] as any as Uint8Array
+    }
+
 }
 
 export const buildInputDevice = (input: any): MidiInput => {
@@ -277,7 +315,7 @@ export const buildOutputDevice = (output: any): MidiOutput => {
         version: output.version,
         type: 'output',
         send: (msg: MidiMessage) => {
-            output.send(msg.raw)
+            output.send(generateRawMidiMessage(msg))
         }
     }
 }

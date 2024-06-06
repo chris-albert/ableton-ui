@@ -2,7 +2,7 @@ import _ from "lodash";
 import {SysExMessage} from "../midi/WindowMidi";
 import {UIRealClip} from "./UIStateDisplay";
 
-const DATA_DELIMITER = 0x01
+// const DATA_DELIMITER = 0x01
 const MANUFACTURER_ID = 0x02
 
 type MessageParser = {
@@ -192,10 +192,9 @@ export type AbletonUIMessage = BeatMessage |
   IsPlayingMessage |
   InitCueMessage
 
-export const parseAbletonUIMessage = (data: Uint8Array): AbletonUIMessage | undefined => {
+export const parseAbletonUIMessage = (message: SysExMessage): AbletonUIMessage | undefined => {
 
   try {
-    const message = parseRawSysex(data)
     if(message.manufacturer === MANUFACTURER_ID) {
       const parser = RX_STATUS_LOOKUP[message.statusByte]
       if(parser !== undefined) {
@@ -211,30 +210,6 @@ export const parseAbletonUIMessage = (data: Uint8Array): AbletonUIMessage | unde
   return undefined
 }
 
-type RawSysexMessage = {
-  manufacturer: number
-  statusByte: number
-  body: Array<any>
-}
-
-const parseRawSysex = (data: Uint8Array): RawSysexMessage => {
-  const contents = data.slice(1)
-  const str = _.join(_.map(contents, value => String.fromCharCode(value)), '')
-  const splitStr = _.split(str, String.fromCharCode(DATA_DELIMITER))
-  return {
-    manufacturer: data[0],
-    statusByte: _.toNumber(splitStr[0]),
-    body: splitStr.splice(1)
-  }
-}
-
-export const generateRawSysex = (sysex: RawSysexMessage): Uint8Array => {
-  const arr = [0xF0, sysex.manufacturer, sysex.statusByte]
-  const withBody = arr.concat(sysex.body)
-  withBody.push(0xF7)
-  return withBody as any as Uint8Array
-}
-
 const charCodesFromString = (str: string): Array<number> => {
   const codes: Array<number> = []
   _.forEach(str, (s, i) => {
@@ -245,16 +220,11 @@ const charCodesFromString = (str: string): Array<number> => {
 
 export const TX_MESSAGE = {
   base: (statusByte: number, body: number): SysExMessage => {
-    const raw = generateRawSysex({
+    return {
+      type: 'sysex',
       manufacturer: MANUFACTURER_ID,
       statusByte,
       body: charCodesFromString(body.toString())
-    })
-    return {
-      type: 'sysex',
-      data: raw,
-      raw,
-      time: new Date()
     }
   },
   play: () => {
