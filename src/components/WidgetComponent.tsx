@@ -25,6 +25,7 @@ import {PlayStopWidgetComponent} from "./widgets/PlayStopWidgetComponent";
 import {ClipNavWidgetComponent} from "./widgets/ClipNavWidgetComponent";
 import {SpacerWidgetComponent} from "./widgets/SpacerWidgetComponent";
 import {WidgetSettingsComponent} from "./widgets/WidgetSettingsComponent";
+import {ButtonWidgetComponent} from "./widgets/ButtonWidgetComponent";
 
 const modalStyle = {
   position: 'absolute' as 'absolute',
@@ -72,6 +73,8 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
     el = (<ClipNavWidgetComponent widget={widget} />)
   } else if(widget.type === 'spacer') {
     el = (<SpacerWidgetComponent widget={widget}/>)
+  } else if(widget.type === 'button') {
+    el = (<ButtonWidgetComponent widget={widget} />)
   }
 
   const label = widget.label === undefined ? null : (

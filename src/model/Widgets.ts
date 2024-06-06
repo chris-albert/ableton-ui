@@ -19,7 +19,7 @@ export const defaultWidgetSettings = (): WidgetSettings => ({
   borderSizePx: 1,
   borderColor: 'white',
   label: undefined,
-  visible: false
+  visible: true
 })
 
 /**
@@ -166,6 +166,25 @@ export const spacer = (): SpacerWidget => ({
   visible: false
 })
 
+export const ButtonWidget = t.intersection([WidgetSettings, t.type({
+  type: t.literal('button'),
+  color: t.string,
+  fontSize: t.string,
+  content: t.union([t.string,t.undefined]),
+  midi: t.array(t.string)
+})])
+
+export type ButtonWidget = t.TypeOf<typeof ButtonWidget>
+
+export const button = (): ButtonWidget => ({
+  type: 'button',
+  color: 'blue',
+  fontSize: '1em',
+  content: undefined,
+  midi: [],
+  ...defaultWidgetSettings()
+})
+
 export const Widget = t.union([
   TimeSignatureWidget,
   TempoWidget,
@@ -176,7 +195,8 @@ export const Widget = t.union([
   TrackSectionsWidget,
   PlayStopWidget,
   ClipNavWidget,
-  SpacerWidget
+  SpacerWidget,
+  ButtonWidget
 ])
 
 export type Widget = t.TypeOf<typeof Widget>

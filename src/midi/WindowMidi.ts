@@ -1,4 +1,5 @@
 import {EventEmitter, EventRecord} from "../utils/EventEmitter";
+import * as t from 'io-ts'
 
 const CHANNEL_MASK          = 0x0F
 
@@ -17,6 +18,10 @@ const STOP_STATUS              = 0xFC
 const ACTIVE_SENSING_STATUS    = 0xFE
 const RESET_STATUS             = 0xFF
 
+// export const CommonMidiMessage = t.type({
+//     raw: t.string,
+//     // time:
+// })
 export type CommonMidiMessage = {
     raw: Uint8Array
     time: Date

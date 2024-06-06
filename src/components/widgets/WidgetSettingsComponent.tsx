@@ -22,15 +22,11 @@ export const WidgetSettingsComponent: React.FC<WidgetSettingsComponentProps> = (
   const onWidgetSave = () => {
     const json = E.tryCatch(
       () => JSON.parse(settings),
-      e => {
-        console.log('e',e)
-        return e
-      }
+      e => e
     )
     const res = E.flatMap(json, Widget.decode)
     E.match<any, Widget, void>(
       (err: any) => {
-        console.log(typeof err)
         if(_.isArray(err)) {
           toast.error("Invalid widget: " + PathReporter.report(E.left(err)).join(', '))
         } else {
