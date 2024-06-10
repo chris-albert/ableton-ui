@@ -1,7 +1,7 @@
 import * as t from 'io-ts'
 import {atomWithStorage} from "jotai/utils";
 import {produce, current} from "immer"
-import {atom, useAtomValue} from "jotai";
+import {atom, useAtomValue, useSetAtom} from "jotai";
 import {MidiMessage} from "../midi/WindowMidi";
 import {Project} from "./Projects";
 import React from "react";
@@ -157,7 +157,8 @@ export const clipNav = (track: string): ClipNavWidget => ({
 
 export const SpacerWidget = t.intersection([WidgetSettings, t.type({
   type: t.literal('spacer'),
-  width: t.number
+  width: t.number,
+  isLineBreaking: t.boolean
 })])
 
 export type SpacerWidget = t.TypeOf<typeof SpacerWidget>
@@ -165,6 +166,7 @@ export type SpacerWidget = t.TypeOf<typeof SpacerWidget>
 export const spacer = (): SpacerWidget => ({
   type: 'spacer',
   width: 100,
+  isLineBreaking: false,
   ...defaultWidgetSettings(),
   visible: false
 })
@@ -174,6 +176,7 @@ export const ButtonWidget = t.intersection([WidgetSettings, t.type({
   color: t.string,
   fontSize: t.string,
   content: t.union([t.string,t.undefined]),
+  textColor: t.union([t.string, t.undefined]),
   midi: t.array(MidiMessage)
 })])
 
@@ -183,6 +186,24 @@ export const button = (): ButtonWidget => ({
   type: 'button',
   color: 'blue',
   fontSize: '1em',
+  content: undefined,
+  textColor: undefined,
+  midi: [],
+  ...defaultWidgetSettings()
+})
+
+export const KnobWidget = t.intersection([WidgetSettings, t.type({
+  type: t.literal('knob'),
+  color: t.string,
+  content: t.union([t.string,t.undefined]),
+  midi: t.array(MidiMessage)
+})])
+
+export type KnobWidget = t.TypeOf<typeof KnobWidget>
+
+export const knob = (): KnobWidget => ({
+  type: 'knob',
+  color: 'blue',
   content: undefined,
   midi: [],
   ...defaultWidgetSettings()
@@ -199,7 +220,8 @@ export const Widget = t.union([
   PlayStopWidget,
   ClipNavWidget,
   SpacerWidget,
-  ButtonWidget
+  ButtonWidget,
+  KnobWidget
 ])
 
 export type Widget = t.TypeOf<typeof Widget>
@@ -213,7 +235,10 @@ export const emptyWidgets: Widgets = []
 export const useWidgets = (project: Project) =>
   useAtomValue(React.useMemo(() => project.widgetsAtom, [project.widgetsAtom]))
 
-export const widgetsAtom = atomWithStorage('widgets', emptyWidgets)
+export const useSetWidgets = (project: Project) =>
+  useSetAtom(React.useMemo(() => project.widgetsAtom, [project.widgetsAtom]))
+
+// export const widgetsAtom = atomWithStorage('widgets', emptyWidgets)
 
 export const editWidgetsAtom = atom(false)
 
@@ -233,6 +258,14 @@ export const addWidget = (widget: Widget): (w: Widgets) => Widgets => {
 export const removeWidget = (widget: Widget): (w: Widgets) => Widgets => {
   return produce<Widgets>(widgets => {
     widgets.splice(current(widgets).indexOf(widget), 1)
+  })
+}
+
+export const duplicateWidget = (widget: Widget): (w: Widgets) => Widgets => {
+  return produce<Widgets>(widgets => {
+    const widgetIndex = current(widgets).indexOf(widget)
+    // widgets.splice(widgetIndex, 1)
+    widgets.splice(widgetIndex + 1, 0, widget)
   })
 }
 

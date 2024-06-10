@@ -25,7 +25,7 @@ export const IndexPage: React.FC<IndexPageProps> = ({
         open={widgetOpen}
         onClose={() => setWidgetOpen(false)}
       >
-        <AddWidgetComponent />
+        <AddWidgetComponent project={project} />
       </Drawer>
       <Box
         sx={{

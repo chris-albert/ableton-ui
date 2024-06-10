@@ -1,20 +1,33 @@
 import React from 'react'
-import {Widget} from "../../model/Widgets";
-import {Button, Card, CardContent, CardHeader} from "@mui/material";
+import {
+  duplicateWidget,
+  moveLeftWidget,
+  moveRightWidget,
+  removeWidget,
+  replaceWidget,
+  Widget,
+  Widgets
+} from "../../model/Widgets";
+import {Box, Button, Card, CardContent, CardHeader} from "@mui/material";
 import {JSONEditor} from "../JSONEditor";
 import * as E from "fp-ts/Either";
 import {toast} from "react-toastify";
 import {PathReporter} from "io-ts/PathReporter";
 import _ from 'lodash'
+import IconButton from "@mui/material/IconButton";
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeftOutlined";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ArrowRightIcon from "@mui/icons-material/ArrowRightOutlined";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export type WidgetSettingsComponentProps = {
   widget: Widget
-  onWidgetUpdate: (w: Widget) => void
+  setWidgets: (w: (ws: Widgets) => Widgets) => void
 }
 
 export const WidgetSettingsComponent: React.FC<WidgetSettingsComponentProps> = ({
   widget,
-  onWidgetUpdate
+  setWidgets
 }) => {
 
   const [settings, setSettings] = React.useState(JSON.stringify(widget, null, 2))
@@ -33,8 +46,8 @@ export const WidgetSettingsComponent: React.FC<WidgetSettingsComponentProps> = (
           toast.error("Invalid JSON: " + err)
         }
       },
-      widget => {
-        onWidgetUpdate(widget)
+      newWidget => {
+        setWidgets(replaceWidget(widget, newWidget))
         toast.success("Widget saved")
       }
     )(res)
@@ -62,6 +75,25 @@ export const WidgetSettingsComponent: React.FC<WidgetSettingsComponentProps> = (
           onChange={setSettings}
           value={settings}
         />
+        <Box>
+          <IconButton
+            onClick={() => {
+              setWidgets(removeWidget(widget))
+            }}
+            aria-label="Remove Widget"
+          >
+            <DeleteIcon />
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              setWidgets(duplicateWidget(widget))
+            }}
+            aria-label="Duplicate"
+          >
+            <ContentCopyIcon />
+          </IconButton>
+
+        </Box>
       </CardContent>
     </Card>
   )

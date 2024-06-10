@@ -3,9 +3,8 @@ import {
   editWidgetsAtom,
   moveLeftWidget,
   moveRightWidget,
-  removeWidget, replaceWidget,
-  Widget,
-  widgetsAtom
+  removeWidget, replaceWidget, useSetWidgets, useWidgets,
+  Widget
 } from "../model/Widgets";
 import {Box, Modal, Paper} from "@mui/material";
 import {TempoComponent} from "./TempoComponent";
@@ -27,6 +26,7 @@ import {SpacerWidgetComponent} from "./widgets/SpacerWidgetComponent";
 import {WidgetSettingsComponent} from "./widgets/WidgetSettingsComponent";
 import {ButtonWidgetComponent} from "./widgets/ButtonWidgetComponent";
 import {Project} from "../model/Projects";
+import {KnobWidgetComponent} from "./widgets/KnobWidgetComponent";
 
 const modalStyle = {
   position: 'absolute' as 'absolute',
@@ -49,7 +49,7 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
 }) => {
 
   const isEdit = useAtomValue(editWidgetsAtom)
-  const setWidgets = useSetAtom(widgetsAtom)
+  const setWidgets = useSetWidgets(project)
   const [settingsOpen, setSettingsOpen] = React.useState(false)
 
   let el = (
@@ -78,6 +78,8 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
     el = (<SpacerWidgetComponent widget={widget}/>)
   } else if(widget.type === 'button') {
     el = (<ButtonWidgetComponent widget={widget} />)
+  } else if(widget.type === 'knob') {
+    el = (<KnobWidgetComponent widget={widget} />)
   }
 
   const label = widget.label === undefined ? null : (
@@ -136,7 +138,7 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
           <Box sx={modalStyle}>
             <WidgetSettingsComponent
               widget={widget}
-              onWidgetUpdate={w => setWidgets(replaceWidget(widget, w))}
+              setWidgets={setWidgets}
             />
           </Box>
         </Modal>
@@ -149,14 +151,6 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
           }}
         >
           <Box>
-            <IconButton
-              onClick={() => {
-                setWidgets(removeWidget(widget))
-              }}
-              aria-label="Remove Widget"
-            >
-              <DeleteIcon />
-            </IconButton>
             <IconButton
               onClick={() => {
                 setWidgets(moveLeftWidget(widget))

@@ -3,7 +3,8 @@ import {Box} from "@mui/material";
 import _ from 'lodash'
 import {WidgetComponent} from "./WidgetComponent";
 import {Project} from "../model/Projects";
-import {useWidgets} from "../model/Widgets";
+import {editWidgetsAtom, useWidgets} from "../model/Widgets";
+import { useAtomValue } from 'jotai';
 
 export type WidgetsComponentProps = {
   project: Project
@@ -14,6 +15,7 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
 }) => {
 
   const widgets = useWidgets(project)
+  const isEdit = useAtomValue(editWidgetsAtom)
 
   return (
     <Box
@@ -24,7 +26,15 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
       }}
     >
       {_.map(widgets, (widget, i) => (
-        <Box key={`widget-${i}`}>
+        <Box
+          key={`widget-${i}`}
+          sx={{
+            ...(widget.type === 'spacer' && widget.isLineBreaking ? {
+              flexBasis: "100%",
+              height: (isEdit ? '80px': '0')
+            }: {})
+          }}
+        >
           <WidgetComponent widget={widget} project={project} />
         </Box>
       ))}

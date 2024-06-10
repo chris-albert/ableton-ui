@@ -6,18 +6,22 @@ import {
   addWidget,
   barBeat,
   beatCount,
-  beatCounter, button, clipNav, playStop, spacer,
+  beatCounter, button, clipNav, knob, playStop, spacer,
   tempo,
-  timeSignature, trackSections,
-  widgetsAtom
+  timeSignature, trackSections, useSetWidgets
 } from "../model/Widgets";
 import {useSetAtom} from "jotai";
+import {Project} from "../model/Projects";
 
-export type AddWidgetComponentProps = {}
+export type AddWidgetComponentProps = {
+  project: Project
+}
 
-export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({}) => {
+export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({
+  project
+}) => {
 
-  const setWidgets = useSetAtom(widgetsAtom)
+  const setWidgets = useSetWidgets(project)
 
   return (
     <Box
@@ -81,6 +85,11 @@ export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({}) => {
         setWidgets(addWidget(button()))
       }}>
         Button
+      </WidgetButtonComponent>
+      <WidgetButtonComponent onClick={() => {
+        setWidgets(addWidget(knob()))
+      }}>
+        Knob
       </WidgetButtonComponent>
     </Box>
   )
