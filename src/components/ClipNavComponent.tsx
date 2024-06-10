@@ -1,8 +1,8 @@
 import React from 'react'
 import {
+  arrangementAtom,
   getHexColor,
   NavigateableClip,
-  projectAtom,
   UIRealClip,
   UITrack
 } from "../model/UIStateDisplay";
@@ -25,11 +25,11 @@ export const ClipNavComponent: React.FC<ClipNavComponentProps> = ({
   const midiOutput = useMidiOutput()
   const activeClip = useActiveClip(track)
   const currentBeat = useAtomValue(beatsAtom)
-  const project = useAtomValue(projectAtom)
+  const arrangement = useAtomValue(arrangementAtom)
 
   const cueHash = React.useMemo(() => {
-    return _.fromPairs(_.map(project.cues, cue => [cue.time, cue]))
-  }, [project.cues])
+    return _.fromPairs(_.map(arrangement.cues, cue => [cue.time, cue]))
+  }, [arrangement.cues])
 
   const clips = React.useMemo(() => {
 

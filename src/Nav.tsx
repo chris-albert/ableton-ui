@@ -35,8 +35,8 @@ export const Nav: React.FC<NavProps> = () => {
                 onClick={() => setMenuOpen(false)}
               />
               <NavLinkItem
-                path='/project'
-                label='Project'
+                path='/arrangement'
+                label='Arrangement'
                 onClick={() => setMenuOpen(false)}
               />
               <NavLinkItem

@@ -1,6 +1,6 @@
 import React from 'react'
 import {useAtom} from "jotai";
-import {projectAtom} from "../model/UIStateDisplay";
+import {arrangementAtom} from "../model/UIStateDisplay";
 import {Box, Button, Card, CardContent, CardHeader, Typography} from "@mui/material";
 import {JSONEditor} from "../components/JSONEditor";
 import {Widgets, widgetsAtom} from "../model/Widgets";
@@ -14,7 +14,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 
 }) => {
 
-  const [project, setProject] = useAtom(projectAtom)
+  const [arrangement, setArrangement] = useAtom(arrangementAtom)
   const [widgets, setWidgets] = useAtom(widgetsAtom)
 
   const [rawWidgets, setRawWidgets] = React.useState("")
@@ -50,12 +50,12 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
     >
       <Card>
         <CardHeader
-          title="Project"
+          title="Arrangement"
         />
         <CardContent>
           <JSONEditor
             height='800px'
-            value={JSON.stringify(project, null, 2)}
+            value={JSON.stringify(arrangement, null, 2)}
           />
         </CardContent>
       </Card>

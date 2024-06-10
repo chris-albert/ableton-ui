@@ -1,15 +1,13 @@
 import React from 'react'
-import {Box, Grid} from "@mui/material";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import {useAtom} from "jotai";
-import {zoomAtom} from "../model/Settings";
+import {zoomAtom} from "../../model/Settings";
+import {Box, Grid} from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
-export type ProjectTimelineComponentProps = {}
+export type ArrangementTimelineComponentProps = {}
 
-export const ProjectTimelineComponent: React.FC<ProjectTimelineComponentProps> = ({
-
-}) => {
+export const ArrangementTimelineComponent: React.FC<ArrangementTimelineComponentProps> = ({}) => {
 
   const [zoom, setZoom] = useAtom(zoomAtom)
 

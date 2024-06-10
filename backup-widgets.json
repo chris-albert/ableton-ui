@@ -1,0 +1,354 @@
+[
+  {
+    "type": "play-stop",
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "tempo",
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "label": "Tempo",
+    "visible": true
+  },
+  {
+    "type": "time-signature",
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "label": "Time Sig",
+    "visible": true
+  },
+  {
+    "type": "spacer",
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": false,
+    "width": 200
+  },
+  {
+    "type": "beat-count",
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "label": "Beat",
+    "visible": true
+  },
+  {
+    "type": "bar-beat",
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "label": "Beat",
+    "visible": true
+  },
+  {
+    "type": "track-sections",
+    "track": "Parts",
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "label": "Parts",
+    "size": 8,
+    "fontSize": "1em",
+    "visible": true
+  },
+  {
+    "type": "active-track-clip",
+    "track": "Songs",
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "label": "Active",
+    "visible": true
+  },
+  {
+    "type": "clip-nav",
+    "track": "Songs",
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "label": "Songs",
+    "visible": true
+  },
+  {
+    "type": "beat-counter",
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "label": "Total Beats",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "green",
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "fontSize": "1em",
+    "content": "Note On",
+    "visible": true,
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 30,
+        "velocity": 127
+      },
+      {
+        "channel": 1,
+        "type": "cc",
+        "controllerNumber": 30,
+        "data": 127
+      }
+    ]
+  },
+  {
+    "type": "button",
+    "color": "red",
+    "fontSize": "1em",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteoff",
+        "note": 30,
+        "velocity": 127
+      }
+    ],
+    "content": "Note Off",
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "red",
+    "fontSize": "1em",
+    "content": "Lazer Off",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 1,
+        "velocity": 0
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "green",
+    "fontSize": "1em",
+    "content": "Lazer On",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 1,
+        "velocity": 100
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "green",
+    "fontSize": "1em",
+    "content": "Lazer Green",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 5,
+        "velocity": 33
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "pink",
+    "fontSize": "1em",
+    "content": "Lazer pink",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 5,
+        "velocity": 81
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "blue",
+    "fontSize": "1em",
+    "content": "Lazer full",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 5,
+        "velocity": 1
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "cyan",
+    "fontSize": "1em",
+    "content": "Animation 1",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 4,
+        "velocity": 1
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "cyan",
+    "fontSize": "1em",
+    "content": "Animation 2",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 4,
+        "velocity": 15
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "cyan",
+    "fontSize": "1em",
+    "content": "Animation 3",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 4,
+        "velocity": 30
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "cyan",
+    "fontSize": "1em",
+    "content": "Animation 4",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 4,
+        "velocity": 75
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "cyan",
+    "fontSize": "1em",
+    "content": "Animation 5",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 4,
+        "velocity": 60
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "cyan",
+    "fontSize": "1em",
+    "content": "Light Beam",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 3,
+        "velocity": 123
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "cyan",
+    "fontSize": "1em",
+    "content": "3D Pattern",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 3,
+        "velocity": 10
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "cyan",
+    "fontSize": "1em",
+    "content": "Slow",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 6,
+        "velocity": 10
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  },
+  {
+    "type": "button",
+    "color": "cyan",
+    "fontSize": "1em",
+    "content": "Fast",
+    "midi": [
+      {
+        "channel": 1,
+        "type": "noteon",
+        "note": 6,
+        "velocity": 127
+      }
+    ],
+    "borderSizePx": 1,
+    "borderColor": "white",
+    "visible": true
+  }
+]

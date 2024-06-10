@@ -43,23 +43,23 @@ export type NavigateableClip = {
   cue: UICue
 }
 
-export type UIProject = {
+export type UIArrangement = {
   tracks: Array<UITrack>,
   cues: Array<UICue>
 }
 
-export const emptyProject = (): UIProject => ({
+export const emptyArrangement = (): UIArrangement => ({
   tracks: [],
   cues: []
 })
 
-export type InitProject = Array<InitTrackMessage | InitClipMessage | InitCueMessage>
+export type InitArrangement = Array<InitTrackMessage | InitClipMessage | InitCueMessage>
 
-export const initProjectAtom = atom<InitProject>([])
+export const initProjectAtom = atom<InitArrangement>([])
 
-export const projectAtom = atomWithStorage('project', emptyProject())
+export const arrangementAtom = atomWithStorage('arrangement', emptyArrangement())
 
-export const tracksAtom = focusAtom(projectAtom, o => o.prop('tracks'))
+export const tracksAtom = focusAtom(arrangementAtom, o => o.prop('tracks'))
 
 export const tracksAtoms = splitAtom(tracksAtom)
 
@@ -91,7 +91,7 @@ const buildContiguousClips = (clips: Array<InitClipMessage>): Array<UIClip> => {
   return uiClips
 }
 
-export const buildProject = (initProject: InitProject): UIProject => {
+export const buildArrangement = (initProject: InitArrangement): UIArrangement => {
 
   const tracksMessages: Array<InitTrackMessage> = []
   const clipsMessages: Array<InitClipMessage> = []
@@ -122,32 +122,32 @@ export const buildProject = (initProject: InitProject): UIProject => {
   }
 }
 
-export const initProject = (message: InitProjectMessage): (p: InitProject) => InitProject => {
+export const initArrangement = (message: InitProjectMessage): (p: InitArrangement) => InitArrangement => {
   return () => {
     return []
   }
 }
 
-export const initTrack = (message: InitTrackMessage): (p: InitProject) => InitProject => {
-  return produce<InitProject>(project => {
-    project.push(message)
+export const initTrack = (message: InitTrackMessage): (p: InitArrangement) => InitArrangement => {
+  return produce<InitArrangement>(arrangement => {
+    arrangement.push(message)
   })
 }
 
-export const initClip = (message: InitClipMessage): (p: InitProject) => InitProject => {
-  return produce<InitProject>(project => {
-    project.push(message)
+export const initClip = (message: InitClipMessage): (p: InitArrangement) => InitArrangement => {
+  return produce<InitArrangement>(arrangement => {
+    arrangement.push(message)
   })
 }
 
-export const initCue = (message: InitCueMessage): (p: InitProject) => InitProject => {
-  return produce<InitProject>(project => {
-    project.push(message)
+export const initCue = (message: InitCueMessage): (p: InitArrangement) => InitArrangement => {
+  return produce<InitArrangement>(arrangement => {
+    arrangement.push(message)
   })
 }
 
-export const initDone = (initProject: InitProject): UIProject => {
-  return buildProject(initProject)
+export const initDone = (initArrangement: InitArrangement): UIArrangement => {
+  return buildArrangement(initArrangement)
 }
 
 export const getHexColor = (hasColor: {color: number}): string =>

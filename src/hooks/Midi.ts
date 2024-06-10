@@ -6,12 +6,11 @@ import getMidiAccess from "../midi/MidiAccess";
 import {parseAbletonUIMessage} from "../model/AbletonUIMessage";
 import {toast} from "react-toastify";
 import {
+  arrangementAtom, initArrangement,
   initClip, initCue,
   initDone,
-  initProject,
   initProjectAtom,
   initTrack,
-  projectAtom
 } from "../model/UIStateDisplay";
 import {barBeatsAtom, beatsAtom, isPlayingAtom, tempoAtom, timeSignatureAtom} from "../model/RealTime";
 
@@ -58,7 +57,7 @@ export const useMidiInit = (): void => {
   }, [])
 
   const midiInput = useAtomValue(midiInputAtom)
-  const setProject = useSetAtom(projectAtom)
+  const setArrangement = useSetAtom(arrangementAtom)
   const setInitProject = useSetAtom(initProjectAtom)
   const initProjectValue = useAtomValue(initProjectAtom)
   const setBeats = useSetAtom(beatsAtom)
@@ -77,10 +76,10 @@ export const useMidiInit = (): void => {
 
   React.useEffect(() => {
     if(projectImportStatus === 'finalizing') {
-      const project = initDone(initProjectValue)
-      setProject(project)
+      const arrangement = initDone(initProjectValue)
+      setArrangement(arrangement)
       setProjectImportStatus('done')
-      toast.success(`Imported project with ${project.tracks.length} tracks.`)
+      toast.success(`Imported project with ${arrangement.tracks.length} tracks.`)
     }
   }, [projectImportStatus, initProjectValue])
 
@@ -91,7 +90,7 @@ export const useMidiInit = (): void => {
       if (msg.type === 'init-project') {
         toast.info('Importing new project.')
         setProjectImportStatus('importing')
-        setInitProject(initProject(msg))
+        setInitProject(initArrangement(msg))
       } else if (msg.type === 'init-track') {
         setInitProject(initTrack(msg))
       } else if (msg.type === 'init-clip') {

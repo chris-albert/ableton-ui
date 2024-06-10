@@ -7,17 +7,11 @@ import {IndexPage} from "./pages/IndexPage";
 import {MidiInputRequiredComponent} from "./components/MidiInputRequiredComponent";
 import {MonitorPage} from "./pages/MonitorPage";
 import {SettingsPage} from "./pages/SettingsPage";
-import {ProjectComponent} from "./components/ProjectComponent";
-import {ActiveTrackClipPage} from "./pages/ActiveTrackClipPage";
-import {BeatCounterComponent} from "./components/BeatCounterComponent";
-import {BarBeatComponent} from "./components/BarBeatComponent";
-import {TimeSignatureComponent} from "./components/TimeSignatureComponent";
-import {TempoComponent} from "./components/TempoComponent";
-import {SectionsTrackClipPage} from "./pages/SectionsTrackClipPage";
 import {ToastContainer} from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import {useMidiInit} from "./hooks/Midi";
+import {ArrangementComponent} from "./components/arrangement/ArrangementComponent";
 
 const darkTheme = createTheme({
   palette: {
@@ -54,45 +48,9 @@ function App() {
                   }
                 />
                 <Route
-                  path='project'
+                  path='arrangement'
                   element={
-                    <ProjectComponent />
-                  }
-                />
-                <Route
-                  path='project/tracks/:trackName/active'
-                  element={
-                    <ActiveTrackClipPage />
-                  }
-                />
-                <Route
-                  path='project/tracks/:trackName/sections'
-                  element={
-                    <SectionsTrackClipPage />
-                  }
-                />
-                <Route
-                  path='beat'
-                  element={
-                    <BeatCounterComponent />
-                  }
-                />
-                <Route
-                  path='barbeat'
-                  element={
-                    <BarBeatComponent />
-                  }
-                />
-                <Route
-                  path='sig'
-                  element={
-                    <TimeSignatureComponent />
-                  }
-                />
-                <Route
-                  path='tempo'
-                  element={
-                    <TempoComponent />
+                    <ArrangementComponent />
                   }
                 />
                 <Route
