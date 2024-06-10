@@ -1,22 +1,24 @@
 import React from 'react'
 import {ClipNavWidget} from "../../model/Widgets";
-import {useAtomValue} from "jotai";
-import {tracksAtom} from "../../model/UIStateDisplay";
 import _ from "lodash";
 import {Box} from "@mui/material";
 import {ClipNavComponent} from "../ClipNavComponent";
+import {Project} from "../../model/Projects";
+import {useTracks} from "../../model/UIStateDisplay";
 
 export type ClipNavWidgetComponentProps = {
+  project: Project,
   widget: ClipNavWidget
 }
 
 export const ClipNavWidgetComponent: React.FC<ClipNavWidgetComponentProps> = ({
+  project,
   widget
 }) => {
 
   const trackName = widget.track
 
-  const tracks = useAtomValue(tracksAtom)
+  const tracks = useTracks(project)
 
   const track = React.useMemo(() => {
     if(trackName !== undefined) {
@@ -30,7 +32,7 @@ export const ClipNavWidgetComponent: React.FC<ClipNavWidgetComponentProps> = ({
     )
   } else {
     return (
-      <ClipNavComponent track={track} />
+      <ClipNavComponent track={track} project={project} />
     )
   }
 }

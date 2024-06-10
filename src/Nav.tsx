@@ -9,10 +9,16 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {MidiInputComponent} from "./components/MidiInputComponent";
 import {NavLinkItem} from "./components/NavLinkItem";
 import {MidiOutputComponent} from "./components/MidiOutputComponent";
+import {ProjectsSelectComponent} from "./components/projects/ProjectsSelectComponent";
+import {Project} from "./model/Projects";
 
-export type NavProps = {}
+export type NavProps = {
+  project: Project
+}
 
-export const Nav: React.FC<NavProps> = () => {
+export const Nav: React.FC<NavProps> = ({
+  project
+}) => {
 
   const [menuOpen, setMenuOpen] = React.useState(false)
 
@@ -75,6 +81,9 @@ export const Nav: React.FC<NavProps> = () => {
             </Grid>
             <Grid item xs={4} container justifyContent="right">
               {/*Right*/}
+              <Box sx={{display: 'flex'}}>
+                <ProjectsSelectComponent project={project} />
+              </Box>
             </Grid>
           </Grid>
 

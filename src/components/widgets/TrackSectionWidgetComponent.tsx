@@ -1,22 +1,24 @@
 import React from 'react'
-import {useAtomValue} from "jotai" ;
-import {tracksAtom} from "../../model/UIStateDisplay";
 import _ from "lodash";
 import {Box} from "@mui/material";
 import {SectionsTrackClipComponent} from "../SectionsTrackClipComponent";
 import {TrackSectionsWidget} from "../../model/Widgets";
+import {Project} from "../../model/Projects";
+import {useTracks} from "../../model/UIStateDisplay";
 
 export type TrackSectionWidgetComponentProps = {
+  project: Project,
   widget: TrackSectionsWidget
 }
 
 export const TrackSectionWidgetComponent: React.FC<TrackSectionWidgetComponentProps> = ({
+  project,
   widget
 }) => {
 
   const trackName = widget.track
 
-  const tracks = useAtomValue(tracksAtom)
+  const tracks = useTracks(project)
 
   const track = React.useMemo(() => {
     if(trackName !== undefined) {

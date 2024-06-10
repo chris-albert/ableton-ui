@@ -5,11 +5,15 @@ import {AddWidgetComponent} from "../components/AddWidgetComponent";
 import {WidgetsComponent} from "../components/WidgetsComponent";
 import {editWidgetsAtom} from "../model/Widgets";
 import {useAtom} from "jotai";
+import {Project} from "../model/Projects";
 
+export type IndexPageProps = {
+  project: Project
+}
 
-export type IndexPageProps = {}
-
-export const IndexPage: React.FC<IndexPageProps> = ({}) => {
+export const IndexPage: React.FC<IndexPageProps> = ({
+  project
+}) => {
 
   const [widgetOpen, setWidgetOpen] = React.useState(false)
   const [editWidgets, setEditWidgets] = useAtom(editWidgetsAtom)
@@ -52,7 +56,7 @@ export const IndexPage: React.FC<IndexPageProps> = ({}) => {
         </Button>
       </Box>
       <Box>
-        <WidgetsComponent />
+        <WidgetsComponent project={project} />
       </Box>
     </Box>
   )

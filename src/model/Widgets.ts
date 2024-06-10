@@ -1,8 +1,10 @@
 import * as t from 'io-ts'
 import {atomWithStorage} from "jotai/utils";
 import {produce, current} from "immer"
-import {atom} from "jotai";
+import {atom, useAtomValue} from "jotai";
 import {MidiMessage} from "../midi/WindowMidi";
+import {Project} from "./Projects";
+import React from "react";
 
 /**
  * Common widget settings
@@ -207,6 +209,9 @@ export const Widgets = t.array(Widget)
 export type Widgets = t.TypeOf<typeof Widgets>
 
 export const emptyWidgets: Widgets = []
+
+export const useWidgets = (project: Project) =>
+  useAtomValue(React.useMemo(() => project.widgetsAtom, [project.widgetsAtom]))
 
 export const widgetsAtom = atomWithStorage('widgets', emptyWidgets)
 

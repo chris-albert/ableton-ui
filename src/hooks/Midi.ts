@@ -6,13 +6,14 @@ import getMidiAccess from "../midi/MidiAccess";
 import {parseAbletonUIMessage} from "../model/AbletonUIMessage";
 import {toast} from "react-toastify";
 import {
-  arrangementAtom, initArrangement,
+  initArrangement,
   initClip, initCue,
   initDone,
   initProjectAtom,
   initTrack,
 } from "../model/UIStateDisplay";
 import {barBeatsAtom, beatsAtom, isPlayingAtom, tempoAtom, timeSignatureAtom} from "../model/RealTime";
+import {Project} from "../model/Projects";
 
 export const midiRXStatusAtom = atom(false)
 export const midiTXStatusAtom = atom(false)
@@ -44,7 +45,7 @@ export const useMidiOutputSelected = () => useAtom(midiOutputSelectedAtom)
 
 type ProjectImportStatus = 'none' | 'importing' | 'finalizing' | 'done' | 'error'
 
-export const useMidiInit = (): void => {
+export const useMidiInit = (project: Project): void => {
 
   const [windowMidi, setWindowMidi] = useAtom(windowMidiAtom)
 
@@ -57,7 +58,7 @@ export const useMidiInit = (): void => {
   }, [])
 
   const midiInput = useAtomValue(midiInputAtom)
-  const setArrangement = useSetAtom(arrangementAtom)
+  const setArrangement = useSetAtom(project.arrangementAtom)
   const setInitProject = useSetAtom(initProjectAtom)
   const initProjectValue = useAtomValue(initProjectAtom)
   const setBeats = useSetAtom(beatsAtom)

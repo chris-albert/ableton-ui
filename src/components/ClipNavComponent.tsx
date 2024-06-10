@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  arrangementAtom,
   getHexColor,
   NavigateableClip,
   UIRealClip,
@@ -13,19 +12,22 @@ import {TX_MESSAGE} from "../model/AbletonUIMessage";
 import {beatsAtom} from "../model/RealTime";
 import {useAtomValue} from "jotai";
 import _ from 'lodash'
+import {Project} from "../model/Projects";
 
 export type ClipNavComponentProps = {
+  project: Project,
   track: UITrack,
 }
 
 export const ClipNavComponent: React.FC<ClipNavComponentProps> = ({
+  project,
   track
 }) => {
 
   const midiOutput = useMidiOutput()
   const activeClip = useActiveClip(track)
   const currentBeat = useAtomValue(beatsAtom)
-  const arrangement = useAtomValue(arrangementAtom)
+  const arrangement = useAtomValue(project.arrangementAtom)
 
   const cueHash = React.useMemo(() => {
     return _.fromPairs(_.map(arrangement.cues, cue => [cue.time, cue]))

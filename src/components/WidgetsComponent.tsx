@@ -1,15 +1,19 @@
 import React from 'react'
-import {useAtomValue} from "jotai";
-import {widgetsAtom} from "../model/Widgets";
 import {Box} from "@mui/material";
 import _ from 'lodash'
 import {WidgetComponent} from "./WidgetComponent";
+import {Project} from "../model/Projects";
+import {useWidgets} from "../model/Widgets";
 
-export type WidgetsComponentProps = {}
+export type WidgetsComponentProps = {
+  project: Project
+}
 
-export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({}) => {
+export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
+  project
+}) => {
 
-  const widgets = useAtomValue(widgetsAtom)
+  const widgets = useWidgets(project)
 
   return (
     <Box
@@ -21,7 +25,7 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({}) => {
     >
       {_.map(widgets, (widget, i) => (
         <Box key={`widget-${i}`}>
-          <WidgetComponent widget={widget} />
+          <WidgetComponent widget={widget} project={project} />
         </Box>
       ))}
     </Box>

@@ -26,6 +26,7 @@ import {ClipNavWidgetComponent} from "./widgets/ClipNavWidgetComponent";
 import {SpacerWidgetComponent} from "./widgets/SpacerWidgetComponent";
 import {WidgetSettingsComponent} from "./widgets/WidgetSettingsComponent";
 import {ButtonWidgetComponent} from "./widgets/ButtonWidgetComponent";
+import {Project} from "../model/Projects";
 
 const modalStyle = {
   position: 'absolute' as 'absolute',
@@ -38,10 +39,12 @@ const modalStyle = {
 }
 
 export type WidgetComponentProps = {
+  project: Project,
   widget: Widget
 }
 
 export const WidgetComponent: React.FC<WidgetComponentProps> = ({
+  project,
   widget
 }) => {
 
@@ -64,13 +67,13 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
   } else if(widget.type === 'beat-count') {
     el = (<BeatCountComponent />)
   } else if(widget.type === 'active-track-clip') {
-    el = (<ActiveTrackClipWidgetComponent widget={widget} />)
+    el = (<ActiveTrackClipWidgetComponent widget={widget} project={project} />)
   } else if(widget.type === 'track-sections') {
-    el = (<TrackSectionWidgetComponent widget={widget} />)
+    el = (<TrackSectionWidgetComponent widget={widget} project={project} />)
   } else if(widget.type === 'play-stop') {
     el = (<PlayStopWidgetComponent />)
   } else if(widget.type === 'clip-nav') {
-    el = (<ClipNavWidgetComponent widget={widget} />)
+    el = (<ClipNavWidgetComponent widget={widget} project={project} />)
   } else if(widget.type === 'spacer') {
     el = (<SpacerWidgetComponent widget={widget}/>)
   } else if(widget.type === 'button') {

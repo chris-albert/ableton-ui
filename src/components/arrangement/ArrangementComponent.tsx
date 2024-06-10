@@ -1,15 +1,19 @@
 import React from 'react'
-import {useAtomValue} from "jotai";
-import {tracksAtoms} from "../../model/UIStateDisplay";
 import {Box} from "@mui/material";
 import {TrackComponent} from "../TrackComponent";
 import {ArrangementTimelineComponent} from "./ArrangementTimelineComponent";
+import {Project} from "../../model/Projects";
+import {useTracksAtoms} from "../../model/UIStateDisplay";
 
-export type ArrangementComponentProps = {}
+export type ArrangementComponentProps = {
+  project: Project
+}
 
-export const ArrangementComponent: React.FC<ArrangementComponentProps> = ({}) => {
+export const ArrangementComponent: React.FC<ArrangementComponentProps> = ({
+  project
+}) => {
 
-  const tracks = useAtomValue(tracksAtoms)
+  const tracks = useTracksAtoms(project)
 
   return (
     <Box>

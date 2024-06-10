@@ -7,7 +7,9 @@ import {
 import _ from 'lodash'
 import {produce} from "immer"
 import {focusAtom} from "jotai-optics";
-import {atom, PrimitiveAtom} from "jotai";
+import {atom, PrimitiveAtom, useAtomValue} from "jotai";
+import {Project} from "./Projects";
+import React from "react";
 
 export type UIRealClip = {
   type: 'real'
@@ -57,11 +59,15 @@ export type InitArrangement = Array<InitTrackMessage | InitClipMessage | InitCue
 
 export const initProjectAtom = atom<InitArrangement>([])
 
-export const arrangementAtom = atomWithStorage('arrangement', emptyArrangement())
+export const useTracks = (project: Project) =>
+  useAtomValue(React.useMemo(() => tracksAtom(project.arrangementAtom), [project.arrangementAtom]))
 
-export const tracksAtom = focusAtom(arrangementAtom, o => o.prop('tracks'))
+export const useTracksAtoms = (project: Project) =>
+  useAtomValue(React.useMemo(() => tracksAtoms(project.arrangementAtom), [project.arrangementAtom]))
 
-export const tracksAtoms = splitAtom(tracksAtom)
+export const tracksAtom = (arrangementAtom: PrimitiveAtom<UIArrangement>) => focusAtom(arrangementAtom, o => o.prop('tracks'))
+
+export const tracksAtoms = (arrangementAtom: PrimitiveAtom<UIArrangement>) => splitAtom(tracksAtom(arrangementAtom))
 
 export const clipsAtom = (trackAtom: PrimitiveAtom<UITrack>) =>
   focusAtom(trackAtom, o => o.prop('clips'))
