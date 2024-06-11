@@ -28,7 +28,7 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
     >
       {_.map(widgets, (widget, i) => (
         <Box
-          key={objectHash(widget)}
+          key={`${objectHash(widget)}-${i}`}
           sx={{
             ...(widget.type === 'spacer' && widget.isLineBreaking ? {
               flexBasis: "100%",
