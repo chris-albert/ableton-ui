@@ -69,8 +69,8 @@ export const WidgetSettingsComponent: React.FC<WidgetSettingsComponentProps> = (
       />
       <CardContent>
         <JSONEditor
-          height='200px'
-          width='365px'
+          height='300px'
+          width='505px'
           readonly={false}
           onChange={setSettings}
           value={settings}
@@ -92,7 +92,22 @@ export const WidgetSettingsComponent: React.FC<WidgetSettingsComponentProps> = (
           >
             <ContentCopyIcon />
           </IconButton>
-
+          <IconButton
+            onClick={() => {
+              setWidgets(moveLeftWidget(widget))
+            }}
+            aria-label="Move Left"
+          >
+            <ArrowLeftIcon />
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              setWidgets(moveRightWidget(widget))
+            }}
+            aria-label="Move Right"
+          >
+            <ArrowRightIcon />
+          </IconButton>
         </Box>
       </CardContent>
     </Card>

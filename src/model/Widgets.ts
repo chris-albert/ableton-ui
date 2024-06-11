@@ -238,8 +238,6 @@ export const useWidgets = (project: Project) =>
 export const useSetWidgets = (project: Project) =>
   useSetAtom(React.useMemo(() => project.widgetsAtom, [project.widgetsAtom]))
 
-// export const widgetsAtom = atomWithStorage('widgets', emptyWidgets)
-
 export const editWidgetsAtom = atom(false)
 
 export const replaceWidget = (origWidget: Widget, updatedWidget: Widget): (w: Widgets) => Widgets => {

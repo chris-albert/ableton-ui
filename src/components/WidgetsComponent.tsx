@@ -5,6 +5,7 @@ import {WidgetComponent} from "./WidgetComponent";
 import {Project} from "../model/Projects";
 import {editWidgetsAtom, useWidgets} from "../model/Widgets";
 import { useAtomValue } from 'jotai';
+import objectHash from 'fast-json-stable-stringify'
 
 export type WidgetsComponentProps = {
   project: Project
@@ -27,7 +28,7 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
     >
       {_.map(widgets, (widget, i) => (
         <Box
-          key={`widget-${i}`}
+          key={objectHash(widget)}
           sx={{
             ...(widget.type === 'spacer' && widget.isLineBreaking ? {
               flexBasis: "100%",
@@ -35,7 +36,10 @@ export const WidgetsComponent: React.FC<WidgetsComponentProps> = ({
             }: {})
           }}
         >
-          <WidgetComponent widget={widget} project={project} />
+          <WidgetComponent
+            widget={widget}
+            project={project}
+          />
         </Box>
       ))}
     </Box>

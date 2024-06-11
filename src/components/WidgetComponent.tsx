@@ -33,7 +33,7 @@ const modalStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 600,
   bgcolor: 'background.paper',
   boxShadow: 24
 }
@@ -151,22 +151,6 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
           }}
         >
           <Box>
-            <IconButton
-              onClick={() => {
-                setWidgets(moveLeftWidget(widget))
-              }}
-              aria-label="Move Left"
-            >
-              <ArrowLeftIcon />
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                setWidgets(moveRightWidget(widget))
-              }}
-              aria-label="Move Right"
-            >
-              <ArrowRightIcon />
-            </IconButton>
           </Box>
           <Box>
             <IconButton
