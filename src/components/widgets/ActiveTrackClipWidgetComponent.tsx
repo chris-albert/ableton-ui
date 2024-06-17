@@ -1,7 +1,6 @@
 import React from 'react'
 import {ActiveTrackClipWidget} from "../../model/Widgets";
-import {useAtomValue} from "jotai";
-import {tracksAtom, useTracks} from "../../model/UIStateDisplay";
+import {useTracks} from "../../model/UIStateDisplay";
 import _ from "lodash";
 import {Box} from "@mui/material";
 import {ActiveTrackClipComponent} from "../ActiveTrackClipComponent";

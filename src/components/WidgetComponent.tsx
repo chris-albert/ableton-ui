@@ -1,12 +1,10 @@
 import React from 'react'
 import {
   editWidgetsAtom,
-  moveLeftWidget,
-  moveRightWidget,
-  removeWidget, replaceWidget, useSetWidgets, useWidgets,
+  useSetWidgets,
   Widget
 } from "../model/Widgets";
-import {Box, Modal, Paper} from "@mui/material";
+import {Box, Drawer, Modal, Paper} from "@mui/material";
 import {TempoComponent} from "./TempoComponent";
 import {TimeSignatureComponent} from "./TimeSignatureComponent";
 import {BeatCounterComponent} from "./BeatCounterComponent";
@@ -16,9 +14,6 @@ import {ActiveTrackClipWidgetComponent} from "./widgets/ActiveTrackClipWidgetCom
 import {TrackSectionWidgetComponent} from "./widgets/TrackSectionWidgetComponent";
 import {useAtomValue, useSetAtom} from "jotai";
 import IconButton from "@mui/material/IconButton";
-import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowRightIcon from '@mui/icons-material/ArrowRightOutlined';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeftOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import {PlayStopWidgetComponent} from "./widgets/PlayStopWidgetComponent";
 import {ClipNavWidgetComponent} from "./widgets/ClipNavWidgetComponent";
@@ -131,17 +126,31 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
 
     return (
       <Paper>
-        <Modal
+        <Drawer
           open={settingsOpen}
           onClose={() => setSettingsOpen(false)}
+          anchor='right'
+          // variant='persistent'
+          sx={{
+            flexShrink: 0
+          }}
         >
-          <Box sx={modalStyle}>
-            <WidgetSettingsComponent
-              widget={widget}
-              setWidgets={setWidgets}
-            />
-          </Box>
-        </Modal>
+          <WidgetSettingsComponent
+            widget={widget}
+            setWidgets={setWidgets}
+          />
+        </Drawer>
+        {/*<Modal*/}
+        {/*  open={settingsOpen}*/}
+        {/*  onClose={() => setSettingsOpen(false)}*/}
+        {/*>*/}
+        {/*  <Box sx={modalStyle}>*/}
+        {/*    <WidgetSettingsComponent*/}
+        {/*      widget={widget}*/}
+        {/*      setWidgets={setWidgets}*/}
+        {/*    />*/}
+        {/*  </Box>*/}
+        {/*</Modal>*/}
         <Box
           sx={{
             border: '1px solid #777777',

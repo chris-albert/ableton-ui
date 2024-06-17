@@ -192,11 +192,33 @@ export const button = (): ButtonWidget => ({
   ...defaultWidgetSettings()
 })
 
+export const MidiVelocityKnobWidget = t.type({
+  type: t.literal('midi-note-velocity'),
+  channel: t.number,
+  note: t.number
+})
+
+export type MidiVelocityKnobWidget = t.TypeOf<typeof MidiVelocityKnobWidget>
+
+export const MidiNoteKnobWidget = t.type({
+  type: t.literal('midi-note'),
+  channel: t.number,
+  velocity: t.number
+})
+
+export type MidiNoteKnobWidget = t.TypeOf<typeof MidiNoteKnobWidget>
+
+export const KnobWidgetType = t.union([
+  MidiVelocityKnobWidget,
+  MidiNoteKnobWidget,
+  t.undefined
+])
+
 export const KnobWidget = t.intersection([WidgetSettings, t.type({
   type: t.literal('knob'),
   color: t.string,
   content: t.union([t.string,t.undefined]),
-  midi: t.array(MidiMessage)
+  midi: KnobWidgetType
 })])
 
 export type KnobWidget = t.TypeOf<typeof KnobWidget>
@@ -205,7 +227,7 @@ export const knob = (): KnobWidget => ({
   type: 'knob',
   color: 'blue',
   content: undefined,
-  midi: [],
+  midi: undefined,
   ...defaultWidgetSettings()
 })
 
