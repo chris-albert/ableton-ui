@@ -1,10 +1,10 @@
 import * as t from 'io-ts'
-import {atomWithStorage} from "jotai/utils";
 import {produce, current} from "immer"
 import {atom, useAtomValue, useSetAtom} from "jotai";
 import {MidiMessage} from "../midi/WindowMidi";
 import {Project} from "./Projects";
 import React from "react";
+import _ from 'lodash'
 
 /**
  * Common widget settings
@@ -284,8 +284,8 @@ export const removeWidget = (widget: Widget): (w: Widgets) => Widgets => {
 export const duplicateWidget = (widget: Widget): (w: Widgets) => Widgets => {
   return produce<Widgets>(widgets => {
     const widgetIndex = current(widgets).indexOf(widget)
-    // widgets.splice(widgetIndex, 1)
-    widgets.splice(widgetIndex + 1, 0, widget)
+    const newWidget = _.clone(widget)
+    widgets.splice(widgetIndex + 1, 0, newWidget)
   })
 }
 
