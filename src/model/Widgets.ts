@@ -231,6 +231,21 @@ export const knob = (): KnobWidget => ({
   ...defaultWidgetSettings()
 })
 
+export const WidgetLookup = [
+  TimeSignatureWidget,
+  TempoWidget,
+  BeatCounterWidget,
+  BarBeatWidget,
+  BeatCountWidget,
+  ActiveTrackClipWidget,
+  TrackSectionsWidget,
+  PlayStopWidget,
+  ClipNavWidget,
+  SpacerWidget,
+  ButtonWidget,
+  KnobWidget
+]
+
 export const Widget = t.union([
   TimeSignatureWidget,
   TempoWidget,

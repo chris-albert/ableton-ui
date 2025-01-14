@@ -14,6 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {useMidiInit} from "./hooks/Midi";
 import {ArrangementComponent} from "./components/arrangement/ArrangementComponent";
 import {Project, useActiveProject} from "./model/Projects";
+import {ControllersPage} from "./pages/ControllersPage";
 
 const darkTheme = createTheme({
   palette: {
@@ -82,6 +83,12 @@ const AppWithProject: React.FC<AppWithProjectProps> = ({
                     )}
                   />
                 }
+              />
+              <Route
+                  path='controllers'
+                  element={
+                    <ControllersPage project={project}  />
+                  }
               />
               <Route
                 path='settings'

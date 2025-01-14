@@ -34,6 +34,7 @@
     "lodash": "^4.17.21",
     "node-sass": "^7.0.3",
     "optics-ts": "^2.4.0",
+    "prettier": "^3.4.2",
     "primereact": "^10.6.6",
     "react": "^18.2.0",
     "react-ace": "^10.1.0",
