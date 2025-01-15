@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box } from '@mui/material'
-import { Controller, ControllerPad } from '../../model/Controller'
+import { Controller, ControllerPad } from '../../model/controllers/Controller'
 import { useMidiOutput } from '../../hooks/Midi'
 
 type ControllerGridComponentProps = {
@@ -46,7 +46,7 @@ export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = (
               }}
               onClick={() => onClick(pad)}
               key={ci}>
-              <Box>{pad.content}</Box>
+              {pad.content}
             </Box>
           ))}
         </Box>

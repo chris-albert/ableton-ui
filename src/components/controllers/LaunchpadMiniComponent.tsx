@@ -4,22 +4,19 @@ import { Box, Button } from '@mui/material'
 import { useMidiInput, useMidiOutput } from '../../hooks/Midi'
 import { ControllerGridComponent } from './ControllerGridComponent'
 import { LaunchPadMiniMk3 } from '../../model/controllers/LaunchPadMiniMk3'
+import { MyCustomBindings } from '../../model/controllers/MyCustomBindings'
 
 export type LaunchpadMiniComponentProps = {}
 
 export const LaunchpadMiniComponent: React.FC<LaunchpadMiniComponentProps> = ({}) => {
   const controller = LaunchPadMiniMk3
+  const bindings = MyCustomBindings
   const midiOutput = useMidiOutput()
   const midiInput = useMidiInput()
 
   React.useEffect(() => {
     if (midiInput !== undefined && midiOutput !== undefined) {
-      midiInput.on('*', (message) => {
-        Option.map(controller.find(message), (pad) => {
-          console.log('pad', pad)
-          midiOutput.send(pad.message(5))
-        })
-      })
+      bindings.bind(midiInput, midiOutput)
     }
   }, [midiInput])
 

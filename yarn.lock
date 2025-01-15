@@ -6683,20 +6683,20 @@ jest@^27.4.3:
     import-local "^3.0.2"
     jest-cli "^27.5.1"
 
-jotai-optics@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/jotai-optics/-/jotai-optics-0.2.0.tgz#d09870f8f6d4f70072775a252aa36c83ef9feb1a"
-  integrity sha512-/vYSIPc9Sfl2pIlk1wQRFwZw+JnxHnB0WNREE4AYgv1D1RwCUbmEF37SQQrqfojA2fUkgcqK4oFVhkEF7FFBSA==
+jotai-optics@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/jotai-optics/-/jotai-optics-0.4.0.tgz#aad207090a06390e61cc85324b623b2692e2e272"
+  integrity sha512-osbEt9AgS55hC4YTZDew2urXKZkaiLmLqkTS/wfW5/l0ib8bmmQ7kBXSFaosV6jDDWSp00IipITcJARFHdp42g==
 
 jotai-xstate@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/jotai-xstate/-/jotai-xstate-0.1.0.tgz#ada27caff14e89b1ebdbab92c9c6c2ad42dedf5c"
   integrity sha512-nZUWz5+vgjDHu3Zc4qMy/KlFha0vl/jsZ6MkvPUXSh56msPs6zkxe9GuvPtI2E4yrGEuYumpmE9KsBvfw0B2SA==
 
-jotai@^1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.10.0.tgz#50c5224789282eca1cdc907a51e316d8d94c5976"
-  integrity sha512-3Q8kQU3Ktds+80Ku4dVcvnwSXEcK0Fg0b6mC1+4wz3rmF64lOGNUySKXQ4njvYCWodR8bw2HygOKYSYkHxQQmA==
+jotai@^2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/jotai/-/jotai-2.11.0.tgz#923f8351e0b2d721036af892c0ae25625049d120"
+  integrity sha512-zKfoBBD1uDw3rljwHkt0fWuja1B76R7CjznuBO+mSX6jpsO1EBeWNRKpeaQho9yPI/pvCv4recGfgOXGxwPZvQ==
 
 js-base64@^2.4.9:
   version "2.6.4"
@@ -7605,10 +7605,10 @@ open@^8.0.9, open@^8.4.0:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
-optics-ts@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/optics-ts/-/optics-ts-2.4.0.tgz#b23d177a76de66fdec9a832eefbd43458a91953e"
-  integrity sha512-BIYgnqOTEf+WiXuxuBFXeoCtyIDOwnUwCMybdQh8qdHyWXunwVVt7iD9XwNq8SCd5vUo9vqgYxF5ati/6inIuQ==
+optics-ts@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/optics-ts/-/optics-ts-2.4.1.tgz#de94bda2b0ed7fde5b7631283031b9699459d40d"
+  integrity sha512-HaYzMHvC80r7U/LqAd4hQyopDezC60PO2qF5GuIwALut2cl5rK1VWHsqTp0oqoJJWjiv6uXKqsO+Q2OO0C3MmQ==
 
 optionator@^0.8.1:
   version "0.8.3"

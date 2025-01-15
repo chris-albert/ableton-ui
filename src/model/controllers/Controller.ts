@@ -1,6 +1,6 @@
 import React from 'react'
 import { Data, Option } from 'effect'
-import { MidiMessage } from '../midi/WindowMidi'
+import { MidiMessage } from '../../midi/WindowMidi'
 import _ from 'lodash'
 
 export type ControllerPadTarget = Data.TaggedEnum<{
@@ -8,33 +8,40 @@ export type ControllerPadTarget = Data.TaggedEnum<{
   CC: { controllerNumber: number }
 }>
 
-const underlyingControllerPadTarget = Data.taggedEnum<ControllerPadTarget>()
-
 export const ControllerPadTarget = Data.taggedEnum<ControllerPadTarget>()
 
 export const ControllerPadNote = (note: number) => ControllerPadTarget.Note({ note })
+
+export const targetToKey = (target: ControllerPadTarget): string =>
+  ControllerPadTarget.$match({
+    Note: ({ note }) => `noteon-${note}`,
+    CC: ({ controllerNumber }) => `cc-${controllerNumber}`,
+  })(target)
+
+export const targetToMessage = (target: ControllerPadTarget, value: number): MidiMessage =>
+  ControllerPadTarget.$match({
+    Note: ({ note }) =>
+      ({
+        type: 'noteon',
+        channel: 1,
+        note,
+        velocity: value,
+      }) as MidiMessage,
+    CC: ({ controllerNumber }) =>
+      ({
+        type: 'cc',
+        channel: 1,
+        controllerNumber,
+        data: value,
+      }) as MidiMessage,
+  })(target)
 
 export class ControllerPad extends Data.Class<{
   target: ControllerPadTarget
   content: React.ReactElement
 }> {
   message(value: number): MidiMessage {
-    return ControllerPadTarget.$match({
-      Note: ({ note }) =>
-        ({
-          type: 'noteon',
-          channel: 1,
-          note,
-          velocity: value,
-        }) as MidiMessage,
-      CC: ({ controllerNumber }) =>
-        ({
-          type: 'cc',
-          channel: 1,
-          controllerNumber,
-          data: value,
-        }) as MidiMessage,
-    })(this.target)
+    return targetToMessage(this.target, value)
   }
 }
 

@@ -1,4 +1,7 @@
-import {atom} from "jotai";
+import { atom } from 'jotai'
+import { createStore } from 'jotai'
+
+export const GlobalRealTimeStore = createStore()
 
 export const beatsAtom = atom(0)
 
@@ -11,7 +14,7 @@ export type TimeSignature = {
 
 export const timeSignatureAtom = atom<TimeSignature>({
   noteCount: 4,
-  noteLength: 4
+  noteLength: 4,
 })
 
 export const tempoAtom = atom(0)

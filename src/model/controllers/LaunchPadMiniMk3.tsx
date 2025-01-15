@@ -4,7 +4,7 @@ import {
   ControllerPadNote,
   ControllerPadTarget,
   midiFromRowCol,
-} from '../Controller'
+} from './Controller'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
