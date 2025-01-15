@@ -1,28 +1,20 @@
 import React from 'react'
 import { Box } from '@mui/material'
+import { Controller, ControllerPad } from '../../model/Controller'
 import { useMidiOutput } from '../../hooks/Midi'
 
-export type LaunchpadMiniGridComponentProps = {}
+type ControllerGridComponentProps = {
+  controller: Controller
+}
 
-const midiCCFromRowCol = (row: number, column: number): number => parseInt(`${9 - row}${column + 1}`)
-
-export const LaunchpadMiniGridComponent: React.FC<LaunchpadMiniGridComponentProps> = ({}) => {
-  const buttonSize = 75
-  const rows = 9
-  const columns = 9
-
+export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = ({ controller }) => {
   const midiOutput = useMidiOutput()
 
-  const onClick = (row: number, column: number) => {
-    const cc = midiCCFromRowCol(row, column)
-    console.log('clicked', cc)
+  const buttonSize = 75
+
+  const onClick = (pad: ControllerPad) => {
     if (midiOutput !== undefined) {
-      midiOutput.send({
-        channel: 1,
-        type: 'noteon',
-        note: cc,
-        velocity: 5,
-      })
+      midiOutput.send(pad.message(5))
     }
   }
 
@@ -33,15 +25,15 @@ export const LaunchpadMiniGridComponent: React.FC<LaunchpadMiniGridComponentProp
         gap: '1rem',
         flexDirection: 'column',
       }}>
-      {new Array(rows).fill(0).map((_, row) => (
+      {controller.pads.map((padRow, ri) => (
         <Box
           sx={{
             display: 'flex',
             gap: '1rem',
             flexDirection: 'row',
           }}
-          key={row}>
-          {new Array(columns).fill(0).map((_, column) => (
+          key={ri}>
+          {padRow.map((pad, ci) => (
             <Box
               sx={{
                 width: `${buttonSize}px`,
@@ -52,9 +44,9 @@ export const LaunchpadMiniGridComponent: React.FC<LaunchpadMiniGridComponentProp
                 justifyContent: 'center',
                 cursor: 'pointer',
               }}
-              onClick={() => onClick(row, column)}
-              key={column}>
-              <Box>{midiCCFromRowCol(row, column)}</Box>
+              onClick={() => onClick(pad)}
+              key={ci}>
+              <Box>{pad.content}</Box>
             </Box>
           ))}
         </Box>

@@ -21,6 +21,7 @@
     "@types/react-router-dom": "^5.3.3",
     "ace-builds": "^1.22.0",
     "bulma": "^0.9.4",
+    "effect": "^3.12.4",
     "fast-json-stable-stringify": "^2.1.0",
     "fp-ts": "^2.16.0",
     "immer": "^9.0.16",
