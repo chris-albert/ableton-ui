@@ -37,13 +37,15 @@ export type MidiEmitter = {
   send: (m: MidiMessage) => void
 }
 
-const emptyEmitter: MidiEmitter = {
-  send: () => {},
-}
+const emptyEmitter = (): MidiEmitter => ({
+  send: (message: MidiMessage) => {
+    console.debug('Empty send', message)
+  },
+})
 
 const emitters = {
-  daw: emptyEmitter,
-  controller: emptyEmitter,
+  daw: emptyEmitter(),
+  controller: emptyEmitter(),
 }
 
 const atoms = {
@@ -122,10 +124,14 @@ const selectionInit = (midiType: MidiType) => {
   store.sub(selection.selected.output, () => onSelectedOutput(selection))
 
   const bindOutput = (midiOutput: MidiOutput) => {
-    midiType === 'daw' ? (emitters.daw.send = midiOutput.send) : (emitters.controller.send = midiOutput.send)
+    const loggingSend = (message: MidiMessage) => {
+      console.debug(`Sending ${midiType}`, message)
+      midiOutput.send(message)
+    }
+    midiType === 'daw' ? (emitters.daw.send = loggingSend) : (emitters.controller.send = loggingSend)
   }
   const unBindOutput = () => {
-    midiType === 'daw' ? (emitters.daw = emptyEmitter) : (emitters.controller = emptyEmitter)
+    midiType === 'daw' ? (emitters.daw = emptyEmitter()) : (emitters.controller = emptyEmitter())
   }
   store.sub(selection.midi.output, () => {
     Option.match(store.get(selection.midi.output), {

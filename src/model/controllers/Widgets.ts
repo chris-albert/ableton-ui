@@ -18,6 +18,6 @@ export const PlayStopWidget: ControllerWidget = (sub) => {
   })
 
   return () => {
-    Midi.emitters.controller.send(isPlaying ? TX_MESSAGE.stop() : TX_MESSAGE.play())
+    Midi.emitters.daw.send(isPlaying ? TX_MESSAGE.stop() : TX_MESSAGE.play())
   }
 }
