@@ -2,20 +2,24 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { ProjectMidi } from '../midi/ProjectMidi'
 import React from 'react'
 import _ from 'lodash'
+import { focusAtom } from 'jotai-optics'
+import { splitAtom } from 'jotai/utils'
+
+const useArrangementAtom = () => {
+  const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
+  return React.useMemo(() => ProjectMidi.atoms.project.arrangement(activeProject), [activeProject])
+}
+
+const useTracksAtom = () => {
+  const arrangement = useArrangementAtom()
+  return focusAtom(arrangement, (o) => o.prop('tracks'))
+}
 
 export const ProjectHooks = {
-  useArrangement: () => {
-    const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
-    const arrangement = React.useMemo(
-      () => ProjectMidi.atoms.project.getArrangement(activeProject),
-      [activeProject],
-    )
-    return useAtomValue(arrangement)
-  },
+  useArrangement: () => useAtomValue(useArrangementAtom()),
   useWidgets: () => {
     const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
-    const widgets = React.useMemo(() => ProjectMidi.atoms.project.widgets(activeProject), [activeProject])
-    return useAtom(widgets)
+    return useAtom(React.useMemo(() => ProjectMidi.atoms.project.widgets(activeProject), [activeProject]))
   },
   useProjectsConfig: () => useAtom(ProjectMidi.atoms.projectsConfig),
   useActiveProjectLabel: () => {
@@ -29,10 +33,8 @@ export const ProjectHooks = {
     }
   },
   useSetActiveProject: () => useSetAtom(ProjectMidi.atoms.project.active),
-  useTracks: () => {
-    return useAtomValue(ProjectMidi.atoms.project.tracks)
-  },
+  useTracks: () => useAtomValue(useTracksAtom()),
   useTracksAtoms: () => {
-    return useAtomValue(ProjectMidi.atoms.project.tracksAtoms)
+    return useAtomValue(splitAtom(useTracksAtom()))
   },
 }
