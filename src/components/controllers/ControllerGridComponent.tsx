@@ -1,21 +1,17 @@
 import React from 'react'
 import { Box } from '@mui/material'
 import { Controller, ControllerPad } from '../../model/controllers/Controller'
-import { useMidiOutput } from '../../hooks/Midi'
+import { Midi } from '../../midi/GlobalMidi'
 
 type ControllerGridComponentProps = {
   controller: Controller
 }
 
 export const ControllerGridComponent: React.FC<ControllerGridComponentProps> = ({ controller }) => {
-  const midiOutput = useMidiOutput()
-
   const buttonSize = 75
 
   const onClick = (pad: ControllerPad) => {
-    if (midiOutput !== undefined) {
-      midiOutput.send(pad.message(5))
-    }
+    Midi.emitters.controller.send(pad.message(5))
   }
 
   return (

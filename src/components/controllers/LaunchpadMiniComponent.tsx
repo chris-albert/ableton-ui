@@ -1,40 +1,35 @@
 import React from 'react'
-import { Option } from 'effect'
 import { Box, Button } from '@mui/material'
-import { useMidiInput, useMidiOutput } from '../../hooks/Midi'
 import { ControllerGridComponent } from './ControllerGridComponent'
 import { LaunchPadMiniMk3 } from '../../model/controllers/LaunchPadMiniMk3'
 import { MyCustomBindings } from '../../model/controllers/MyCustomBindings'
+import { Midi } from '../../midi/GlobalMidi'
 
 export type LaunchpadMiniComponentProps = {}
 
 export const LaunchpadMiniComponent: React.FC<LaunchpadMiniComponentProps> = ({}) => {
   const controller = LaunchPadMiniMk3
   const bindings = MyCustomBindings
-  const midiOutput = useMidiOutput()
-  const midiInput = useMidiInput()
 
   React.useEffect(() => {
-    if (midiInput !== undefined && midiOutput !== undefined) {
-      bindings.bind(midiInput, midiOutput)
-    }
-  }, [midiInput])
+    bindings.bind()
+  }, [])
 
   const enableProgrammerMode = () => {
-    if (midiOutput !== undefined) {
-      midiOutput.send({
-        type: 'sysex',
-        manufacturer: 0,
-        statusByte: 32,
-        body: [41, 2, 13, 14, 1],
-      })
-    }
+    Midi.emitters.controller.send({
+      type: 'sysex',
+      manufacturer: 0,
+      statusByte: 32,
+      body: [41, 2, 13, 14, 1],
+    })
   }
 
   const clearPads = () => {
-    if (midiOutput !== undefined) {
-      controller.foreach((pad) => midiOutput.send(pad.message(0)))
-    }
+    controller.foreach((pad) => Midi.emitters.controller.send(pad.message(0)))
+  }
+
+  const reBind = () => {
+    bindings.bind()
   }
 
   return (
@@ -56,6 +51,12 @@ export const LaunchpadMiniComponent: React.FC<LaunchpadMiniComponentProps> = ({}
           onClick={clearPads}
           variant='outlined'>
           Clear Pads
+        </Button>
+        <Button
+          sx={{ ml: 2 }}
+          onClick={reBind}
+          variant='outlined'>
+          Re-Bind
         </Button>
       </Box>
       <Box>

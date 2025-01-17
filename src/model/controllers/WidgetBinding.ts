@@ -1,7 +1,8 @@
 import { Data } from 'effect'
 import { Controller, ControllerPadTarget, targetToKey, targetToMessage } from './Controller'
-import { MidiInput, MidiMessage, MidiOutput } from '../../midi/WindowMidi'
+import { MidiMessage } from '../../midi/WindowMidi'
 import _ from 'lodash'
+import { Midi } from '../../midi/GlobalMidi'
 
 export type WidgetAction = () => void
 export type ControllerWidget = (f: (value: number) => void) => () => void
@@ -17,12 +18,12 @@ export class WidgetBindings extends Data.Class<{
 }> {
   private widgetBindings: Record<string, WidgetAction> = {}
 
-  private initWidgetBindings(midiOutput: MidiOutput): void {
+  private initWidgetBindings(): void {
     this.widgetBindings = _.fromPairs(
       _.map(this.bindings, (binding) => {
         return [
           targetToKey(binding.target),
-          binding.widget((value) => midiOutput.send(targetToMessage(binding.target, value))),
+          binding.widget((value) => Midi.emitters.controller.send(targetToMessage(binding.target, value))),
         ]
       }),
     )
@@ -45,8 +46,8 @@ export class WidgetBindings extends Data.Class<{
     }
   }
 
-  bind(midiInput: MidiInput, midiOutput: MidiOutput) {
-    this.initWidgetBindings(midiOutput)
-    midiInput.on('*', (m) => this.onMessage(m))
+  bind() {
+    this.initWidgetBindings()
+    Midi.listeners.controller.on('*', (m) => this.onMessage(m))
   }
 }

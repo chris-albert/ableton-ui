@@ -1,39 +1,30 @@
 import React from 'react'
-import {
-  AppBar,
-  Box,
-  Toolbar, Grid, Drawer, List
-} from "@mui/material";
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import {MidiInputComponent} from "./components/MidiInputComponent";
-import {NavLinkItem} from "./components/NavLinkItem";
-import {MidiOutputComponent} from "./components/MidiOutputComponent";
-import {ProjectsSelectComponent} from "./components/projects/ProjectsSelectComponent";
-import {Project} from "./model/Projects";
+import { AppBar, Box, Toolbar, Grid, Drawer, List } from '@mui/material'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
+import { MidiInputComponent } from './components/MidiInputComponent'
+import { NavLinkItem } from './components/NavLinkItem'
+import { MidiOutputComponent } from './components/MidiOutputComponent'
+import { ProjectsSelectComponent } from './components/projects/ProjectsSelectComponent'
+import { Project } from './model/Projects'
 
 export type NavProps = {
   project: Project
 }
 
-export const Nav: React.FC<NavProps> = ({
-  project
-}) => {
-
+export const Nav: React.FC<NavProps> = ({ project }) => {
   const [menuOpen, setMenuOpen] = React.useState(false)
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position='static'>
         <Drawer
           anchor='left'
           open={menuOpen}
-          onClose={() => setMenuOpen(false)}
-        >
+          onClose={() => setMenuOpen(false)}>
           <Box
-            role="presentation"
-            sx={{width: 250}}
-          >
+            role='presentation'
+            sx={{ width: 250 }}>
             <List>
               <NavLinkItem
                 path='/'
@@ -46,14 +37,14 @@ export const Nav: React.FC<NavProps> = ({
                 onClick={() => setMenuOpen(false)}
               />
               <NavLinkItem
-                path='/monitor'
-                label='MIDI Monitor'
+                path='/midi'
+                label='MIDI'
                 onClick={() => setMenuOpen(false)}
               />
               <NavLinkItem
-                  path='/controllers'
-                  label='Controllers'
-                  onClick={() => setMenuOpen(false)}
+                path='/controllers'
+                label='Controllers'
+                onClick={() => setMenuOpen(false)}
               />
               <NavLinkItem
                 path='/settings'
@@ -65,33 +56,38 @@ export const Nav: React.FC<NavProps> = ({
         </Drawer>
         <Toolbar>
           <IconButton
-            size="small"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
+            size='small'
+            edge='start'
+            color='inherit'
+            aria-label='menu'
             sx={{ mr: 1 }}
-            onClick={() => setMenuOpen(true)}
-          >
+            onClick={() => setMenuOpen(true)}>
             <MenuIcon />
           </IconButton>
-          <Grid container >
-            <Grid item xs={6}>
-              <Box sx={{display: 'flex'}}>
-                <MidiInputComponent />
-                <MidiOutputComponent />
-              </Box>
+          <Grid container>
+            <Grid
+              item
+              xs={6}>
+              <Box sx={{ display: 'flex' }}></Box>
             </Grid>
-            <Grid item xs={2} container justifyContent="center">
+            <Grid
+              item
+              xs={2}
+              container
+              justifyContent='center'>
               {/*Center*/}
             </Grid>
-            <Grid item xs={4} container justifyContent="right">
+            <Grid
+              item
+              xs={4}
+              container
+              justifyContent='right'>
               {/*Right*/}
-              <Box sx={{display: 'flex'}}>
+              <Box sx={{ display: 'flex' }}>
                 <ProjectsSelectComponent project={project} />
               </Box>
             </Grid>
           </Grid>
-
         </Toolbar>
       </AppBar>
     </Box>

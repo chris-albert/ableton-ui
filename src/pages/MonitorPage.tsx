@@ -1,17 +1,13 @@
 import React from 'react'
-import {MidiInput, MidiMessageWithRaw} from "../midi/WindowMidi";
-import {Box, Button, Card, CardContent, Grid} from "@mui/material";
+import { MidiInput, MidiMessageWithRaw } from '../midi/WindowMidi'
+import { Box, Button, Card, CardContent, Grid } from '@mui/material'
 import _ from 'lodash'
-import {MidiMessageDetail} from "../components/MidiMessageDetail";
+import { MidiMessageDetail } from '../components/MidiMessageDetail'
+import { Midi } from '../midi/GlobalMidi'
 
-export type MonitorPageProps = {
-  midiInput: MidiInput
-}
+export type MonitorPageProps = {}
 
-export const MonitorPage: React.FC<MonitorPageProps> = ({
-  midiInput
-}) => {
-
+export const MonitorPage: React.FC<MonitorPageProps> = () => {
   const maxMessages = 25
 
   const [messages, setMessages] = React.useState<Array<[MidiMessageWithRaw, number]>>([])
@@ -19,31 +15,43 @@ export const MonitorPage: React.FC<MonitorPageProps> = ({
   const [listenEnabled, setListenEnabled] = React.useState(false)
 
   React.useEffect(() => {
-    return midiInput.on('*', message => {
-      setListenEnabled(enabled => {
-        // console.log('message', message, enabled)
-        if(enabled) {
-          setTotalCount(count => {
-            setMessages(m => _.take([[message, count], ...m], maxMessages))
+    return Midi.listeners.controller.on('*', (message) => {
+      setListenEnabled((enabled) => {
+        if (enabled) {
+          setTotalCount((count) => {
+            setMessages((m) => _.take([[message, count], ...m], maxMessages))
             return count + 1
           })
         }
         return enabled
       })
     })
-  }, [midiInput])
+  }, [])
+
+  React.useEffect(() => {
+    return Midi.listeners.daw.on('*', (message) => {
+      setListenEnabled((enabled) => {
+        if (enabled) {
+          setTotalCount((count) => {
+            setMessages((m) => _.take([[message, count], ...m], maxMessages))
+            return count + 1
+          })
+        }
+        return enabled
+      })
+    })
+  }, [])
 
   return (
-    <Box sx={{m: 2}}>
-      <Box sx={{mb: 2}}>
+    <Box sx={{ m: 2 }}>
+      <Box sx={{ mb: 2 }}>
         <Button
-          sx={{mr: 1}}
+          sx={{ mr: 1 }}
           variant='outlined'
           color={listenEnabled ? 'error' : 'success'}
           onClick={() => {
-            setListenEnabled(e => !e)
-          }}
-        >
+            setListenEnabled((e) => !e)
+          }}>
           {listenEnabled ? 'Stop' : 'Listen'}
         </Button>
         <Button
@@ -51,25 +59,34 @@ export const MonitorPage: React.FC<MonitorPageProps> = ({
           onClick={() => {
             setTotalCount(0)
             setMessages([])
-          }}
-        >
+          }}>
           Clear
         </Button>
       </Box>
-      <Card sx={{mb: 1}}>
+      <Card sx={{ mb: 1 }}>
         <CardContent>
-          <Grid container spacing={1}>
-            <Grid item xs={1}>
+          <Grid
+            container
+            spacing={1}>
+            <Grid
+              item
+              xs={1}>
               #
             </Grid>
-            <Grid item xs={1}>
+            <Grid
+              item
+              xs={1}>
               Raw Type
             </Grid>
-            <Grid item xs={1}>
+            <Grid
+              item
+              xs={1}>
               JSON Type
             </Grid>
-            <Grid item xs={9}>
-              <Box sx={{display: 'flex', justifyContent: 'flex-start', mr: 5}}>
+            <Grid
+              item
+              xs={9}>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-start', mr: 5 }}>
                 <Box>Values</Box>
               </Box>
             </Grid>
@@ -77,7 +94,9 @@ export const MonitorPage: React.FC<MonitorPageProps> = ({
         </CardContent>
       </Card>
       {_.map(messages, (message, i) => (
-        <Box key={`midi-message-detail-${i}`} sx={{mb: 1}}>
+        <Box
+          key={`midi-message-detail-${i}`}
+          sx={{ mb: 1 }}>
           <MidiMessageDetail
             messageNumber={message[1]}
             message={message[0]}
