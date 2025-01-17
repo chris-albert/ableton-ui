@@ -1,27 +1,23 @@
 import React from 'react'
-import {
-  editWidgetsAtom,
-  useSetWidgets,
-  Widget
-} from "../model/Widgets";
-import {Box, Drawer, Modal, Paper} from "@mui/material";
-import {TempoComponent} from "./TempoComponent";
-import {TimeSignatureComponent} from "./TimeSignatureComponent";
-import {BeatCounterComponent} from "./BeatCounterComponent";
-import {BarBeatComponent} from "./BarBeatComponent";
-import {BeatCountComponent} from "./widgets/BeatCountComponent";
-import {ActiveTrackClipWidgetComponent} from "./widgets/ActiveTrackClipWidgetComponent";
-import {TrackSectionWidgetComponent} from "./widgets/TrackSectionWidgetComponent";
-import {useAtomValue, useSetAtom} from "jotai";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from '@mui/icons-material/Menu';
-import {PlayStopWidgetComponent} from "./widgets/PlayStopWidgetComponent";
-import {ClipNavWidgetComponent} from "./widgets/ClipNavWidgetComponent";
-import {SpacerWidgetComponent} from "./widgets/SpacerWidgetComponent";
-import {WidgetSettingsComponent} from "./widgets/WidgetSettingsComponent";
-import {ButtonWidgetComponent} from "./widgets/ButtonWidgetComponent";
-import {Project} from "../model/Projects";
-import {KnobWidgetComponent} from "./widgets/KnobWidgetComponent";
+import { editWidgetsAtom, Widget } from '../model/Widgets'
+import { Box, Drawer, Paper } from '@mui/material'
+import { TempoComponent } from './TempoComponent'
+import { TimeSignatureComponent } from './TimeSignatureComponent'
+import { BeatCounterComponent } from './BeatCounterComponent'
+import { BarBeatComponent } from './BarBeatComponent'
+import { BeatCountComponent } from './widgets/BeatCountComponent'
+import { ActiveTrackClipWidgetComponent } from './widgets/ActiveTrackClipWidgetComponent'
+import { TrackSectionWidgetComponent } from './widgets/TrackSectionWidgetComponent'
+import { useAtomValue } from 'jotai'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
+import { PlayStopWidgetComponent } from './widgets/PlayStopWidgetComponent'
+import { ClipNavWidgetComponent } from './widgets/ClipNavWidgetComponent'
+import { SpacerWidgetComponent } from './widgets/SpacerWidgetComponent'
+import { WidgetSettingsComponent } from './widgets/WidgetSettingsComponent'
+import { ButtonWidgetComponent } from './widgets/ButtonWidgetComponent'
+import { KnobWidgetComponent } from './widgets/KnobWidgetComponent'
+import { ProjectHooks } from '../hooks/ProjectHooks'
 
 const modalStyle = {
   position: 'absolute' as 'absolute',
@@ -30,80 +26,72 @@ const modalStyle = {
   transform: 'translate(-50%, -50%)',
   width: 600,
   bgcolor: 'background.paper',
-  boxShadow: 24
+  boxShadow: 24,
 }
 
 export type WidgetComponentProps = {
-  project: Project,
   widget: Widget
 }
 
-export const WidgetComponent: React.FC<WidgetComponentProps> = ({
-  project,
-  widget
-}) => {
-
+export const WidgetComponent: React.FC<WidgetComponentProps> = ({ widget }) => {
   const isEdit = useAtomValue(editWidgetsAtom)
-  const setWidgets = useSetWidgets(project)
+  const [_, setWidgets] = ProjectHooks.useWidgets()
   const [settingsOpen, setSettingsOpen] = React.useState(false)
 
-  let el = (
-    <Box>Unknown</Box>
-  )
+  let el = <Box>Unknown</Box>
 
-  if(widget.type === 'tempo') {
-    el = (<TempoComponent />)
-  } else if(widget.type === 'time-signature') {
-    el = (<TimeSignatureComponent />)
-  } else if(widget.type === 'beat-counter') {
-    el = (<BeatCounterComponent />)
-  } else if(widget.type === 'bar-beat') {
-    el = (<BarBeatComponent />)
-  } else if(widget.type === 'beat-count') {
-    el = (<BeatCountComponent />)
-  } else if(widget.type === 'active-track-clip') {
-    el = (<ActiveTrackClipWidgetComponent widget={widget} project={project} />)
-  } else if(widget.type === 'track-sections') {
-    el = (<TrackSectionWidgetComponent widget={widget} project={project} />)
-  } else if(widget.type === 'play-stop') {
-    el = (<PlayStopWidgetComponent />)
-  } else if(widget.type === 'clip-nav') {
-    el = (<ClipNavWidgetComponent widget={widget} project={project} />)
-  } else if(widget.type === 'spacer') {
-    el = (<SpacerWidgetComponent widget={widget}/>)
-  } else if(widget.type === 'button') {
-    el = (<ButtonWidgetComponent widget={widget} />)
-  } else if(widget.type === 'knob') {
-    el = (<KnobWidgetComponent widget={widget} />)
+  if (widget.type === 'tempo') {
+    el = <TempoComponent />
+  } else if (widget.type === 'time-signature') {
+    el = <TimeSignatureComponent />
+  } else if (widget.type === 'beat-counter') {
+    el = <BeatCounterComponent />
+  } else if (widget.type === 'bar-beat') {
+    el = <BarBeatComponent />
+  } else if (widget.type === 'beat-count') {
+    el = <BeatCountComponent />
+  } else if (widget.type === 'active-track-clip') {
+    el = <ActiveTrackClipWidgetComponent widget={widget} />
+  } else if (widget.type === 'track-sections') {
+    el = <TrackSectionWidgetComponent widget={widget} />
+  } else if (widget.type === 'play-stop') {
+    el = <PlayStopWidgetComponent />
+  } else if (widget.type === 'clip-nav') {
+    el = <ClipNavWidgetComponent widget={widget} />
+  } else if (widget.type === 'spacer') {
+    el = <SpacerWidgetComponent widget={widget} />
+  } else if (widget.type === 'button') {
+    el = <ButtonWidgetComponent widget={widget} />
+  } else if (widget.type === 'knob') {
+    el = <KnobWidgetComponent widget={widget} />
   }
 
-  const label = widget.label === undefined ? null : (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
+  const label =
+    widget.label === undefined ? null : (
       <Box
         sx={{
-          position: 'absolute',
-          x: 0,
-          y: '0',
-          marginTop: '-16px',
-          backgroundColor: '#777777',
-          border: '1px solid white',
-          lineHeight: 1,
-          borderBottomLeftRadius: '5px',
-          borderBottomRightRadius: '5px',
-          paddingLeft: '3px',
-          paddingRight: '3px',
-        }}
-      >
-        {widget.label}
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            x: 0,
+            y: '0',
+            marginTop: '-16px',
+            backgroundColor: '#777777',
+            border: '1px solid white',
+            lineHeight: 1,
+            borderBottomLeftRadius: '5px',
+            borderBottomRightRadius: '5px',
+            paddingLeft: '3px',
+            paddingRight: '3px',
+          }}>
+          {widget.label}
+        </Box>
       </Box>
-    </Box>
-  )
+    )
 
   const widgetBody = (
     <Box
@@ -113,17 +101,13 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
         borderColor: widget.borderColor,
         borderStyle: 'solid',
         borderRadius: '5px',
-      }}
-    >
+      }}>
       {label}
-      <Box>
-        {el}
-      </Box>
+      <Box>{el}</Box>
     </Box>
   )
 
-  if(isEdit) {
-
+  if (isEdit) {
     return (
       <Paper>
         <Drawer
@@ -132,9 +116,8 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
           anchor='right'
           // variant='persistent'
           sx={{
-            flexShrink: 0
-          }}
-        >
+            flexShrink: 0,
+          }}>
           <WidgetSettingsComponent
             widget={widget}
             setWidgets={setWidgets}
@@ -156,31 +139,25 @@ export const WidgetComponent: React.FC<WidgetComponentProps> = ({
             border: '1px solid #777777',
             borderRadius: '5px',
             display: 'flex',
-            justifyContent: 'space-between'
-          }}
-        >
-          <Box>
-          </Box>
+            justifyContent: 'space-between',
+          }}>
+          <Box></Box>
           <Box>
             <IconButton
               onClick={() => {
                 setSettingsOpen(true)
               }}
-              aria-label="Edit"
-            >
+              aria-label='Edit'>
               <MenuIcon />
             </IconButton>
           </Box>
-
         </Box>
         {widgetBody}
       </Paper>
     )
-  } else if(widget.visible === false) {
+  } else if (widget.visible === false) {
     return el
   } else {
     return widgetBody
   }
-
-
 }

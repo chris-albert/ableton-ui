@@ -1,7 +1,6 @@
 import React from 'react'
-import * as E from 'fp-ts/Either'
 import './styles.scss'
-import { Box, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from './pages/Layout'
 import { IndexPage } from './pages/IndexPage'
@@ -10,7 +9,6 @@ import { toast, ToastContainer } from 'react-toastify'
 
 import 'react-toastify/dist/ReactToastify.css'
 import { ArrangementComponent } from './components/arrangement/ArrangementComponent'
-import { Project, useActiveProject } from './model/Projects'
 import { ControllersPage } from './pages/ControllersPage'
 import { MidiPage } from './pages/MidiPage'
 import { ProjectMidi } from './midi/ProjectMidi'
@@ -26,19 +24,7 @@ const darkTheme = createTheme({
   },
 })
 
-type AppWithoutProjectProps = {
-  message: string
-}
-
-const AppWithoutProject: React.FC<AppWithoutProjectProps> = ({ message }) => {
-  return <Box>Unable to load project with error message: {message}</Box>
-}
-
-type AppWithProjectProps = {
-  project: Project
-}
-
-const AppWithProject: React.FC<AppWithProjectProps> = ({ project }) => {
+function App() {
   Midi.init()
   ProjectMidi.init()
   ControllerMidi.init()
@@ -67,11 +53,11 @@ const AppWithProject: React.FC<AppWithProjectProps> = ({ project }) => {
               element={<Layout />}>
               <Route
                 index
-                element={<IndexPage project={project} />}
+                element={<IndexPage />}
               />
               <Route
                 path='arrangement'
-                element={<ArrangementComponent project={project} />}
+                element={<ArrangementComponent />}
               />
               <Route
                 path='midi'
@@ -79,7 +65,7 @@ const AppWithProject: React.FC<AppWithProjectProps> = ({ project }) => {
               />
               <Route
                 path='controllers'
-                element={<ControllersPage project={project} />}
+                element={<ControllersPage />}
               />
               <Route
                 path='settings'
@@ -91,16 +77,6 @@ const AppWithProject: React.FC<AppWithProjectProps> = ({ project }) => {
       </BrowserRouter>
     </div>
   )
-}
-
-function App() {
-  const project = useActiveProject()
-
-  if (E.isLeft(project)) {
-    return <AppWithoutProject message={project.left} />
-  } else {
-    return <AppWithProject project={project.right} />
-  }
 }
 
 export default App

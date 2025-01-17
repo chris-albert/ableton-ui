@@ -1,13 +1,10 @@
 import React from 'react'
-import { Project } from '../model/Projects'
 import { Box } from '@mui/material'
 import { LaunchpadMiniComponent } from '../components/controllers/LaunchpadMiniComponent'
 
-export type ControllersPageProps = {
-  project: Project
-}
+export type ControllersPageProps = {}
 
-export const ControllersPage: React.FC<ControllersPageProps> = ({ project }) => {
+export const ControllersPage: React.FC<ControllersPageProps> = ({}) => {
   return (
     <Box>
       <LaunchpadMiniComponent />

@@ -4,7 +4,6 @@ import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import { NavLinkItem } from './components/NavLinkItem'
 import { ProjectsSelectComponent } from './components/projects/ProjectsSelectComponent'
-import { Project } from './model/Projects'
 
 export type NavProps = {}
 

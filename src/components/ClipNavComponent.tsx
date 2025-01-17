@@ -3,21 +3,19 @@ import { getHexColor, NavigateableClip, UITrack } from '../model/UIStateDisplay'
 import { useActiveClip } from '../hooks/ActiveClipHook'
 import { Box, Typography } from '@mui/material'
 import { TX_MESSAGE } from '../model/AbletonUIMessage'
-import { useAtomValue } from 'jotai'
 import _ from 'lodash'
-import { Project } from '../model/Projects'
 import { Midi } from '../midi/GlobalMidi'
 import { useBeat } from '../hooks/RealTimeHooks'
+import { ProjectHooks } from '../hooks/ProjectHooks'
 
 export type ClipNavComponentProps = {
-  project: Project
   track: UITrack
 }
 
-export const ClipNavComponent: React.FC<ClipNavComponentProps> = ({ project, track }) => {
+export const ClipNavComponent: React.FC<ClipNavComponentProps> = ({ track }) => {
   const activeClip = useActiveClip(track)
   const currentBeat = useBeat()
-  const arrangement = useAtomValue(project.arrangementAtom)
+  const arrangement = ProjectHooks.useArrangement()
 
   const cueHash = React.useMemo(() => {
     return _.fromPairs(_.map(arrangement.cues, (cue) => [cue.time, cue]))

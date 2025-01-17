@@ -7,7 +7,7 @@ export const ProjectHooks = {
   useArrangement: () => {
     const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
     const arrangement = React.useMemo(
-      () => ProjectMidi.atoms.project.arrangement(activeProject),
+      () => ProjectMidi.atoms.project.getArrangement(activeProject),
       [activeProject],
     )
     return useAtomValue(arrangement)
@@ -29,4 +29,10 @@ export const ProjectHooks = {
     }
   },
   useSetActiveProject: () => useSetAtom(ProjectMidi.atoms.project.active),
+  useTracks: () => {
+    return useAtomValue(ProjectMidi.atoms.project.tracks)
+  },
+  useTracksAtoms: () => {
+    return useAtomValue(ProjectMidi.atoms.project.tracksAtoms)
+  },
 }

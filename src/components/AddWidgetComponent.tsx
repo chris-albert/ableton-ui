@@ -1,94 +1,105 @@
 import React from 'react'
-import {Box, Button} from "@mui/material";
-import {WidgetButtonComponent} from "./WidgetButtonComponent";
+import { Box, Button } from '@mui/material'
+import { WidgetButtonComponent } from './WidgetButtonComponent'
 import {
   activeTrackClip,
   addWidget,
   barBeat,
   beatCount,
-  beatCounter, button, clipNav, knob, playStop, spacer,
+  beatCounter,
+  button,
+  clipNav,
+  knob,
+  playStop,
+  spacer,
   tempo,
-  timeSignature, trackSections, useSetWidgets
-} from "../model/Widgets";
-import {useSetAtom} from "jotai";
-import {Project} from "../model/Projects";
+  timeSignature,
+  trackSections,
+} from '../model/Widgets'
+import { ProjectHooks } from '../hooks/ProjectHooks'
 
-export type AddWidgetComponentProps = {
-  project: Project
-}
+export type AddWidgetComponentProps = {}
 
-export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({
-  project
-}) => {
-
-  const setWidgets = useSetWidgets(project)
+export const AddWidgetComponent: React.FC<AddWidgetComponentProps> = ({}) => {
+  const [_, setWidgets] = ProjectHooks.useWidgets()
 
   return (
     <Box
       sx={{
         p: 2,
         display: 'flex',
-        gap: 2
-      }}
-    >
-      <WidgetButtonComponent onClick={() => {
-        setWidgets(addWidget(beatCounter()))
+        gap: 2,
       }}>
+      <WidgetButtonComponent
+        onClick={() => {
+          setWidgets(addWidget(beatCounter()))
+        }}>
         Beat Counter
       </WidgetButtonComponent>
-      <WidgetButtonComponent onClick={() => {
-        setWidgets(addWidget(beatCount()))
-      }}>
+      <WidgetButtonComponent
+        onClick={() => {
+          setWidgets(addWidget(beatCount()))
+        }}>
         Beat Count
       </WidgetButtonComponent>
-      <WidgetButtonComponent onClick={() => {
-        setWidgets(addWidget(timeSignature()))
-      }}>
+      <WidgetButtonComponent
+        onClick={() => {
+          setWidgets(addWidget(timeSignature()))
+        }}>
         Time Signature
       </WidgetButtonComponent>
-      <WidgetButtonComponent onClick={() => {
-        setWidgets(addWidget(tempo()))
-      }}>
+      <WidgetButtonComponent
+        onClick={() => {
+          setWidgets(addWidget(tempo()))
+        }}>
         Tempo
       </WidgetButtonComponent>
-      <WidgetButtonComponent onClick={() => {
-        setWidgets(addWidget(barBeat()))
-      }}>
+      <WidgetButtonComponent
+        onClick={() => {
+          setWidgets(addWidget(barBeat()))
+        }}>
         Bar Beat
       </WidgetButtonComponent>
-      <WidgetButtonComponent onClick={() => {
-        setWidgets(addWidget(activeTrackClip('Songs')))
-      }}>
+      <WidgetButtonComponent
+        onClick={() => {
+          setWidgets(addWidget(activeTrackClip('Songs')))
+        }}>
         Active Clip
       </WidgetButtonComponent>
-      <WidgetButtonComponent onClick={() => {
-        setWidgets(addWidget(trackSections('Parts')))
-      }}>
+      <WidgetButtonComponent
+        onClick={() => {
+          setWidgets(addWidget(trackSections('Parts')))
+        }}>
         Track Sections
       </WidgetButtonComponent>
-      <WidgetButtonComponent onClick={() => {
-        setWidgets(addWidget(playStop()))
-      }}>
+      <WidgetButtonComponent
+        onClick={() => {
+          setWidgets(addWidget(playStop()))
+        }}>
         Play/Stop
       </WidgetButtonComponent>
-      <WidgetButtonComponent onClick={() => {
-        setWidgets(addWidget(clipNav('')))
-      }}>
+      <WidgetButtonComponent
+        onClick={() => {
+          setWidgets(addWidget(clipNav('')))
+        }}>
         Clip Nav
       </WidgetButtonComponent>
-      <WidgetButtonComponent onClick={() => {
-        setWidgets(addWidget(spacer()))
-      }}>
+      <WidgetButtonComponent
+        onClick={() => {
+          setWidgets(addWidget(spacer()))
+        }}>
         Spacer
       </WidgetButtonComponent>
-      <WidgetButtonComponent onClick={() => {
-        setWidgets(addWidget(button()))
-      }}>
+      <WidgetButtonComponent
+        onClick={() => {
+          setWidgets(addWidget(button()))
+        }}>
         Button
       </WidgetButtonComponent>
-      <WidgetButtonComponent onClick={() => {
-        setWidgets(addWidget(knob()))
-      }}>
+      <WidgetButtonComponent
+        onClick={() => {
+          setWidgets(addWidget(knob()))
+        }}>
         Knob
       </WidgetButtonComponent>
     </Box>

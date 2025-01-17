@@ -1,19 +1,13 @@
 import React from 'react'
-import {Box} from "@mui/material";
-import {TrackComponent} from "../TrackComponent";
-import {ArrangementTimelineComponent} from "./ArrangementTimelineComponent";
-import {Project} from "../../model/Projects";
-import {useTracksAtoms} from "../../model/UIStateDisplay";
+import { Box } from '@mui/material'
+import { TrackComponent } from '../TrackComponent'
+import { ArrangementTimelineComponent } from './ArrangementTimelineComponent'
+import { ProjectHooks } from '../../hooks/ProjectHooks'
 
-export type ArrangementComponentProps = {
-  project: Project
-}
+export type ArrangementComponentProps = {}
 
-export const ArrangementComponent: React.FC<ArrangementComponentProps> = ({
-  project
-}) => {
-
-  const tracks = useTracksAtoms(project)
+export const ArrangementComponent: React.FC<ArrangementComponentProps> = ({}) => {
+  const tracks = ProjectHooks.useTracksAtoms()
 
   return (
     <Box>

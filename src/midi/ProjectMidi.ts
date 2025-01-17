@@ -12,8 +12,9 @@ import {
 import { atom, getDefaultStore } from 'jotai'
 import { parseAbletonUIMessage } from '../model/AbletonUIMessage'
 import * as t from 'io-ts'
-import { atomWithStorage } from 'jotai/utils'
+import { atomWithStorage, splitAtom } from 'jotai/utils'
 import { emptyWidgets, Widgets } from '../model/Widgets'
+import { focusAtom } from 'jotai-optics'
 
 const store = getDefaultStore()
 
@@ -53,14 +54,23 @@ export type TimeSignature = {
 export type ProjectImportStatus = 'none' | 'importing' | 'finalizing' | 'done' | 'error'
 
 const activeProject = atomWithStorage('active-project', 'default')
+const getArrangement = (name: string) =>
+  atomWithStorage<UIArrangement>(`arrangement-${name}`, emptyArrangement())
+
+const arrangement = getArrangement(store.get(activeProject))
+const tracks = focusAtom(arrangement, (o) => o.prop('tracks'))
+
 const atoms = {
   initArrangement: atom<InitArrangement>([]),
   importStatus: atom<ProjectImportStatus>('none'),
   projectsConfig: atomWithStorage<ProjectsConfig>('projects-config', defaultProjectsConfig()),
   project: {
     active: activeProject,
-    arrangement: (name: string) => atomWithStorage<UIArrangement>(`arrangement-${name}`, emptyArrangement()),
+    getArrangement,
+    arrangement,
     widgets: (name: string) => atomWithStorage<Widgets>(`widgets-${name}`, emptyWidgets),
+    tracks,
+    tracksAtoms: splitAtom(tracks),
   },
   realTime: {
     beats: atom(0),
@@ -79,7 +89,7 @@ const ProjectListener = () => {
     const status = store.get(atoms.importStatus)
     if (status === 'finalizing') {
       const arrangement = initDone(store.get(atoms.initArrangement))
-      // store.set(atoms.project.arrangement, arrangement)
+      store.set(atoms.project.arrangement, arrangement)
       store.set(atoms.importStatus, 'done')
     }
   })
