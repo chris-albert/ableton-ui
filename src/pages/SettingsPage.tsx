@@ -1,27 +1,22 @@
 import React from 'react'
-import {useAtom} from "jotai";
-import {Box, Button, Card, CardContent, CardHeader, Typography} from "@mui/material";
-import {JSONEditor} from "../components/JSONEditor";
-import {Widgets} from "../model/Widgets";
+import { Box, Button, Card, CardContent, CardHeader, Typography } from '@mui/material'
+import { JSONEditor } from '../components/JSONEditor'
+import { Widgets } from '../model/Widgets'
 import * as E from 'fp-ts/Either'
-import {toast} from "react-toastify";
+import { toast } from 'react-toastify'
 import { PathReporter } from 'io-ts/lib/PathReporter'
-import {Project, ProjectsConfig, projectsConfigAtom} from "../model/Projects";
+import { ProjectHooks } from '../hooks/ProjectHooks'
+import { ProjectsConfig } from '../midi/ProjectMidi'
 
-export type SettingsPageProps = {
-  project: Project
-}
+export type SettingsPageProps = {}
 
-export const SettingsPage: React.FC<SettingsPageProps> = ({
-  project
-}) => {
+export const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
+  const arrangement = ProjectHooks.useArrangement()
+  const [widgets, setWidgets] = ProjectHooks.useWidgets()
+  const [projects, setProjects] = ProjectHooks.useProjectsConfig()
 
-  const [arrangement, setArrangement] = useAtom(project.arrangementAtom)
-  const [widgets, setWidgets] = useAtom(project.widgetsAtom)
-  const [projects, setProjects] = useAtom(projectsConfigAtom)
-
-  const [rawWidgets, setRawWidgets] = React.useState("")
-  const [rawProjects, setRawProjects] = React.useState("")
+  const [rawWidgets, setRawWidgets] = React.useState('')
+  const [rawProjects, setRawProjects] = React.useState('')
 
   React.useEffect(() => {
     setRawWidgets(JSON.stringify(widgets, null, 2))
@@ -34,34 +29,34 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   const onWidgetsSave = () => {
     const json = E.tryCatch(
       () => JSON.parse(rawWidgets),
-      e => e
+      (e) => e,
     )
     const res = E.flatMap(json, Widgets.decode)
     E.match<any, Widgets, void>(
       (err: any) => {
-        toast.error("Invalid widgets: " + PathReporter.report(E.left(err)).join(', '))
+        toast.error('Invalid widgets: ' + PathReporter.report(E.left(err)).join(', '))
       },
-      widgets => {
+      (widgets) => {
         setWidgets(widgets)
-        toast.success("Widgets saved")
-      }
+        toast.success('Widgets saved')
+      },
     )(res)
   }
 
   const onProjectsSave = () => {
     const json = E.tryCatch(
       () => JSON.parse(rawProjects),
-      e => e
+      (e) => e,
     )
     const res = E.flatMap(json, ProjectsConfig.decode)
     E.match<any, ProjectsConfig, void>(
       (err: any) => {
-        toast.error("Invalid Projects: " + PathReporter.report(E.left(err)).join(', '))
+        toast.error('Invalid Projects: ' + PathReporter.report(E.left(err)).join(', '))
       },
-      projects => {
+      (projects) => {
         setProjects(projects)
-        toast.success("Projects saved")
-      }
+        toast.success('Projects saved')
+      },
     )(res)
   }
 
@@ -71,15 +66,15 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         display: 'flex',
         p: 2,
         gap: 2,
-      }}
-    >
+      }}>
       <Card>
         <CardHeader
-          title="Projects"
+          title='Projects'
           action={
             <Button
               onClick={onProjectsSave}
-              variant="outlined" size="small">
+              variant='outlined'
+              size='small'>
               Save
             </Button>
           }
@@ -94,9 +89,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         </CardContent>
       </Card>
       <Card>
-        <CardHeader
-          title="Arrangement"
-        />
+        <CardHeader title='Arrangement' />
         <CardContent>
           <JSONEditor
             height='800px'
@@ -109,11 +102,12 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           action={
             <Button
               onClick={onWidgetsSave}
-              variant="outlined" size="small">
+              variant='outlined'
+              size='small'>
               Save
             </Button>
           }
-          title="Widgets"
+          title='Widgets'
         />
         <CardContent>
           <JSONEditor
@@ -124,7 +118,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           />
         </CardContent>
       </Card>
-
     </Box>
   )
 }

@@ -1,20 +1,20 @@
 import { TX_MESSAGE } from '../AbletonUIMessage'
 import { getDefaultStore } from 'jotai'
-import { isPlayingAtom } from '../RealTime'
 import { ControllerWidget } from './WidgetBinding'
 import { Midi } from '../../midi/GlobalMidi'
+import { ProjectMidi } from '../../midi/ProjectMidi'
 
 export const PlayStopWidget: ControllerWidget = (sub) => {
   const store = getDefaultStore()
 
-  const isPlaying = store.get(isPlayingAtom)
+  const isPlaying = store.get(ProjectMidi.atoms.realTime.isPlaying)
 
   const color = (playing: boolean): number => (playing ? 5 : 10)
 
   sub(color(isPlaying))
 
-  store.sub(isPlayingAtom, () => {
-    sub(color(store.get(isPlayingAtom)))
+  store.sub(ProjectMidi.atoms.realTime.isPlaying, () => {
+    sub(color(store.get(ProjectMidi.atoms.realTime.isPlaying)))
   })
 
   return () => {

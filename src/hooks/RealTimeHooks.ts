@@ -1,29 +1,22 @@
-import {useAtomValue} from "jotai";
-import {
-  barBeatsAtom,
-  beatsAtom,
-  isPlayingAtom,
-  tempoAtom,
-  TimeSignature,
-  timeSignatureAtom
-} from "../model/RealTime";
+import { useAtomValue } from 'jotai'
+import { ProjectMidi, TimeSignature } from '../midi/ProjectMidi'
 
 export const useBeat = (): number => {
-  return useAtomValue(beatsAtom)
+  return useAtomValue(ProjectMidi.atoms.realTime.beats)
 }
 
 export const useBarBeats = (): number => {
-  return useAtomValue(barBeatsAtom)
+  return useAtomValue(ProjectMidi.atoms.realTime.barBeats)
 }
 
 export const useTimeSignature = (): TimeSignature => {
-  return useAtomValue(timeSignatureAtom)
+  return useAtomValue(ProjectMidi.atoms.realTime.timeSignature)
 }
 
 export const useTempo = (): number => {
-  return useAtomValue(tempoAtom)
+  return useAtomValue(ProjectMidi.atoms.realTime.tempo)
 }
 
 export const useIsPlaying = (): boolean => {
-  return useAtomValue(isPlayingAtom)
+  return useAtomValue(ProjectMidi.atoms.realTime.isPlaying)
 }

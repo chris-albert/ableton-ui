@@ -5,13 +5,10 @@ import { Box, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from './pages/Layout'
 import { IndexPage } from './pages/IndexPage'
-import { MidiInputRequiredComponent } from './components/MidiInputRequiredComponent'
-import { MonitorPage } from './pages/MonitorPage'
 import { SettingsPage } from './pages/SettingsPage'
-import { ToastContainer } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 
 import 'react-toastify/dist/ReactToastify.css'
-import { useMidiInit } from './hooks/Midi'
 import { ArrangementComponent } from './components/arrangement/ArrangementComponent'
 import { Project, useActiveProject } from './model/Projects'
 import { ControllersPage } from './pages/ControllersPage'
@@ -42,10 +39,21 @@ type AppWithProjectProps = {
 }
 
 const AppWithProject: React.FC<AppWithProjectProps> = ({ project }) => {
-  useMidiInit(project)
   Midi.init()
   ProjectMidi.init()
   ControllerMidi.init()
+
+  React.useEffect(
+    () =>
+      ProjectMidi.onStatusChange((status) => {
+        if (status === 'importing') {
+          toast.info('Importing new project.')
+        } else if (status === 'done') {
+          toast.success(`Successfully imported project!`)
+        }
+      }),
+    [],
+  )
 
   return (
     <div className='App'>
@@ -56,7 +64,7 @@ const AppWithProject: React.FC<AppWithProjectProps> = ({ project }) => {
           <Routes>
             <Route
               path='/'
-              element={<Layout project={project} />}>
+              element={<Layout />}>
               <Route
                 index
                 element={<IndexPage project={project} />}
@@ -75,7 +83,7 @@ const AppWithProject: React.FC<AppWithProjectProps> = ({ project }) => {
               />
               <Route
                 path='settings'
-                element={<SettingsPage project={project} />}
+                element={<SettingsPage />}
               />
             </Route>
           </Routes>

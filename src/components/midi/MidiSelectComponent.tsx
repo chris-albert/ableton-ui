@@ -1,8 +1,6 @@
 import React from 'react'
 import { Box } from '@mui/material'
 import { SelectComponent, SelectItem } from '../SelectComponent'
-import { midiTXStatusAtom } from '../../hooks/Midi'
-import { useAtomValue } from 'jotai/index'
 import { StatusLedComponent } from '../StatusLedComponent'
 import { MidiDeviceType, MidiType } from '../../midi/GlobalMidi'
 import _ from 'lodash'
@@ -33,8 +31,6 @@ export const MidiSelectComponent: React.FC<MidiSelectComponentProps> = ({ midiTy
     midiDevices.setSelected(output)
   }
 
-  const midiStatus = useAtomValue(midiTXStatusAtom)
-
   return (
     <Box
       sx={{
@@ -47,7 +43,7 @@ export const MidiSelectComponent: React.FC<MidiSelectComponentProps> = ({ midiTy
         onChange={onMidiSelect}
         activeLabel={midiDevices.selected}
       />
-      <StatusLedComponent on={midiStatus} />
+      <StatusLedComponent on={false} />
     </Box>
   )
 }

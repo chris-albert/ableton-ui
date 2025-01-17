@@ -1,11 +1,4 @@
-import {
-  MidiEventRecord,
-  MidiInput,
-  MidiMessage,
-  MidiMessageWithRaw,
-  MidiOutput,
-  WindowMidi,
-} from './WindowMidi'
+import { MidiEventRecord, MidiInput, MidiMessage, MidiOutput, WindowMidi } from './WindowMidi'
 import { atom, getDefaultStore, PrimitiveAtom } from 'jotai'
 import getMidiAccess from './MidiAccess'
 import { atomWithStorage } from 'jotai/utils'
@@ -38,9 +31,6 @@ const store = getDefaultStore()
 const listeners = {
   daw: EventEmitter<MidiEventRecord>(),
   controller: EventEmitter<MidiEventRecord>(),
-}
-export type MidiListener = {
-  on: (f: MidiEventRecord) => void
 }
 
 export type MidiEmitter = {

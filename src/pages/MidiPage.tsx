@@ -1,16 +1,11 @@
 import React from 'react'
 import { Box, Card, CardContent, CardHeader } from '@mui/material'
-import { useMidiInput } from '../hooks/Midi'
 import { MonitorPage } from './MonitorPage'
-import { MidiInputComponent } from '../components/MidiInputComponent'
-import { MidiOutputComponent } from '../components/MidiOutputComponent'
 import { MidiSelectComponent } from '../components/midi/MidiSelectComponent'
-import { Midi } from '../midi/GlobalMidi'
 
 type MidiPageProps = {}
 
 export const MidiPage: React.FC<MidiPageProps> = () => {
-  const midiInput = useMidiInput()
   return (
     <Box>
       <Box

@@ -2,17 +2,13 @@ import React from 'react'
 import { AppBar, Box, Toolbar, Grid, Drawer, List } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
-import { MidiInputComponent } from './components/MidiInputComponent'
 import { NavLinkItem } from './components/NavLinkItem'
-import { MidiOutputComponent } from './components/MidiOutputComponent'
 import { ProjectsSelectComponent } from './components/projects/ProjectsSelectComponent'
 import { Project } from './model/Projects'
 
-export type NavProps = {
-  project: Project
-}
+export type NavProps = {}
 
-export const Nav: React.FC<NavProps> = ({ project }) => {
+export const Nav: React.FC<NavProps> = () => {
   const [menuOpen, setMenuOpen] = React.useState(false)
 
   return (
@@ -84,7 +80,7 @@ export const Nav: React.FC<NavProps> = ({ project }) => {
               justifyContent='right'>
               {/*Right*/}
               <Box sx={{ display: 'flex' }}>
-                <ProjectsSelectComponent project={project} />
+                <ProjectsSelectComponent />
               </Box>
             </Grid>
           </Grid>
