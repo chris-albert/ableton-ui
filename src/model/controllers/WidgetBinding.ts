@@ -4,11 +4,16 @@ import { MidiMessage } from '../../midi/WindowMidi'
 import _ from 'lodash'
 import { Midi } from '../../midi/GlobalMidi'
 
-export type WidgetAction = () => void
-export type ControllerWidget = (f: (value: number) => void) => () => void
+export type WidgetAction = (index: number) => void
+export type WidgetRender = (values: Array<number>) => void
+export type WidgetOpts = {
+  render: WidgetRender
+  targets: Array<ControllerPadTarget>
+}
+export type ControllerWidget = (opts: WidgetOpts) => WidgetAction
 
 export class WidgetBinding extends Data.Class<{
-  target: ControllerPadTarget
+  targets: Array<ControllerPadTarget>
   widget: ControllerWidget
 }> {}
 
@@ -16,15 +21,20 @@ export class WidgetBindings extends Data.Class<{
   controller: Controller
   bindings: Array<WidgetBinding>
 }> {
-  private widgetBindings: Record<string, WidgetAction> = {}
+  private widgetBindings: Record<string, () => WidgetAction> = {}
 
   private initWidgetBindings(): void {
     this.widgetBindings = _.fromPairs(
-      _.map(this.bindings, (binding) => {
-        return [
-          targetToKey(binding.target),
-          binding.widget((value) => Midi.emitters.controller.send(targetToMessage(binding.target, value))),
-        ]
+      _.flatMap(this.bindings, (binding) => {
+        const widget = binding.widget({
+          targets: binding.targets,
+          render: (values) =>
+            _.forEach(binding.targets, (target, i) =>
+              Midi.emitters.controller.send(targetToMessage(target, values[i])),
+            ),
+        })
+
+        return _.map(binding.targets, (target, i) => [targetToKey(target), () => widget(i)])
       }),
     )
   }
