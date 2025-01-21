@@ -50,6 +50,7 @@ export class ControllerPad extends Data.Class<{
  */
 export class Controller extends Data.Class<{
   pads: Array<Array<ControllerPad>>
+  init: () => void
 }> {
   private noteLookup: Record<number, ControllerPad> = _.fromPairs(
     _.compact(
@@ -78,5 +79,7 @@ export class Controller extends Data.Class<{
     return Option.none()
   }
 }
+
+export const emptyController: Controller = new Controller({ pads: [], init: () => {} })
 
 export const midiFromRowCol = (row: number, column: number): number => parseInt(`${row}${column + 1}`)

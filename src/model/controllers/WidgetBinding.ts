@@ -23,7 +23,7 @@ export class WidgetBindings extends Data.Class<{
       _.map(this.bindings, (binding) => {
         return [
           targetToKey(binding.target),
-          binding.widget((value) => Midi.emitters.daw.send(targetToMessage(binding.target, value))),
+          binding.widget((value) => Midi.emitters.controller.send(targetToMessage(binding.target, value))),
         ]
       }),
     )
@@ -47,6 +47,7 @@ export class WidgetBindings extends Data.Class<{
   }
 
   bind() {
+    this.controller.init()
     this.initWidgetBindings()
     Midi.listeners.controller.on('*', (m) => this.onMessage(m))
   }

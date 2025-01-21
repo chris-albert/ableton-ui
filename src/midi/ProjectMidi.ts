@@ -14,7 +14,7 @@ import { parseAbletonUIMessage } from '../model/AbletonUIMessage'
 import * as t from 'io-ts'
 import { atomWithStorage, splitAtom } from 'jotai/utils'
 import { emptyWidgets, Widgets } from '../model/Widgets'
-import { focusAtom } from 'jotai-optics'
+import { createJSONStorage } from 'jotai/utils'
 
 const store = getDefaultStore()
 
@@ -56,11 +56,24 @@ export type ProjectImportStatus = 'none' | 'importing' | 'finalizing' | 'done' |
 const atoms = {
   initArrangement: atom<InitArrangement>([]),
   importStatus: atom<ProjectImportStatus>('none'),
-  projectsConfig: atomWithStorage<ProjectsConfig>('projects-config', defaultProjectsConfig()),
+  projectsConfig: atomWithStorage<ProjectsConfig>(
+    'projects-config',
+    defaultProjectsConfig(),
+    createJSONStorage(),
+    {
+      getOnInit: true,
+    },
+  ),
   project: {
     active: atomWithStorage('active-project', 'default'),
-    arrangement: (name: string) => atomWithStorage<UIArrangement>(`arrangement-${name}`, emptyArrangement()),
-    widgets: (name: string) => atomWithStorage<Widgets>(`widgets-${name}`, emptyWidgets),
+    arrangement: (name: string) =>
+      atomWithStorage<UIArrangement>(`arrangement-${name}`, emptyArrangement(), createJSONStorage(), {
+        getOnInit: true,
+      }),
+    widgets: (name: string) =>
+      atomWithStorage<Widgets>(`widgets-${name}`, emptyWidgets, createJSONStorage(), {
+        getOnInit: true,
+      }),
   },
   realTime: {
     beats: atom(0),

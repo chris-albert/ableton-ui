@@ -1,31 +1,20 @@
 import React from 'react'
 import { Box, Button } from '@mui/material'
 import { ControllerGridComponent } from './ControllerGridComponent'
-import { LaunchPadMiniMk3 } from '../../model/controllers/LaunchPadMiniMk3'
-import { MyCustomBindings } from '../../model/controllers/MyCustomBindings'
 import { Midi } from '../../midi/GlobalMidi'
+import { ControllerMidi } from '../../midi/ControllerMidi'
 
 export type LaunchpadMiniComponentProps = {}
 
 export const LaunchpadMiniComponent: React.FC<LaunchpadMiniComponentProps> = ({}) => {
-  const controller = LaunchPadMiniMk3
-  const bindings = MyCustomBindings
-
-  React.useEffect(() => {
-    bindings.bind()
-  }, [])
+  const bindings = ControllerMidi.getBindings()
 
   const enableProgrammerMode = () => {
-    Midi.emitters.controller.send({
-      type: 'sysex',
-      manufacturer: 0,
-      statusByte: 32,
-      body: [41, 2, 13, 14, 1],
-    })
+    bindings.controller.init()
   }
 
   const clearPads = () => {
-    controller.foreach((pad) => Midi.emitters.controller.send(pad.message(0)))
+    bindings.controller.foreach((pad) => Midi.emitters.controller.send(pad.message(0)))
   }
 
   const reBind = () => {
@@ -60,7 +49,7 @@ export const LaunchpadMiniComponent: React.FC<LaunchpadMiniComponentProps> = ({}
         </Button>
       </Box>
       <Box>
-        <ControllerGridComponent controller={controller} />
+        <ControllerGridComponent controller={bindings.controller} />
       </Box>
     </Box>
   )

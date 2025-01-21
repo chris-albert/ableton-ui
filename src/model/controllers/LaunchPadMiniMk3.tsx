@@ -11,8 +11,17 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import { Box } from '@mui/material'
+import { Midi } from '../../midi/GlobalMidi'
 
 export const LaunchPadMiniMk3: Controller = new Controller({
+  init: () => {
+    Midi.emitters.controller.send({
+      type: 'sysex',
+      manufacturer: 0,
+      statusByte: 32,
+      body: [41, 2, 13, 14, 1],
+    })
+  },
   pads: [
     [
       new ControllerPad({

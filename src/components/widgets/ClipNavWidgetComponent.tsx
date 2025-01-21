@@ -13,6 +13,7 @@ export const ClipNavWidgetComponent: React.FC<ClipNavWidgetComponentProps> = ({ 
   const trackName = widget.track
 
   const tracks = ProjectHooks.useTracks()
+  const a = ProjectHooks.useArrangement()
 
   const track = React.useMemo(() => {
     if (trackName !== undefined) {

@@ -12,7 +12,7 @@ const useArrangementAtom = () => {
 
 const useTracksAtom = () => {
   const arrangement = useArrangementAtom()
-  return focusAtom(arrangement, (o) => o.prop('tracks'))
+  return React.useMemo(() => focusAtom(arrangement, (o) => o.prop('tracks')), [arrangement])
 }
 
 export const ProjectHooks = {

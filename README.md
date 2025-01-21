@@ -22,6 +22,9 @@ you can't get in/out to work at the same time.
 You should set up an IAC Driver with AUI TX and AUI RX, and wire those into both the UI 
 and Ableton.
 
+In the UI set the RX to Midi Input and the TX to Midi Output
+and in ableton set the RX to the Midi Output and TX to Midi Input
+
 ## MIDI Implementation
 
 ### Sysex
