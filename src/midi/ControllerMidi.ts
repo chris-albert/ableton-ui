@@ -1,4 +1,3 @@
-import { Midi } from './GlobalMidi'
 import { Controller } from '../model/controllers/Controller'
 import { atom, getDefaultStore } from 'jotai'
 import { LaunchPadMiniMk3 } from '../model/controllers/LaunchPadMiniMk3'
@@ -13,9 +12,7 @@ const atoms = {
 }
 
 const ControllerListener = () => {
-  // Midi.listeners.controller.on('*', (message) => {
-  //   console.debug('controller message', message)
-  // })
+  console.log('Controller Init')
   store.get(atoms.bindings).bind()
 }
 

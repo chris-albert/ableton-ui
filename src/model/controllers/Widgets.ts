@@ -4,9 +4,9 @@ import { ControllerWidget } from './WidgetBinding'
 import { Midi } from '../../midi/GlobalMidi'
 import { ProjectMidi } from '../../midi/ProjectMidi'
 import _ from 'lodash'
-import { NavigateableClip } from '../UIStateDisplay'
-import { getNovationColor } from '../../components/controllers/NovationColors'
+import { NavigateableClip, UIClip } from '../UIStateDisplay'
 import { Color } from '../../components/controllers/Color'
+import { searchActiveClip } from '../../hooks/ActiveClipHook'
 
 export const PlayStopWidget: ControllerWidget = (opts) => {
   const store = getDefaultStore()
@@ -23,6 +23,22 @@ export const PlayStopWidget: ControllerWidget = (opts) => {
     Midi.emitters.daw.send(
       store.get(ProjectMidi.atoms.realTime.isPlaying) ? TX_MESSAGE.stop() : TX_MESSAGE.play(),
     )
+  }
+}
+
+export const PlayWidget: ControllerWidget = (opts) => {
+  opts.render([Color.GREEN])
+
+  return () => {
+    Midi.emitters.daw.send(TX_MESSAGE.play())
+  }
+}
+
+export const StopWidget: ControllerWidget = (opts) => {
+  opts.render([Color.RED])
+
+  return () => {
+    Midi.emitters.daw.send(TX_MESSAGE.stop())
   }
 }
 
@@ -82,17 +98,15 @@ export const TimeSignatureNoteLengthWidget: ControllerWidget = (opts) => {
   return () => {}
 }
 
-export const SongsWidget =
-  (fromIndex: number, toIndex: number, trackName: string): ControllerWidget =>
-  (opts) => {
-    const store = getDefaultStore()
+export const SongsWidget = (fromIndex: number, toIndex: number, trackName: string): ControllerWidget =>
+  ControllerWidget.guard(() => _.find(ProjectMidi.arrangement().tracks, (t) => t.name === trackName))(
+    (track) => (opts) => {
+      const store = getDefaultStore()
 
-    const arrangement = ProjectMidi.arrangement()
-    const cueHash = _.fromPairs(_.map(arrangement.cues, (cue) => [cue.time, cue]))
-    const clips: Array<NavigateableClip> = []
+      const arrangement = ProjectMidi.arrangement()
+      const cueHash = _.fromPairs(_.map(arrangement.cues, (cue) => [cue.time, cue]))
+      const clips: Array<NavigateableClip> = []
 
-    const track = _.find(arrangement.tracks, (t) => t.name === trackName)
-    if (track !== undefined) {
       track.clips.forEach((clip) => {
         if (clip.type === 'real') {
           const cue = _.get(cueHash, clip.startTime, undefined)
@@ -101,30 +115,59 @@ export const SongsWidget =
           }
         }
       })
-    }
 
-    const render = () => {
-      const beat = store.get(ProjectMidi.atoms.realTime.beats)
-      opts.render(
-        _.map(Array(toIndex - fromIndex), (c, i) => {
-          const clip = _.get(clips, i, undefined)
-          if (clip !== undefined) {
-            console.log('clip color', clip.clip.color)
-            console.log('clip color', Color.toRGB(clip.clip.color))
-            return clip.clip.color
-          } else {
-            return 0
+      let storedActiveClip: UIClip | undefined = undefined
+      let interval: NodeJS.Timer | number | undefined = undefined
+      let intervalCount = 0
+      const setActiveClip = (activeClip: UIClip, index: number) => {
+        if (activeClip !== storedActiveClip) {
+          clearInterval(interval)
+          if (activeClip.type === 'real') {
+            const onArr = Array(index + 1).fill(undefined)
+            onArr[index] = activeClip.color
+            const offArr = Array(index + 1).fill(undefined)
+            offArr[index] = Color.BLACK
+            interval = setInterval(() => {
+              if (intervalCount % 2 === 0) {
+                opts.render(onArr)
+              } else {
+                opts.render(offArr)
+              }
+              intervalCount++
+            }, 250)
           }
-        }),
-      )
-    }
-
-    render()
-
-    return (i) => {
-      const clip = _.get(clips, i, undefined)
-      if (clip !== undefined) {
-        Midi.emitters.daw.send(TX_MESSAGE.jumpToCue(clip.cue.index))
+        }
       }
-    }
-  }
+
+      const render = () => {
+        const beat = store.get(ProjectMidi.atoms.realTime.beats)
+        const activeClip = searchActiveClip(track.clips, beat)
+        opts.render(
+          _.map(Array(toIndex - fromIndex), (c, i) => {
+            const clip = _.get(clips, i, undefined)
+            if (clip !== undefined) {
+              if (activeClip === clip.clip) {
+                setActiveClip(activeClip, i)
+                // If we are the active clip, let the active clip interval to the rendering
+                return undefined
+              } else {
+                return clip.clip.color
+              }
+            } else {
+              return 0
+            }
+          }),
+        )
+      }
+
+      render()
+      store.sub(ProjectMidi.atoms.realTime.beats, render)
+
+      return (i) => {
+        const clip = _.get(clips, i, undefined)
+        if (clip !== undefined) {
+          Midi.emitters.daw.send(TX_MESSAGE.jumpToCue(clip.cue.index))
+        }
+      }
+    },
+  )

@@ -6,12 +6,26 @@ import { Midi } from '../../midi/GlobalMidi'
 import { Color } from '../../components/controllers/Color'
 
 export type WidgetAction = (index: number) => void
-export type WidgetRender = (values: Array<Color>) => void
+export type WidgetRender = (values: Array<Color | undefined>) => void
 export type WidgetOpts = {
   render: WidgetRender
   targets: Array<ControllerPadTarget>
 }
 export type ControllerWidget = (opts: WidgetOpts) => WidgetAction
+
+const empty: ControllerWidget = () => () => {}
+const guard =
+  <A>(f: () => A | undefined) =>
+  (w: (a: A) => ControllerWidget): ControllerWidget => {
+    const fa = f()
+    if (fa === undefined) return empty
+    else return w(fa)
+  }
+
+export const ControllerWidget = {
+  empty,
+  guard,
+}
 
 export class WidgetBinding extends Data.Class<{
   targets: Array<ControllerPadTarget>

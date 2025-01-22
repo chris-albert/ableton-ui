@@ -5,7 +5,9 @@ import {
   BeatsWidget,
   MetronomeFlashWidget,
   PlayStopWidget,
+  PlayWidget,
   SongsWidget,
+  StopWidget,
   TimeSignatureNoteCountWidget,
   TimeSignatureNoteLengthWidget,
 } from './Widgets'
@@ -14,8 +16,16 @@ export const MyCustomBindings: WidgetBindings = new WidgetBindings({
   controller: LaunchPadMiniMk3,
   bindings: [
     new WidgetBinding({
-      targets: [ControllerPadNote(19)],
+      targets: [ControllerPadNote(89)],
       widget: PlayStopWidget,
+    }),
+    new WidgetBinding({
+      targets: [ControllerPadNote(19)],
+      widget: StopWidget,
+    }),
+    new WidgetBinding({
+      targets: [ControllerPadNote(29)],
+      widget: PlayWidget,
     }),
     new WidgetBinding({
       targets: [ControllerPadNote(99)],

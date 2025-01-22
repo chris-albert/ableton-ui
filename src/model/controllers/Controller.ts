@@ -14,7 +14,7 @@ export const ControllerPadNote = (note: number) => ControllerPadTarget.Note({ no
 
 export type ControllerPadColor = {
   target: ControllerPadTarget
-  color: number
+  color: number | undefined
 }
 
 export const targetToKey = (target: ControllerPadTarget): string =>
