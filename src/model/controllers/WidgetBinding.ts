@@ -3,9 +3,10 @@ import { Controller, ControllerPadTarget, targetToKey, targetToMessage } from '.
 import { MidiMessage } from '../../midi/WindowMidi'
 import _ from 'lodash'
 import { Midi } from '../../midi/GlobalMidi'
+import { Color } from '../../components/controllers/Color'
 
 export type WidgetAction = (index: number) => void
-export type WidgetRender = (values: Array<number>) => void
+export type WidgetRender = (values: Array<Color>) => void
 export type WidgetOpts = {
   render: WidgetRender
   targets: Array<ControllerPadTarget>
@@ -29,9 +30,7 @@ export class WidgetBindings extends Data.Class<{
         const widget = binding.widget({
           targets: binding.targets,
           render: (values) =>
-            _.forEach(binding.targets, (target, i) =>
-              Midi.emitters.controller.send(targetToMessage(target, values[i])),
-            ),
+            this.controller.render(_.map(binding.targets, (target, i) => ({ target, color: values[i] }))),
         })
 
         return _.map(binding.targets, (target, i) => [targetToKey(target), () => widget(i)])

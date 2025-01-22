@@ -12,6 +12,11 @@ export const ControllerPadTarget = Data.taggedEnum<ControllerPadTarget>()
 
 export const ControllerPadNote = (note: number) => ControllerPadTarget.Note({ note })
 
+export type ControllerPadColor = {
+  target: ControllerPadTarget
+  color: number
+}
+
 export const targetToKey = (target: ControllerPadTarget): string =>
   ControllerPadTarget.$match({
     Note: ({ note }) => `noteon-${note}`,
@@ -36,6 +41,12 @@ export const targetToMessage = (target: ControllerPadTarget, value: number): Mid
       }) as MidiMessage,
   })(target)
 
+export const targetToValue = (target: ControllerPadTarget): number =>
+  ControllerPadTarget.$match({
+    Note: ({ note }) => note,
+    CC: ({ controllerNumber }) => controllerNumber,
+  })(target)
+
 export class ControllerPad extends Data.Class<{
   target: ControllerPadTarget
   content: React.ReactElement
@@ -51,6 +62,7 @@ export class ControllerPad extends Data.Class<{
 export class Controller extends Data.Class<{
   pads: Array<Array<ControllerPad>>
   init: () => void
+  render: (pads: Array<ControllerPadColor>) => void
 }> {
   private noteLookup: Record<number, ControllerPad> = _.fromPairs(
     _.compact(
@@ -80,6 +92,10 @@ export class Controller extends Data.Class<{
   }
 }
 
-export const emptyController: Controller = new Controller({ pads: [], init: () => {} })
+export const emptyController: Controller = new Controller({
+  pads: [],
+  init: () => {},
+  render: () => {},
+})
 
 export const midiFromRowCol = (row: number, column: number): number => parseInt(`${row}${column + 1}`)

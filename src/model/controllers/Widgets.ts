@@ -6,11 +6,12 @@ import { ProjectMidi } from '../../midi/ProjectMidi'
 import _ from 'lodash'
 import { NavigateableClip } from '../UIStateDisplay'
 import { getNovationColor } from '../../components/controllers/NovationColors'
+import { Color } from '../../components/controllers/Color'
 
 export const PlayStopWidget: ControllerWidget = (opts) => {
   const store = getDefaultStore()
 
-  const color = (playing: boolean): number => (playing ? 5 : 87)
+  const color = (playing: boolean): number => (playing ? Color.RED : Color.GREEN)
 
   opts.render([color(store.get(ProjectMidi.atoms.realTime.isPlaying))])
 
@@ -28,7 +29,7 @@ export const PlayStopWidget: ControllerWidget = (opts) => {
 export const MetronomeFlashWidget: ControllerWidget = (opts) => {
   const store = getDefaultStore()
 
-  const color = (barBeat: number): number => (barBeat === 1 ? 5 : 87)
+  const color = (barBeat: number): number => (barBeat === 1 ? Color.GREEN : Color.RED)
 
   store.sub(ProjectMidi.atoms.realTime.barBeats, () => {
     opts.render([color(store.get(ProjectMidi.atoms.realTime.barBeats))])
@@ -43,7 +44,7 @@ export const MetronomeFlashWidget: ControllerWidget = (opts) => {
 export const BeatsWidget: ControllerWidget = (opts) => {
   const store = getDefaultStore()
 
-  const color = (barBeat: number): number => (barBeat === 1 ? 5 : 87)
+  const color = (barBeat: number): number => (barBeat === 1 ? Color.GREEN : Color.RED)
 
   store.sub(ProjectMidi.atoms.realTime.barBeats, () => {
     const beat = store.get(ProjectMidi.atoms.realTime.barBeats)
@@ -58,7 +59,7 @@ export const TimeSignatureNoteCountWidget: ControllerWidget = (opts) => {
 
   const render = () => {
     const sig = store.get(ProjectMidi.atoms.realTime.timeSignature)
-    opts.render(_.map(Array(opts.targets.length), (_, i) => (i + 1 <= sig.noteCount ? 87 : 0)))
+    opts.render(_.map(Array(opts.targets.length), (_, i) => (i + 1 <= sig.noteCount ? Color.BLUE : 0)))
   }
 
   render()
@@ -72,7 +73,7 @@ export const TimeSignatureNoteLengthWidget: ControllerWidget = (opts) => {
 
   const render = () => {
     const sig = store.get(ProjectMidi.atoms.realTime.timeSignature)
-    opts.render(_.map(Array(opts.targets.length), (_, i) => (i + 1 <= sig.noteLength ? 87 : 0)))
+    opts.render(_.map(Array(opts.targets.length), (_, i) => (i + 1 <= sig.noteLength ? Color.PURPLE : 0)))
   }
 
   render()
@@ -108,7 +109,9 @@ export const SongsWidget =
         _.map(Array(toIndex - fromIndex), (c, i) => {
           const clip = _.get(clips, i, undefined)
           if (clip !== undefined) {
-            return getNovationColor(clip.clip.color)
+            console.log('clip color', clip.clip.color)
+            console.log('clip color', Color.toRGB(clip.clip.color))
+            return clip.clip.color
           } else {
             return 0
           }
