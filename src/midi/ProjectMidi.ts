@@ -87,6 +87,11 @@ const atoms = {
   },
 }
 
+const arrangement = () => {
+  const active = store.get(atoms.project.active)
+  return store.get(atoms.project.arrangement(active))
+}
+
 const ProjectListener = () => {
   store.sub(atoms.importStatus, () => {
     const status = store.get(atoms.importStatus)
@@ -137,4 +142,5 @@ export const ProjectMidi = {
   init,
   atoms,
   onStatusChange,
+  arrangement,
 }

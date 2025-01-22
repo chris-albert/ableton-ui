@@ -14,7 +14,6 @@ export type ClipNavComponentProps = {
 
 export const ClipNavComponent: React.FC<ClipNavComponentProps> = ({ track }) => {
   const activeClip = useActiveClip(track)
-  const currentBeat = useBeat()
   const arrangement = ProjectHooks.useArrangement()
 
   const cueHash = React.useMemo(() => {

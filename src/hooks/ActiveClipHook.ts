@@ -7,7 +7,7 @@ const isClipActive = (clip: UIClip, beat: number): boolean => {
   return beat >= clip.startTime && (clip.endTime === undefined || beat < clip.endTime)
 }
 
-const searchActiveClip = (clips: Array<UIClip>, beat: number): UIClip => {
+export const searchActiveClip = (clips: Array<UIClip>, beat: number): UIClip => {
   return _.find(clips, (clip) => isClipActive(clip, beat)) as UIClip
 }
 
