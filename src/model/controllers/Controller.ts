@@ -2,6 +2,7 @@ import React from 'react'
 import { Data, Option } from 'effect'
 import { MidiMessage } from '../../midi/WindowMidi'
 import _ from 'lodash'
+import { Color } from '../../components/controllers/Color'
 
 export type ControllerPadTarget = Data.TaggedEnum<{
   Note: { note: number }
@@ -89,6 +90,17 @@ export class Controller extends Data.Class<{
       }
     }
     return Option.none()
+  }
+
+  clear() {
+    this.render(
+      _.flatMap(this.pads, (padRow) =>
+        _.map(padRow, (pad) => ({
+          target: pad.target,
+          color: Color.BLACK,
+        })),
+      ),
+    )
   }
 }
 

@@ -4,7 +4,7 @@ import { ControllerWidget } from './WidgetBinding'
 import { Midi } from '../../midi/GlobalMidi'
 import { ProjectMidi } from '../../midi/ProjectMidi'
 import _ from 'lodash'
-import { NavigateableClip, UIClip } from '../UIStateDisplay'
+import { NavigateableClip, UIClip, UIRealClip } from '../UIStateDisplay'
 import { Color } from '../../components/controllers/Color'
 import { searchActiveClip } from '../../hooks/ActiveClipHook'
 
@@ -116,32 +116,42 @@ export const SongsWidget = (fromIndex: number, toIndex: number, trackName: strin
         }
       })
 
-      let storedActiveClip: UIClip | undefined = undefined
+      let storedActiveClip: UIRealClip | undefined = undefined
       let interval: NodeJS.Timer | number | undefined = undefined
       let intervalCount = 0
-      const setActiveClip = (activeClip: UIClip, index: number) => {
+      const setActiveClip = (activeClip: UIRealClip, index: number) => {
         if (activeClip !== storedActiveClip) {
+          storedActiveClip = activeClip
+          console.log('active clip', activeClip)
+          intervalCount = 0
           clearInterval(interval)
-          if (activeClip.type === 'real') {
-            const onArr = Array(index + 1).fill(undefined)
-            onArr[index] = activeClip.color
-            const offArr = Array(index + 1).fill(undefined)
-            offArr[index] = Color.BLACK
-            interval = setInterval(() => {
-              if (intervalCount % 2 === 0) {
-                opts.render(onArr)
-              } else {
-                opts.render(offArr)
-              }
-              intervalCount++
-            }, 250)
-          }
+          const onArr = Array(index + 1).fill(undefined)
+          onArr[index] = activeClip.color
+          const offArr = Array(index + 1).fill(undefined)
+          offArr[index] = Color.BLACK
+          interval = setInterval(() => {
+            if (intervalCount % 2 === 0) {
+              opts.render(onArr)
+            } else {
+              opts.render(offArr)
+            }
+            intervalCount++
+          }, 250)
         }
+      }
+
+      const setBlankClip = () => {
+        storedActiveClip = undefined
+        clearInterval(interval)
+        interval = undefined
       }
 
       const render = () => {
         const beat = store.get(ProjectMidi.atoms.realTime.beats)
         const activeClip = searchActiveClip(track.clips, beat)
+        if (activeClip.type === 'blank') {
+          setBlankClip()
+        }
         opts.render(
           _.map(Array(toIndex - fromIndex), (c, i) => {
             const clip = _.get(clips, i, undefined)
@@ -169,5 +179,57 @@ export const SongsWidget = (fromIndex: number, toIndex: number, trackName: strin
           Midi.emitters.daw.send(TX_MESSAGE.jumpToCue(clip.cue.index))
         }
       }
+    },
+  )
+
+export const TrackSectionsWidget = (
+  size: number,
+  trackName: string,
+  parentTrackName: string | undefined,
+): ControllerWidget =>
+  ControllerWidget.guard(() => _.find(ProjectMidi.arrangement().tracks, (t) => t.name === trackName))(
+    (track) => (opts) => {
+      const store = getDefaultStore()
+
+      const parentTrack = _.find(ProjectMidi.arrangement().tracks, (t) => t.name === parentTrackName)
+
+      const validInParent =
+        (beat: number) =>
+        (clip: UIClip): boolean => {
+          if (parentTrack === undefined) {
+            return true
+          } else {
+            const parentActive = searchActiveClip(parentTrack.clips, beat)
+            return parentActive.endTime === undefined ? false : clip.startTime < parentActive.endTime
+          }
+        }
+
+      const render = () => {
+        const beat = store.get(ProjectMidi.atoms.realTime.beats)
+        const activeClip = searchActiveClip(track.clips, beat)
+
+        const tmpClips: Array<UIClip> = []
+        track.clips.forEach((clip) => {
+          if (clip.startTime >= activeClip.startTime) {
+            tmpClips.push(clip)
+          }
+        })
+        const visibleClips = _.filter(_.take(tmpClips, size), validInParent(beat))
+        opts.render(
+          _.map(Array(size), (c, i) => {
+            const clip = _.get(visibleClips, i, undefined)
+            if (clip !== undefined && clip.type === 'real') {
+              return clip.color
+            } else {
+              return Color.BLACK
+            }
+          }),
+        )
+      }
+
+      render()
+      store.sub(ProjectMidi.atoms.realTime.beats, render)
+
+      return () => {}
     },
   )

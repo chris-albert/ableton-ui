@@ -10,6 +10,7 @@ import {
   StopWidget,
   TimeSignatureNoteCountWidget,
   TimeSignatureNoteLengthWidget,
+  TrackSectionsWidget,
 } from './Widgets'
 
 export const MyCustomBindings: WidgetBindings = new WidgetBindings({
@@ -85,6 +86,20 @@ export const MyCustomBindings: WidgetBindings = new WidgetBindings({
         ControllerPadNote(18),
       ],
       widget: SongsWidget(0, 8, 'Songs'),
+    }),
+
+    new WidgetBinding({
+      targets: [
+        ControllerPadNote(41),
+        ControllerPadNote(42),
+        ControllerPadNote(43),
+        ControllerPadNote(44),
+        ControllerPadNote(45),
+        ControllerPadNote(46),
+        ControllerPadNote(47),
+        ControllerPadNote(48),
+      ],
+      widget: TrackSectionsWidget(8, 'Parts', 'Songs'),
     }),
   ],
 })
