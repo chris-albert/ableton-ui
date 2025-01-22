@@ -2,6 +2,7 @@ import { WidgetBinding, WidgetBindings } from './WidgetBinding'
 import { ControllerPadNote } from './Controller'
 import { LaunchPadMiniMk3 } from './LaunchPadMiniMk3'
 import {
+  BarTrackerWidget,
   BeatsWidget,
   MetronomeFlashWidget,
   PlayStopWidget,
@@ -99,7 +100,21 @@ export const MyCustomBindings: WidgetBindings = new WidgetBindings({
         ControllerPadNote(47),
         ControllerPadNote(48),
       ],
-      widget: TrackSectionsWidget(8, 'Parts', 'Songs'),
+      widget: TrackSectionsWidget('Parts', 'Songs'),
+    }),
+
+    new WidgetBinding({
+      targets: [
+        ControllerPadNote(71),
+        ControllerPadNote(72),
+        ControllerPadNote(73),
+        ControllerPadNote(74),
+        ControllerPadNote(75),
+        ControllerPadNote(76),
+        ControllerPadNote(77),
+        ControllerPadNote(78),
+      ],
+      widget: BarTrackerWidget('Bars'),
     }),
   ],
 })

@@ -122,7 +122,6 @@ export const SongsWidget = (fromIndex: number, toIndex: number, trackName: strin
       const setActiveClip = (activeClip: UIRealClip, index: number) => {
         if (activeClip !== storedActiveClip) {
           storedActiveClip = activeClip
-          console.log('active clip', activeClip)
           intervalCount = 0
           clearInterval(interval)
           const onArr = Array(index + 1).fill(undefined)
@@ -183,12 +182,12 @@ export const SongsWidget = (fromIndex: number, toIndex: number, trackName: strin
   )
 
 export const TrackSectionsWidget = (
-  size: number,
   trackName: string,
   parentTrackName: string | undefined,
 ): ControllerWidget =>
   ControllerWidget.guard(() => _.find(ProjectMidi.arrangement().tracks, (t) => t.name === trackName))(
     (track) => (opts) => {
+      const size = opts.targets.length
       const store = getDefaultStore()
 
       const parentTrack = _.find(ProjectMidi.arrangement().tracks, (t) => t.name === parentTrackName)
@@ -229,6 +228,41 @@ export const TrackSectionsWidget = (
 
       render()
       store.sub(ProjectMidi.atoms.realTime.beats, render)
+
+      return () => {}
+    },
+  )
+
+export const BarTrackerWidget = (trackName: string): ControllerWidget =>
+  ControllerWidget.guard(() => _.find(ProjectMidi.arrangement().tracks, (t) => t.name === trackName))(
+    (track) => (opts) => {
+      const size = opts.targets.length
+      const store = getDefaultStore()
+
+      let barCount = 0
+      const render = () => {
+        const beat = store.get(ProjectMidi.atoms.realTime.beats)
+        const barBeat = store.get(ProjectMidi.atoms.realTime.barBeats)
+        const activeClip = searchActiveClip(track.clips, beat)
+        if (activeClip.type === 'real') {
+          const count = Number(activeClip.name)
+          if (!isNaN(count)) {
+            console.log('barCOunt', barCount)
+            if (activeClip.startTime === beat) {
+              barCount = 0
+            } else if (barBeat === 1) {
+              barCount++
+              if (barCount >= count) {
+                barCount = 0
+              }
+            }
+            opts.render(_.map(Array(size), (a, i) => (i <= barCount ? Color.GREEN : Color.BLACK)))
+          }
+        }
+      }
+
+      render()
+      store.sub(ProjectMidi.atoms.realTime.barBeats, render)
 
       return () => {}
     },
