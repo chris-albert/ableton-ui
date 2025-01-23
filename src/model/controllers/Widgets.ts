@@ -247,7 +247,6 @@ export const BarTrackerWidget = (trackName: string): ControllerWidget =>
         if (activeClip.type === 'real') {
           const count = Number(activeClip.name)
           if (!isNaN(count)) {
-            console.log('barCOunt', barCount)
             if (activeClip.startTime === beat) {
               barCount = 0
             } else if (barBeat === 1) {
