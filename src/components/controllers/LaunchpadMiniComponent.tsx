@@ -1,7 +1,6 @@
 import React from 'react'
 import { Box, Button } from '@mui/material'
 import { ControllerGridComponent } from './ControllerGridComponent'
-import { Midi } from '../../midi/GlobalMidi'
 import { ControllerMidi } from '../../midi/ControllerMidi'
 
 export type LaunchpadMiniComponentProps = {}
@@ -14,7 +13,7 @@ export const LaunchpadMiniComponent: React.FC<LaunchpadMiniComponentProps> = ({}
   }
 
   const clearPads = () => {
-    bindings.controller.foreach((pad) => Midi.emitters.controller.send(pad.message(0)))
+    bindings.controller.clear()
   }
 
   const reBind = () => {

@@ -4,6 +4,8 @@ import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import { NavLinkItem } from './components/NavLinkItem'
 import { ProjectsSelectComponent } from './components/projects/ProjectsSelectComponent'
+import RefreshIcon from '@mui/icons-material/Refresh'
+import { ControllerMidi } from './midi/ControllerMidi'
 
 export type NavProps = {}
 
@@ -19,7 +21,7 @@ export const Nav: React.FC<NavProps> = () => {
           onClose={() => setMenuOpen(false)}>
           <Box
             role='presentation'
-            sx={{ width: 250 }}>
+            sx={{ width: 200 }}>
             <List>
               <NavLinkItem
                 path='/'
@@ -78,7 +80,13 @@ export const Nav: React.FC<NavProps> = () => {
               container
               justifyContent='right'>
               {/*Right*/}
-              <Box sx={{ display: 'flex' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box>
+                  <IconButton onClick={() => ControllerMidi.getBindings().bind()}>
+                    <RefreshIcon />
+                  </IconButton>
+                </Box>
+
                 <ProjectsSelectComponent />
               </Box>
             </Grid>
