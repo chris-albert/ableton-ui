@@ -14,6 +14,8 @@ import { MidiPage } from './pages/MidiPage'
 import { ProjectMidi } from './midi/ProjectMidi'
 import { Midi } from './midi/GlobalMidi'
 import { ControllerMidi } from './midi/ControllerMidi'
+import { ReactMidiRenderer } from './react-midi/renderer'
+import { MidiApp } from './components/midi/MidiApp'
 
 const darkTheme = createTheme({
   palette: {
@@ -28,6 +30,7 @@ function App() {
   Midi.init().then((_) => {
     ProjectMidi.init()
     ControllerMidi.init()
+    ReactMidiRenderer.render(<MidiApp />)
   })
 
   React.useEffect(() => {
