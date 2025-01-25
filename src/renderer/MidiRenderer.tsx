@@ -1,7 +1,7 @@
 import { MidiReconciler } from './MidiReconciler'
 import { ReactNode } from 'react'
 
-//https://github.com/chentsulin/awesome-react-renderer
+// https://github.com/chentsulin/awesome-react-renderer
 
 const render = (node: ReactNode) => {
   console.log('Rendering MidiReconciler')
@@ -16,10 +16,9 @@ const render = (node: ReactNode) => {
     console.error,
     null,
   )
-  const result = MidiReconciler.instance.updateContainer(node, container, null, () => {
+  MidiReconciler.instance.updateContainer(node, container, null, () => {
     console.log('Done rendering wooohoooo', info)
   })
-  console.log('Midi result', result)
 }
 
 export const MidiRenderer = {

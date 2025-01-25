@@ -39,6 +39,9 @@ export const LaunchPadMiniMk3: Controller = new Controller({
     })
     Midi.emitters.controller.send(sysex(sysexArr))
   },
+  on: (f) => {
+    Midi.listeners.controller.on('*', f)
+  },
   pads: [
     [
       new ControllerPad({

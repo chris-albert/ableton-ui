@@ -1,11 +1,17 @@
 import Reconciler, { OpaqueHandle } from 'react-reconciler'
 import ReactReconciler from 'react-reconciler'
 import { Color } from '../components/controllers/Color'
-import { ControllerPadTarget } from '../model/controllers/Controller'
+import {
+  ControllerPadTarget,
+  emptyController,
+  messageToKey,
+  targetToKey,
+} from '../model/controllers/Controller'
 import _ from 'lodash'
 import { Controller as ControllerModel } from '../model/controllers/Controller'
+import { MidiMessage } from '../midi/WindowMidi'
 
-const log = true ? console.log : () => {}
+const log = false ? console.log : () => {}
 
 declare global {
   namespace JSX {
@@ -19,10 +25,12 @@ declare global {
 type PadProps = {
   color: Color
   target: ControllerPadTarget
+  onClick?: () => void
+  key?: string
 }
 
 type ControllerProps = {
-  children: Array<Pad>
+  children: Array<Pad> | Pad | null
   model: ControllerModel
 }
 
@@ -51,8 +59,100 @@ type HostContext = {
   model: ControllerModel | undefined
 }
 type TimeoutHandle = unknown
-type UpdatePayload = unknown
+type UpdatePayload = Instance
 type SuspenseInstance = unknown
+
+const GlobalControllerManager = () => {
+  let controller: ControllerModel = emptyController
+
+  return {
+    get() {
+      return controller
+    },
+    set(c: ControllerModel) {
+      controller = c
+      controller.init()
+      controller.clear()
+    },
+  }
+}
+
+const GlobalController = GlobalControllerManager()
+
+const PadUpdatesManager = () => {
+  let updates: Array<PadProps> = []
+
+  return {
+    add(pad: PadProps) {
+      updates.push(pad)
+    },
+    get(): Array<PadProps> {
+      return updates
+    },
+    clear() {
+      updates = []
+    },
+  }
+}
+
+const PadUpdates = PadUpdatesManager()
+
+const commit = (instance: Instance) => {
+  if (instance.type === 'pad') {
+    PadUpdates.add(instance.props)
+  } else if (instance.type === 'controller') {
+    log('Commit All', PadUpdates.get())
+    GlobalController.get().render(PadUpdates.get())
+    PadUpdates.clear()
+  }
+}
+
+const typeInstance = (type: Type, props: Props): Instance => {
+  if (type === 'pad') {
+    return {
+      type: 'pad',
+      props: props as PadProps,
+    }
+  } else if (type === 'controller') {
+    return {
+      type: 'controller',
+      props: props as ControllerProps,
+    }
+  } else {
+    throw new Error(`Invalid React MIDI node ${type}`)
+  }
+}
+
+const ListenersManager = () => {
+  const listeners: Record<string, () => void> = {}
+
+  return {
+    add(target: ControllerPadTarget, f: () => void) {
+      const key = targetToKey(target)
+      listeners[key] = f
+    },
+    on(message: MidiMessage) {
+      const key = messageToKey(message)
+      const list = listeners[key]
+      if (list !== undefined) {
+        list()
+      }
+    },
+  }
+}
+
+const Listeners = ListenersManager()
+
+const initInstance = (instance: Instance) => {
+  if (instance.type === 'controller') {
+    GlobalController.set(instance.props.model)
+    GlobalController.get().on(Listeners.on)
+  } else if (instance.type === 'pad') {
+    if (instance.props.onClick !== undefined) {
+      Listeners.add(instance.props.target, instance.props.onClick)
+    }
+  }
+}
 
 const instance = Reconciler({
   createInstance(
@@ -63,19 +163,9 @@ const instance = Reconciler({
     internalHandle: ReactReconciler.OpaqueHandle,
   ): Instance {
     log('createInstance', type, props, rootContainer, hostContext, internalHandle)
-    if (type === 'pad') {
-      return {
-        type: 'pad',
-        props: props as PadProps,
-      }
-    } else if (type === 'controller') {
-      return {
-        type: 'controller',
-        props: props as ControllerProps,
-      }
-    } else {
-      throw new Error(`Invalid React MIDI node ${type}`)
-    }
+    const instance = typeInstance(type, props)
+    initInstance(instance)
+    return instance
   },
 
   createTextInstance(
@@ -122,6 +212,7 @@ const instance = Reconciler({
     rootContainer: Container,
     hostContext: HostContext,
   ): boolean {
+    log('finalizeInitialChildren', instance, type, props, rootContainer, hostContext)
     return true
   },
 
@@ -135,7 +226,7 @@ const instance = Reconciler({
   ): UpdatePayload | null {
     log('prepareUpdate', instance, type, oldProps, newProps, rootContainer, hostContext)
     if (!_.isEqual(oldProps, newProps)) {
-      return newProps
+      return typeInstance(type, newProps)
     } else {
       return null
     }
@@ -150,12 +241,12 @@ const instance = Reconciler({
     internalHandle: OpaqueHandle,
   ): void {
     log('commitUpdate', instance, updatePayload, type, prevProps, nextProps)
+    commit(updatePayload)
   },
 
   commitMount(instance: Instance, type: Type, props: Props, internalInstanceHandle: OpaqueHandle): void {
     log('commitMount', instance, type, props)
-    if (instance.type === 'pad') {
-    }
+    commit(instance)
   },
 
   /**
@@ -178,10 +269,9 @@ const instance = Reconciler({
       return null
     }
   },
-  isPrimaryRenderer: true,
+  isPrimaryRenderer: false,
   noTimeout: undefined,
   prepareForCommit(containerInfo: Container): Record<string, any> | null {
-    log('prepareForCommit', containerInfo)
     return null
   },
   preparePortalMount(containerInfo: Container): void {},

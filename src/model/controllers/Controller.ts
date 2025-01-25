@@ -24,6 +24,16 @@ export const targetToKey = (target: ControllerPadTarget): string =>
     CC: ({ controllerNumber }) => `cc-${controllerNumber}`,
   })(target)
 
+export const messageToKey = (message: MidiMessage): string => {
+  if (message.type === 'noteon' && message.velocity > 0) {
+    return `noteon-${message.note}`
+  } else if (message.type === 'cc') {
+    return `cc-${message.controllerNumber}`
+  } else {
+    return ''
+  }
+}
+
 export const targetToMessage = (target: ControllerPadTarget, value: number): MidiMessage =>
   ControllerPadTarget.$match({
     Note: ({ note }) =>
@@ -64,6 +74,7 @@ export class Controller extends Data.Class<{
   pads: Array<Array<ControllerPad>>
   init: () => void
   render: (pads: Array<ControllerPadColor>) => void
+  on: (f: (m: MidiMessage) => void) => void
 }> {
   private noteLookup: Record<number, ControllerPad> = _.fromPairs(
     _.compact(
@@ -108,6 +119,7 @@ export const emptyController: Controller = new Controller({
   pads: [],
   init: () => {},
   render: () => {},
+  on: () => {},
 })
 
 export const midiFromRowCol = (row: number, column: number): number => parseInt(`${row}${column + 1}`)

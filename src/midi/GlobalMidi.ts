@@ -150,16 +150,18 @@ const runInit = () => {
   selectionInit('controller')
 }
 
-let isInit = false
-const init = () => {
-  if (!isInit) {
-    isInit = true
-    getMidiAccess(true)
+let initPromise: Promise<void> | undefined = undefined
+const init = (): Promise<void> => {
+  if (initPromise === undefined) {
+    initPromise = getMidiAccess(true)
       .then((midi) => {
         store.set(atoms.windowMidi, midi)
         runInit()
       })
       .catch(console.error)
+    return initPromise
+  } else {
+    return initPromise
   }
 }
 

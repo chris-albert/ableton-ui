@@ -1,5 +1,5 @@
 import { Data } from 'effect'
-import { Controller, ControllerPadTarget, targetToKey, targetToMessage } from './Controller'
+import { Controller, ControllerPadTarget, messageToKey, targetToKey, targetToMessage } from './Controller'
 import { MidiMessage } from '../../midi/WindowMidi'
 import _ from 'lodash'
 import { Midi } from '../../midi/GlobalMidi'
@@ -52,18 +52,8 @@ export class WidgetBindings extends Data.Class<{
     )
   }
 
-  private messageToKey(message: MidiMessage): string {
-    if (message.type === 'noteon' && message.velocity > 0) {
-      return `noteon-${message.note}`
-    } else if (message.type === 'cc') {
-      return `cc-${message.controllerNumber}`
-    } else {
-      return ''
-    }
-  }
-
   onMessage(message: MidiMessage) {
-    const action = _.get(this.widgetBindings, this.messageToKey(message), undefined)
+    const action = _.get(this.widgetBindings, messageToKey(message), undefined)
     if (action !== undefined) {
       action()
     }

@@ -25,21 +25,20 @@ const darkTheme = createTheme({
 })
 
 function App() {
-  Midi.init()
-  ProjectMidi.init()
-  ControllerMidi.init()
+  Midi.init().then((_) => {
+    ProjectMidi.init()
+    ControllerMidi.init()
+  })
 
-  React.useEffect(
-    () =>
-      ProjectMidi.onStatusChange((status) => {
-        if (status === 'importing') {
-          toast.info('Importing new project.')
-        } else if (status === 'done') {
-          toast.success(`Successfully imported project!`)
-        }
-      }),
-    [],
-  )
+  React.useEffect(() => {
+    ProjectMidi.onStatusChange((status) => {
+      if (status === 'importing') {
+        toast.info('Importing new project.')
+      } else if (status === 'done') {
+        toast.success(`Successfully imported project!`)
+      }
+    })
+  }, [])
 
   return (
     <div className='App'>
