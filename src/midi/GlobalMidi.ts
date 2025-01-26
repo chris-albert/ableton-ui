@@ -28,12 +28,12 @@ export type MidiDevices = {
 
 const store = getDefaultStore()
 
-export type MidiListener = EventEmitter<MidiEventRecord>
+export type MidiListener = Omit<EventEmitter<MidiEventRecord>, 'emit'>
 
-const listeners = {
-  daw: EventEmitter<MidiEventRecord>(),
-  controller: EventEmitter<MidiEventRecord>(),
-}
+// const listeners = {
+//   daw: EventEmitter<MidiEventRecord>(),
+//   controller: EventEmitter<MidiEventRecord>(),
+// }
 
 export type MidiEmitter = {
   send: (m: MidiMessage) => void
@@ -107,19 +107,19 @@ const getSelected = (type: MidiType, deviceType: MidiDeviceType): PrimitiveAtom<
 
 const selectionInit = (midiType: MidiType) => {
   const selection = midiType === 'daw' ? atoms.daw : atoms.controller
-  const on = midiType === 'daw' ? listeners.daw.emit : listeners.controller.emit
 
   // Input Binding
   store.sub(selection.selected.input, () => onSelectedInput(selection))
 
-  let listener: Option.Option<() => void> = Option.none()
-
   const bindInput = (midiInput: MidiInput) => {
-    listener = Option.some(midiInput.on('*', on))
+    midiType === 'daw'
+      ? store.set(atoms.daw.listener, midiInput)
+      : store.set(atoms.controller.listener, midiInput)
   }
 
   const unBindInput = () => {
-    Option.map(listener, (l) => l())
+    store.set(atoms.daw.listener, { on: () => () => {} })
+    store.set(atoms.controller.listener, { on: () => () => {} })
   }
   store.sub(selection.midi.input, () => {
     unBindInput()
@@ -177,13 +177,14 @@ const init = (): Promise<void> => {
 
 export const Midi = {
   init,
-  // listeners,
-  // emitters,
   windowMidi,
-  atoms,
+  // atoms,
   getByType,
   getSelected,
   //Hooks
+  useWindowMidi: () => useAtomValue(atoms.windowMidi),
+  useControllerMidiInput: () => useAtomValue(atoms.controller.midi.input),
+  useControllerMidiOutput: () => useAtomValue(atoms.controller.midi.output),
   useDawEmitter: () => useAtomValue(atoms.daw.emitter),
   useControllerEmitter: () => useAtomValue(atoms.controller.emitter),
   useDawListener: () => useAtomValue(atoms.daw.listener),

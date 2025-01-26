@@ -2,12 +2,12 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { Nav } from '../Nav'
 import { Outlet } from 'react-router-dom'
-import { MidiHooks } from '../hooks/MidiHooks'
+import { Midi } from '../midi/GlobalMidi'
 
 export type LayoutProps = {}
 
 export const Layout: React.FC<LayoutProps> = ({}) => {
-  const windowMidi = MidiHooks.useWindowMidi()
+  const windowMidi = Midi.useWindowMidi()
 
   return (
     <Box>

@@ -1,5 +1,4 @@
 import React from 'react'
-import { useAtomValue } from 'jotai'
 import { Midi } from '../../midi/GlobalMidi'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { Option } from 'effect'
@@ -7,8 +6,8 @@ import { Option } from 'effect'
 type MidiAppProps = {}
 
 export const MidiApp: React.FC<MidiAppProps> = () => {
-  const midiInput = useAtomValue(Midi.atoms.controller.midi.input)
-  const midiOutput = useAtomValue(Midi.atoms.controller.midi.output)
+  const midiInput = Midi.useControllerMidiInput()
+  const midiOutput = Midi.useControllerMidiOutput()
 
   const body = Option.zipWith(midiInput, midiOutput, (input, output) => (
     <midi-device

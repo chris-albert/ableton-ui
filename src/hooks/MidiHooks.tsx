@@ -1,14 +1,11 @@
 import React from 'react'
-import { useAtomValue } from 'jotai/index'
 import { Midi, MidiDevices, MidiDeviceType, MidiType } from '../midi/GlobalMidi'
 import { MidiPort } from '../midi/WindowMidi'
 import { useAtom } from 'jotai'
 import { Option } from 'effect'
 
-const useWindowMidi = () => useAtomValue(Midi.atoms.windowMidi)
-
 const useMidiDevices = (midiType: MidiType, deviceType: MidiDeviceType): MidiDevices => {
-  const windowMidi = useWindowMidi()
+  const windowMidi = Midi.useWindowMidi()
 
   const devices = React.useMemo(() => {
     const ports: Array<MidiPort> = deviceType === 'input' ? windowMidi.inputs : windowMidi.outputs
@@ -28,6 +25,5 @@ const useMidiDevices = (midiType: MidiType, deviceType: MidiDeviceType): MidiDev
 }
 
 export const MidiHooks = {
-  useWindowMidi,
   useMidiDevices,
 }
