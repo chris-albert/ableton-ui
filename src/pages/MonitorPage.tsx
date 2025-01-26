@@ -10,12 +10,14 @@ export type MonitorPageProps = {}
 export const MonitorPage: React.FC<MonitorPageProps> = () => {
   const maxMessages = 25
 
+  const dawListener = Midi.useDawListener()
+  const controllerListener = Midi.useControllerListener()
   const [messages, setMessages] = React.useState<Array<[MidiMessageWithRaw, number]>>([])
   const [totalCount, setTotalCount] = React.useState(0)
   const [listenEnabled, setListenEnabled] = React.useState(false)
 
   React.useEffect(() => {
-    return Midi.listeners.controller.on('*', (message) => {
+    return controllerListener.on('*', (message) => {
       setListenEnabled((enabled) => {
         if (enabled) {
           setTotalCount((count) => {
@@ -29,7 +31,7 @@ export const MonitorPage: React.FC<MonitorPageProps> = () => {
   }, [])
 
   React.useEffect(() => {
-    return Midi.listeners.daw.on('*', (message) => {
+    return dawListener.on('*', (message) => {
       setListenEnabled((enabled) => {
         if (enabled) {
           setTotalCount((count) => {

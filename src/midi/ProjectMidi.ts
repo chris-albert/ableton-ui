@@ -102,7 +102,7 @@ const ProjectListener = () => {
     }
   })
 
-  Midi.listeners.daw.on('sysex', (sysex) => {
+  Midi.dawListener.on('sysex', (sysex) => {
     const msg = parseAbletonUIMessage(sysex)
     if (msg !== undefined) {
       if (msg.type === 'init-project') {

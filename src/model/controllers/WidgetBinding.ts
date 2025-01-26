@@ -64,6 +64,6 @@ export class WidgetBindings extends Data.Class<{
     this.controller.clear()
     this.controller.init()
     this.initWidgetBindings()
-    Midi.listeners.controller.on('*', (m) => this.onMessage(m))
+    // Midi..controller.on('*', (m) => this.onMessage(m))
   }
 }

@@ -177,7 +177,7 @@ const init = (): Promise<void> => {
 
 export const Midi = {
   init,
-  listeners,
+  // listeners,
   // emitters,
   windowMidi,
   atoms,
@@ -188,4 +188,6 @@ export const Midi = {
   useControllerEmitter: () => useAtomValue(atoms.controller.emitter),
   useDawListener: () => useAtomValue(atoms.daw.listener),
   useControllerListener: () => useAtomValue(atoms.controller.listener),
+  //Temporary exports
+  dawListener: store.get(atoms.daw.listener),
 }
