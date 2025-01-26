@@ -1,5 +1,5 @@
 import { MidiEventRecord, MidiInput, MidiMessage, MidiOutput, WindowMidi } from './WindowMidi'
-import { atom, getDefaultStore, PrimitiveAtom } from 'jotai'
+import { atom, getDefaultStore, PrimitiveAtom, useAtomValue } from 'jotai'
 import getMidiAccess from './MidiAccess'
 import { atomWithStorage } from 'jotai/utils'
 import { EventEmitter } from '../utils/EventEmitter'
@@ -28,6 +28,8 @@ export type MidiDevices = {
 
 const store = getDefaultStore()
 
+export type MidiListener = EventEmitter<MidiEventRecord>
+
 const listeners = {
   daw: EventEmitter<MidiEventRecord>(),
   controller: EventEmitter<MidiEventRecord>(),
@@ -43,14 +45,16 @@ const emptyEmitter = (): MidiEmitter => ({
   },
 })
 
-const emitters = {
-  daw: emptyEmitter(),
-  controller: emptyEmitter(),
-}
+// const emitters = {
+//   daw: emptyEmitter(),
+//   controller: emptyEmitter(),
+// }
 
 const atoms = {
   windowMidi: atom<WindowMidi>(WindowMidi.empty),
   daw: {
+    emitter: atom<MidiEmitter>(emptyEmitter()),
+    listener: atom<MidiListener>(EventEmitter<MidiEventRecord>()),
     midi: {
       input: atom<Option.Option<MidiInput>>(Option.none()),
       output: atom<Option.Option<MidiOutput>>(Option.none()),
@@ -61,6 +65,8 @@ const atoms = {
     },
   },
   controller: {
+    emitter: atom<MidiEmitter>(emptyEmitter()),
+    listener: atom<MidiListener>(EventEmitter<MidiEventRecord>()),
     midi: {
       input: atom<Option.Option<MidiInput>>(Option.none()),
       output: atom<Option.Option<MidiOutput>>(Option.none()),
@@ -128,10 +134,14 @@ const selectionInit = (midiType: MidiType) => {
       console.debug(`Sending ${midiType}`, message)
       midiOutput.send(message)
     }
-    midiType === 'daw' ? (emitters.daw.send = loggingSend) : (emitters.controller.send = loggingSend)
+    midiType === 'daw'
+      ? store.set(atoms.daw.emitter, { send: loggingSend })
+      : store.set(atoms.controller.emitter, { send: loggingSend })
   }
   const unBindOutput = () => {
-    midiType === 'daw' ? (emitters.daw = emptyEmitter()) : (emitters.controller = emptyEmitter())
+    midiType === 'daw'
+      ? store.set(atoms.daw.emitter, emptyEmitter())
+      : store.set(atoms.controller.emitter, emptyEmitter())
   }
   store.sub(selection.midi.output, () => {
     Option.match(store.get(selection.midi.output), {
@@ -168,9 +178,14 @@ const init = (): Promise<void> => {
 export const Midi = {
   init,
   listeners,
-  emitters,
+  // emitters,
   windowMidi,
   atoms,
   getByType,
   getSelected,
+  //Hooks
+  useDawEmitter: () => useAtomValue(atoms.daw.emitter),
+  useControllerEmitter: () => useAtomValue(atoms.controller.emitter),
+  useDawListener: () => useAtomValue(atoms.daw.listener),
+  useControllerListener: () => useAtomValue(atoms.controller.listener),
 }

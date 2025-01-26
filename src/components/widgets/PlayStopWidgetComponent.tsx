@@ -9,13 +9,14 @@ import { useIsPlaying } from '../../hooks/RealTimeHooks'
 export type PlayStopWidgetComponentProps = {}
 
 export const PlayStopWidgetComponent: React.FC<PlayStopWidgetComponentProps> = ({}) => {
+  const dawEmitter = Midi.useDawEmitter()
   const isPlaying = useIsPlaying()
 
   const onClick = (play: boolean) => {
     if (play) {
-      Midi.emitters.daw.send(TX_MESSAGE.play())
+      dawEmitter.send(TX_MESSAGE.play())
     } else {
-      Midi.emitters.daw.send(TX_MESSAGE.stop())
+      dawEmitter.send(TX_MESSAGE.stop())
     }
   }
 

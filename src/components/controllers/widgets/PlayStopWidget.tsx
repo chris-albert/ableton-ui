@@ -1,11 +1,11 @@
 import React from 'react'
-import { ControllerPadTarget } from '../../../model/controllers/Controller'
 import { useIsPlaying } from '../../../hooks/RealTimeHooks'
 import { StopWidget } from './StopWidget'
 import { PlayWidget } from './PlayWidget'
+import { MidiTarget } from '../../../midi/MidiTarget'
 
 type PlayStopWidgetProps = {
-  target: ControllerPadTarget
+  target: MidiTarget
 }
 
 export const PlayStopWidget: React.FC<PlayStopWidgetProps> = ({ target }) => {

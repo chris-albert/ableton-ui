@@ -1,11 +1,11 @@
 import React from 'react'
-import { ControllerPadTarget } from '../../../model/controllers/Controller'
 import { useBarBeats } from '../../../hooks/RealTimeHooks'
 import _ from 'lodash'
 import { Color } from '../Color'
+import { MidiTarget } from '../../../midi/MidiTarget'
 
 type BeatsWidgetProps = {
-  targets: Array<ControllerPadTarget>
+  targets: Array<MidiTarget>
 }
 
 const color = (beat: number, index: number): Color => {

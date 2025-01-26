@@ -1,10 +1,10 @@
 import React from 'react'
-import { ControllerPadTarget } from '../../../model/controllers/Controller'
 import { useBarBeats } from '../../../hooks/RealTimeHooks'
 import { Color } from '../Color'
+import { MidiTarget } from '../../../midi/MidiTarget'
 
 type MetronomeWidgetProps = {
-  target: ControllerPadTarget
+  target: MidiTarget
 }
 
 export const MetronomeWidget: React.FC<MetronomeWidgetProps> = ({ target }) => {
@@ -15,7 +15,7 @@ export const MetronomeWidget: React.FC<MetronomeWidgetProps> = ({ target }) => {
   React.useEffect(() => {
     setColor(beat === 1 ? Color.GREEN : Color.RED)
     const timer = setTimeout(() => {
-      // setColor(Color.BLACK)
+      setColor(Color.BLACK)
     }, 100)
     return () => clearTimeout(timer)
   }, [beat])

@@ -1,6 +1,4 @@
 import { WidgetBinding, WidgetBindings } from './WidgetBinding'
-import { ControllerPadNote } from './Controller'
-import { LaunchPadMiniMk3 } from './LaunchPadMiniMk3'
 import {
   BarTrackerWidget,
   BeatsWidget,
@@ -13,108 +11,111 @@ import {
   TimeSignatureNoteLengthWidget,
   TrackSectionsWidget,
 } from './Widgets'
+import { MidiTarget } from '../../midi/MidiTarget'
+import { Controller } from './Controller'
 
-export const MyCustomBindings: WidgetBindings = new WidgetBindings({
-  controller: LaunchPadMiniMk3,
-  bindings: [
-    new WidgetBinding({
-      targets: [ControllerPadNote(89)],
-      widget: PlayStopWidget,
-    }),
-    new WidgetBinding({
-      targets: [ControllerPadNote(19)],
-      widget: StopWidget,
-    }),
-    new WidgetBinding({
-      targets: [ControllerPadNote(29)],
-      widget: PlayWidget,
-    }),
-    new WidgetBinding({
-      targets: [ControllerPadNote(99)],
-      widget: MetronomeFlashWidget,
-    }),
-    new WidgetBinding({
-      targets: [
-        ControllerPadNote(81),
-        ControllerPadNote(82),
-        ControllerPadNote(83),
-        ControllerPadNote(84),
-        ControllerPadNote(85),
-        ControllerPadNote(86),
-        ControllerPadNote(87),
-        ControllerPadNote(88),
-      ],
-      widget: BeatsWidget,
-    }),
+export const MyCustomBindings = (controller: Controller) =>
+  new WidgetBindings({
+    controller: controller,
+    bindings: [
+      new WidgetBinding({
+        targets: [MidiTarget.note(89)],
+        widget: PlayStopWidget,
+      }),
+      new WidgetBinding({
+        targets: [MidiTarget.note(19)],
+        widget: StopWidget,
+      }),
+      new WidgetBinding({
+        targets: [MidiTarget.note(29)],
+        widget: PlayWidget,
+      }),
+      new WidgetBinding({
+        targets: [MidiTarget.note(99)],
+        widget: MetronomeFlashWidget,
+      }),
+      new WidgetBinding({
+        targets: [
+          MidiTarget.note(81),
+          MidiTarget.note(82),
+          MidiTarget.note(83),
+          MidiTarget.note(84),
+          MidiTarget.note(85),
+          MidiTarget.note(86),
+          MidiTarget.note(87),
+          MidiTarget.note(88),
+        ],
+        widget: BeatsWidget,
+      }),
 
-    new WidgetBinding({
-      targets: [
-        ControllerPadNote(61),
-        ControllerPadNote(62),
-        ControllerPadNote(63),
-        ControllerPadNote(64),
-        ControllerPadNote(65),
-        ControllerPadNote(66),
-        ControllerPadNote(67),
-        ControllerPadNote(68),
-      ],
-      widget: TimeSignatureNoteCountWidget,
-    }),
+      new WidgetBinding({
+        targets: [
+          MidiTarget.note(61),
+          MidiTarget.note(62),
+          MidiTarget.note(63),
+          MidiTarget.note(64),
+          MidiTarget.note(65),
+          MidiTarget.note(66),
+          MidiTarget.note(67),
+          MidiTarget.note(68),
+        ],
+        widget: TimeSignatureNoteCountWidget,
+      }),
 
-    new WidgetBinding({
-      targets: [
-        ControllerPadNote(51),
-        ControllerPadNote(52),
-        ControllerPadNote(53),
-        ControllerPadNote(54),
-        ControllerPadNote(55),
-        ControllerPadNote(56),
-        ControllerPadNote(57),
-        ControllerPadNote(58),
-      ],
-      widget: TimeSignatureNoteLengthWidget,
-    }),
+      new WidgetBinding({
+        targets: [
+          MidiTarget.note(51),
+          MidiTarget.note(52),
+          MidiTarget.note(53),
+          MidiTarget.note(54),
+          MidiTarget.note(55),
+          MidiTarget.note(56),
+          MidiTarget.note(57),
+          MidiTarget.note(58),
+        ],
+        widget: TimeSignatureNoteLengthWidget,
+      }),
 
-    new WidgetBinding({
-      targets: [
-        ControllerPadNote(11),
-        ControllerPadNote(12),
-        ControllerPadNote(13),
-        ControllerPadNote(14),
-        ControllerPadNote(15),
-        ControllerPadNote(16),
-        ControllerPadNote(17),
-        ControllerPadNote(18),
-      ],
-      widget: SongsWidget(0, 8, 'Songs'),
-    }),
+      new WidgetBinding({
+        targets: [
+          MidiTarget.note(11),
+          MidiTarget.note(12),
+          MidiTarget.note(13),
+          MidiTarget.note(14),
+          MidiTarget.note(15),
+          MidiTarget.note(16),
+          MidiTarget.note(17),
+          MidiTarget.note(18),
+        ],
+        widget: SongsWidget(0, 8, 'Songs'),
+      }),
 
-    new WidgetBinding({
-      targets: [
-        ControllerPadNote(41),
-        ControllerPadNote(42),
-        ControllerPadNote(43),
-        ControllerPadNote(44),
-        ControllerPadNote(45),
-        ControllerPadNote(46),
-        ControllerPadNote(47),
-        ControllerPadNote(48),
-      ],
-      widget: TrackSectionsWidget('Parts', 'Songs'),
-    }),
+      new WidgetBinding({
+        targets: [
+          MidiTarget.note(41),
+          MidiTarget.note(42),
+          MidiTarget.note(43),
+          MidiTarget.note(44),
+          MidiTarget.note(45),
+          MidiTarget.note(46),
+          MidiTarget.note(47),
+          MidiTarget.note(48),
+        ],
+        widget: TrackSectionsWidget('Parts', 'Songs'),
+      }),
 
-    new WidgetBinding({
-      targets: [
-        ControllerPadNote(71),
-        ControllerPadNote(72),
-        ControllerPadNote(73),
-        ControllerPadNote(74),
-        ControllerPadNote(75),
-        ControllerPadNote(76),
-        ControllerPadNote(77),
-        ControllerPadNote(78),
-      ],
-      widget: BarTrackerWidget('Bars'),
-    }),
-  ],
-})
+      new WidgetBinding({
+        targets: [
+          MidiTarget.note(71),
+          MidiTarget.note(72),
+          MidiTarget.note(73),
+          MidiTarget.note(74),
+          MidiTarget.note(75),
+          MidiTarget.note(76),
+          MidiTarget.note(77),
+          MidiTarget.note(78),
+        ],
+        widget: BarTrackerWidget('Bars'),
+      }),
+    ],
+  })

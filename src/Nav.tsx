@@ -82,7 +82,7 @@ export const Nav: React.FC<NavProps> = () => {
               {/*Right*/}
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Box>
-                  <IconButton onClick={() => ControllerMidi.getBindings().bind()}>
+                  <IconButton onClick={() => {}}>
                     <RefreshIcon />
                   </IconButton>
                 </Box>

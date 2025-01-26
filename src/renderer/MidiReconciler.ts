@@ -1,15 +1,11 @@
 import Reconciler, { OpaqueHandle } from 'react-reconciler'
 import ReactReconciler from 'react-reconciler'
 import { Color } from '../components/controllers/Color'
-import {
-  ControllerPadTarget,
-  emptyController,
-  messageToKey,
-  targetToKey,
-} from '../model/controllers/Controller'
+import { emptyController, messageToKey } from '../model/controllers/Controller'
 import _ from 'lodash'
 import { Controller as ControllerModel } from '../model/controllers/Controller'
 import { MidiMessage } from '../midi/WindowMidi'
+import { MidiTarget } from '../midi/MidiTarget'
 
 const log = false ? console.log : () => {}
 
@@ -24,7 +20,7 @@ declare global {
 
 type PadProps = {
   color: Color
-  target: ControllerPadTarget
+  target: MidiTarget
   onClick?: () => void
   key?: string
 }
@@ -127,8 +123,8 @@ const ListenersManager = () => {
   const listeners: Record<string, () => void> = {}
 
   return {
-    add(target: ControllerPadTarget, f: () => void) {
-      const key = targetToKey(target)
+    add(target: MidiTarget, f: () => void) {
+      const key = MidiTarget.toKey(target)
       listeners[key] = f
     },
     on(message: MidiMessage) {

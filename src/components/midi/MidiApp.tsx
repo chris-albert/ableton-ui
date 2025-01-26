@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAtomValue } from 'jotai'
 import { Midi } from '../../midi/GlobalMidi'
-import { MidiTarget } from '../../react-midi/MidiTarget'
+import { MidiTarget } from '../../midi/MidiTarget'
 import { Option } from 'effect'
 
 type MidiAppProps = {}

@@ -9,12 +9,13 @@ export type KnobWidgetComponentProps = {
 }
 
 export const KnobWidgetComponent: React.FC<KnobWidgetComponentProps> = ({ widget }) => {
+  const dawEmitter = Midi.useDawEmitter()
   const [value, setValue] = React.useState(0)
 
   const onChangeValue = (value: number) => {
     setValue(value)
     if (widget.midi !== undefined && widget.midi.type === 'midi-note-velocity') {
-      Midi.emitters.daw.send({
+      dawEmitter.send({
         type: 'noteon',
         channel: widget.midi.channel,
         note: widget.midi.note,

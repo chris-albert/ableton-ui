@@ -9,6 +9,7 @@ import { Color } from '../../components/controllers/Color'
 import { searchActiveClip } from '../../hooks/ActiveClipHook'
 
 export const PlayStopWidget: ControllerWidget = (opts) => {
+  const dawEmitter = Midi.useDawEmitter()
   const store = getDefaultStore()
 
   const color = (playing: boolean): number => (playing ? Color.RED : Color.GREEN)
@@ -20,25 +21,25 @@ export const PlayStopWidget: ControllerWidget = (opts) => {
   })
 
   return () => {
-    Midi.emitters.daw.send(
-      store.get(ProjectMidi.atoms.realTime.isPlaying) ? TX_MESSAGE.stop() : TX_MESSAGE.play(),
-    )
+    dawEmitter.send(store.get(ProjectMidi.atoms.realTime.isPlaying) ? TX_MESSAGE.stop() : TX_MESSAGE.play())
   }
 }
 
 export const PlayWidget: ControllerWidget = (opts) => {
+  const dawEmitter = Midi.useDawEmitter()
   opts.render([Color.GREEN])
 
   return () => {
-    Midi.emitters.daw.send(TX_MESSAGE.play())
+    dawEmitter.send(TX_MESSAGE.play())
   }
 }
 
 export const StopWidget: ControllerWidget = (opts) => {
+  const dawEmitter = Midi.useDawEmitter()
   opts.render([Color.RED])
 
   return () => {
-    Midi.emitters.daw.send(TX_MESSAGE.stop())
+    dawEmitter.send(TX_MESSAGE.stop())
   }
 }
 
@@ -175,7 +176,7 @@ export const SongsWidget = (fromIndex: number, toIndex: number, trackName: strin
       return (i) => {
         const clip = _.get(clips, i, undefined)
         if (clip !== undefined) {
-          Midi.emitters.daw.send(TX_MESSAGE.jumpToCue(clip.cue.index))
+          // Midi.emitters.daw.send(TX_MESSAGE.jumpToCue(clip.cue.index))
         }
       }
     },

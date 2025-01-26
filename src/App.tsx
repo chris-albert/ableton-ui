@@ -30,7 +30,6 @@ function App() {
   Midi.init().then((_) => {
     ProjectMidi.init()
     ControllerMidi.init()
-    ReactMidiRenderer.render(<MidiApp />)
   })
 
   React.useEffect(() => {

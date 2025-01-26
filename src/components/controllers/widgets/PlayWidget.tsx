@@ -1,9 +1,9 @@
 import React from 'react'
 import { Color } from '../Color'
-import { ControllerPadTarget } from '../../../model/controllers/Controller'
+import { MidiTarget } from '../../../midi/MidiTarget'
 
 type PlayWidgetProps = {
-  target: ControllerPadTarget
+  target: MidiTarget
 }
 
 export const PlayWidget: React.FC<PlayWidgetProps> = ({ target }) => {

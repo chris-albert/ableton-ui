@@ -15,6 +15,7 @@ export type ClipNavComponentProps = {
 export const ClipNavComponent: React.FC<ClipNavComponentProps> = ({ track }) => {
   const activeClip = useActiveClip(track)
   const arrangement = ProjectHooks.useArrangement()
+  const dawEmitter = Midi.useDawEmitter()
 
   const cueHash = React.useMemo(() => {
     return _.fromPairs(_.map(arrangement.cues, (cue) => [cue.time, cue]))
@@ -34,7 +35,7 @@ export const ClipNavComponent: React.FC<ClipNavComponentProps> = ({ track }) => 
   }, [track, cueHash])
 
   const onClick = (clip: NavigateableClip) => {
-    Midi.emitters.daw.send(TX_MESSAGE.jumpToCue(clip.cue.index))
+    dawEmitter.send(TX_MESSAGE.jumpToCue(clip.cue.index))
   }
 
   return (

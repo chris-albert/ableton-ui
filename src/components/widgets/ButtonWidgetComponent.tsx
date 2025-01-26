@@ -8,8 +8,9 @@ export type ButtonWidgetComponentProps = {
 }
 
 export const ButtonWidgetComponent: React.FC<ButtonWidgetComponentProps> = ({ widget }) => {
+  const dawEmitter = Midi.useDawEmitter()
   const onClick = () => {
-    widget.midi.forEach(Midi.emitters.daw.send)
+    widget.midi.forEach(dawEmitter.send)
   }
 
   return (

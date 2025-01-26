@@ -1,15 +1,16 @@
 import { Data } from 'effect'
-import { Controller, ControllerPadTarget, messageToKey, targetToKey, targetToMessage } from './Controller'
+import { Controller, messageToKey } from './Controller'
 import { MidiMessage } from '../../midi/WindowMidi'
 import _ from 'lodash'
 import { Midi } from '../../midi/GlobalMidi'
 import { Color } from '../../components/controllers/Color'
+import { MidiTarget } from '../../midi/MidiTarget'
 
 export type WidgetAction = (index: number) => void
 export type WidgetRender = (values: Array<Color | undefined>) => void
 export type WidgetOpts = {
   render: WidgetRender
-  targets: Array<ControllerPadTarget>
+  targets: Array<MidiTarget>
 }
 export type ControllerWidget = (opts: WidgetOpts) => WidgetAction
 
@@ -28,7 +29,7 @@ export const ControllerWidget = {
 }
 
 export class WidgetBinding extends Data.Class<{
-  targets: Array<ControllerPadTarget>
+  targets: Array<MidiTarget>
   widget: ControllerWidget
 }> {}
 
@@ -47,7 +48,7 @@ export class WidgetBindings extends Data.Class<{
             this.controller.render(_.map(binding.targets, (target, i) => ({ target, color: values[i] }))),
         })
 
-        return _.map(binding.targets, (target, i) => [targetToKey(target), () => widget(i)])
+        return _.map(binding.targets, (target, i) => [MidiTarget.toKey(target), () => widget(i)])
       }),
     )
   }

@@ -1,7 +1,7 @@
 import ReactReconciler, { OpaqueHandle } from 'react-reconciler'
 import _ from 'lodash'
 import { Controller as ControllerModel } from '../model/controllers/Controller'
-import { MidiTarget } from './MidiTarget'
+import { MidiTarget } from '../midi/MidiTarget'
 import { MidiInput, MidiMessage, MidiOutput } from '../midi/WindowMidi'
 
 /**
