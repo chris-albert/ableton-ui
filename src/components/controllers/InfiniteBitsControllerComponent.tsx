@@ -7,6 +7,9 @@ import { MetronomeWidget } from './widgets/MetronomeWidget'
 import { BeatsWidget } from './widgets/BeatsWidget'
 import { MidiTarget } from '../../midi/MidiTarget'
 import { Midi } from '../../midi/GlobalMidi'
+import { TimeSigNoteCountWidget } from './widgets/TimeSigNoteCountWidget'
+import { TimeSigNoteLengthWidget } from './widgets/TimeSigNoteLengthWidget'
+import { SongsWidget } from './widgets/SongsWidget'
 
 type InfiniteBitsControllerComponentProps = {}
 
@@ -20,6 +23,12 @@ export const InfiniteBitsControllerComponent: React.FC<InfiniteBitsControllerCom
       <PlayStopWidget target={MidiTarget.note(39)} />
       <MetronomeWidget target={MidiTarget.note(99)} />
       <BeatsWidget targets={MidiTarget.notes({ from: 81, to: 88 })} />
+      <TimeSigNoteCountWidget targets={MidiTarget.notes({ from: 61, to: 68 })} />
+      <TimeSigNoteLengthWidget targets={MidiTarget.notes({ from: 51, to: 58 })} />
+      <SongsWidget
+        targets={MidiTarget.notes({ from: 11, to: 18 })}
+        trackName='Songs'
+      />
     </controller>
   )
 }

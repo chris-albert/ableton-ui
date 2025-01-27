@@ -1,6 +1,7 @@
 import { InitClipMessage, InitCueMessage, InitProjectMessage, InitTrackMessage } from './AbletonUIMessage'
 import _ from 'lodash'
 import { produce } from 'immer'
+import { Color } from '../components/controllers/Color'
 
 export type UIRealClip = {
   type: 'real'
@@ -22,6 +23,12 @@ export type UITrack = {
   name: string
   color: number
   clips: Array<UIClip>
+}
+
+export const emptyTrack: UITrack = {
+  name: '',
+  color: Color.BLACK,
+  clips: [],
 }
 
 export type UICue = {
