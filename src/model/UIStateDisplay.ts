@@ -28,7 +28,13 @@ export type UITrack = {
 export const emptyTrack: UITrack = {
   name: '',
   color: Color.BLACK,
-  clips: [],
+  clips: [
+    {
+      type: 'blank',
+      startTime: 0,
+      endTime: undefined,
+    },
+  ],
 }
 
 export type UICue = {

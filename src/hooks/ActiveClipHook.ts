@@ -11,7 +11,7 @@ export const searchActiveClip = (clips: Array<UIClip>, beat: number): UIClip => 
   return _.find(clips, (clip) => isClipActive(clip, beat)) as UIClip
 }
 
-export const useActiveClip = (track: UITrack): UIClip | undefined => {
+export const useActiveClip = (track: UITrack): UIClip => {
   const beat = useBeat()
 
   return React.useMemo(() => searchActiveClip(track.clips, beat), [beat])

@@ -18,7 +18,7 @@ declare global {
   }
 }
 
-type PadProps = {
+export type PadProps = {
   color: Color
   target: MidiTarget
   onClick?: () => void
@@ -38,6 +38,7 @@ type Pad = {
 type Controller = {
   type: 'controller'
   props: ControllerProps
+  pads: Record<string, PadProps>
 }
 
 type Type = 'pad' | 'controller'
@@ -75,31 +76,10 @@ const GlobalControllerManager = () => {
 
 const GlobalController = GlobalControllerManager()
 
-const PadUpdatesManager = () => {
-  let updates: Array<PadProps> = []
-
-  return {
-    add(pad: PadProps) {
-      updates.push(pad)
-    },
-    get(): Array<PadProps> {
-      return updates
-    },
-    clear() {
-      updates = []
-    },
-  }
-}
-
-const PadUpdates = PadUpdatesManager()
-
 const commit = (instance: Instance) => {
   if (instance.type === 'pad') {
-    PadUpdates.add(instance.props)
+    GlobalController.get().render([instance.props])
   } else if (instance.type === 'controller') {
-    log('Commit All', PadUpdates.get())
-    GlobalController.get().render(PadUpdates.get())
-    PadUpdates.clear()
   }
 }
 
@@ -113,6 +93,7 @@ const typeInstance = (type: Type, props: Props): Instance => {
     return {
       type: 'controller',
       props: props as ControllerProps,
+      pads: {},
     }
   } else {
     throw new Error(`Invalid React MIDI node ${type}`)
@@ -147,6 +128,12 @@ const initInstance = (instance: Instance) => {
     if (instance.props.onClick !== undefined) {
       Listeners.add(instance.props.target, instance.props.onClick)
     }
+  }
+}
+
+const addInstance = (parentInstance: Instance, child: Instance) => {
+  if (parentInstance.type === 'controller' && child.type === 'pad') {
+    parentInstance.pads[MidiTarget.toKey(child.props.target)] = child.props
   }
 }
 
@@ -190,6 +177,7 @@ const instance = Reconciler({
 
   appendInitialChild(parentInstance: Instance, child: Instance | TextInstance): void {
     log('appendInitialChild', parentInstance, child)
+    // addInstance(parentInstance, child)
   },
 
   getChildHostContext(parentHostContext: HostContext, type: Type, rootContainer: Container): HostContext {
@@ -245,6 +233,18 @@ const instance = Reconciler({
     commit(instance)
   },
 
+  removeChild(parentInstance: Instance, child: Instance | TextInstance | SuspenseInstance): void {
+    log('removeChild', parentInstance, child)
+  },
+
+  insertBefore(
+    parentInstance: Instance,
+    child: Instance | TextInstance,
+    beforeChild: Instance | TextInstance | SuspenseInstance,
+  ): void {
+    log('insertBefore', parentInstance, child, beforeChild)
+  },
+
   /**
    * Stuff below here we don't need to worry about
    */
@@ -268,20 +268,25 @@ const instance = Reconciler({
   isPrimaryRenderer: false,
   noTimeout: undefined,
   prepareForCommit(containerInfo: Container): Record<string, any> | null {
+    log('prepareForCommit', containerInfo)
     return null
   },
-  preparePortalMount(containerInfo: Container): void {},
+  preparePortalMount(containerInfo: Container): void {
+    log('preparePortalMount', containerInfo)
+  },
 
-  resetAfterCommit(containerInfo: Container): void {},
+  resetAfterCommit(containerInfo: Container): void {
+    log('resetAfterCommit', containerInfo)
+  },
   scheduleTimeout(fn: (...args: unknown[]) => unknown, delay: number | undefined): TimeoutHandle {
     return undefined
   },
   shouldSetTextContent(type: Type, props: Props): boolean {
     return false
   },
-  supportsHydration: true,
+  supportsHydration: false,
   supportsMutation: true,
-  supportsPersistence: true,
+  supportsPersistence: false,
   afterActiveInstanceBlur(): void {},
   beforeActiveInstanceBlur(): void {},
   getCurrentEventPriority(): ReactReconciler.Lane {

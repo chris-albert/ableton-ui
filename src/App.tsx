@@ -28,9 +28,11 @@ const darkTheme = createTheme({
 
 function App() {
   Midi.init().then((_) => {
-    ProjectMidi.init()
+    // ProjectMidi.init()
     ControllerMidi.init()
   })
+
+  ProjectMidi.useProjectListener()
 
   React.useEffect(() => {
     ProjectMidi.onStatusChange((status) => {

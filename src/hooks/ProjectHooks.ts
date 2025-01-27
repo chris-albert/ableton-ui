@@ -4,7 +4,7 @@ import React from 'react'
 import _ from 'lodash'
 import { focusAtom } from 'jotai-optics'
 import { splitAtom } from 'jotai/utils'
-import { emptyTrack } from '../model/UIStateDisplay'
+import { emptyTrack, UITrack } from '../model/UIStateDisplay'
 
 const useArrangementAtom = () => {
   const activeProject = useAtomValue(ProjectMidi.atoms.project.active)
@@ -16,9 +16,13 @@ const useTracksAtom = () => {
   return React.useMemo(() => focusAtom(arrangement, (o) => o.prop('tracks')), [arrangement])
 }
 
-const useTrack = (trackName: string) => {
+const useTrackOrUndefined = (trackName: string): UITrack | undefined => {
   const tracks = useAtomValue(useTracksAtom())
-  const track = tracks.find((t) => t.name === trackName)
+  return tracks.find((t) => t.name === trackName)
+}
+
+const useTrack = (trackName: string) => {
+  const track = useTrackOrUndefined(trackName)
   return track === undefined ? emptyTrack : track
 }
 
@@ -42,6 +46,7 @@ export const ProjectHooks = {
   useSetActiveProject: () => useSetAtom(ProjectMidi.atoms.project.active),
   useTracks: () => useAtomValue(useTracksAtom()),
   useTrack,
+  useTrackOrUndefined,
   useTracksAtoms: () => {
     return useAtomValue(splitAtom(useTracksAtom()))
   },
