@@ -1,11 +1,11 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
-import { useBeat } from '../hooks/RealTimeHooks'
+import { ProjectHooks } from '../hooks/ProjectHooks'
 
 export type BeatCounterComponentProps = {}
 
 export const BeatCounterComponent: React.FC<BeatCounterComponentProps> = ({}) => {
-  const beat = useBeat()
+  const beat = ProjectHooks.useBeat()
 
   return (
     <Box

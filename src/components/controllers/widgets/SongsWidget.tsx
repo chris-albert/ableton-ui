@@ -1,7 +1,6 @@
 import React from 'react'
 import { MidiTarget } from '../../../midi/MidiTarget'
 import { ProjectHooks } from '../../../hooks/ProjectHooks'
-import { useActiveClip } from '../../../hooks/ActiveClipHook'
 import { NavigateableClip, UIRealClip } from '../../../model/UIStateDisplay'
 import { TX_MESSAGE } from '../../../model/AbletonUIMessage'
 import { Midi } from '../../../midi/GlobalMidi'
@@ -19,7 +18,7 @@ export const SongsWidget: React.FC<SongsWidgetProps> = ({ targets, trackName, fr
   const dawEmitter = Midi.useDawEmitter()
   const arrangement = ProjectHooks.useArrangement()
   const track = ProjectHooks.useTrack(trackName)
-  const activeClip = useActiveClip(track)
+  const activeClip = ProjectHooks.useActiveClip(track)
 
   const cueHash = React.useMemo(() => {
     return _.fromPairs(_.map(arrangement.cues, (cue) => [cue.time, cue]))

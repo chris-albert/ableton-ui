@@ -1,7 +1,6 @@
 import React from 'react'
 import { MidiTarget } from '../../../midi/MidiTarget'
 import { ProjectHooks } from '../../../hooks/ProjectHooks'
-import { useActiveClip } from '../../../hooks/ActiveClipHook'
 import { UIClip } from '../../../model/UIStateDisplay'
 import { Pad } from '../pads/Pad'
 import { Color } from '../Color'
@@ -26,9 +25,9 @@ export const TrackSectionsWidget: React.FC<TrackSectionsWidgetProps> = ({
   parentTrackName = '',
 }) => {
   const track = ProjectHooks.useTrack(trackName)
-  const activeClip = useActiveClip(track)
+  const activeClip = ProjectHooks.useActiveClip(track)
   const parentTrack = ProjectHooks.useTrack(parentTrackName)
-  const parentActiveClip = useActiveClip(parentTrack)
+  const parentActiveClip = ProjectHooks.useActiveClip(parentTrack)
 
   const visibleClips: Array<UIClip> = React.useMemo(() => {
     const tmpClips: Array<UIClip> = []

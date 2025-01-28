@@ -1,8 +1,6 @@
 import React from 'react'
 import { MidiTarget } from '../../../midi/MidiTarget'
 import { ProjectHooks } from '../../../hooks/ProjectHooks'
-import { useBarBeats, useBeat, useTimeSignature } from '../../../hooks/RealTimeHooks'
-import { useActiveClip } from '../../../hooks/ActiveClipHook'
 import { Pad } from '../pads/Pad'
 import { Color } from '../Color'
 import { UIClipsOps } from '../../../model/UIStateDisplay'
@@ -140,10 +138,10 @@ export type BarTrackerWidgetProps = {
 
 export const BarTrackerWidget: React.FC<BarTrackerWidgetProps> = ({ targets, trackName }) => {
   const track = ProjectHooks.useTrack(trackName)
-  const beat = useBeat()
-  const barBeat = useBarBeats()
-  const activeClip = useActiveClip(track)
-  const timeSig = useTimeSignature()
+  const beat = ProjectHooks.useBeat()
+  const barBeat = ProjectHooks.useBarBeats()
+  const activeClip = ProjectHooks.useActiveClip(track)
+  const timeSig = ProjectHooks.useTimeSignature()
 
   const [barsSinceStart, setBarsSinceStart] = React.useState(0)
 

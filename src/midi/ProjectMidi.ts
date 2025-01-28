@@ -9,7 +9,7 @@ import {
   initTrack,
   UIArrangement,
 } from '../model/UIStateDisplay'
-import { atom, getDefaultStore } from 'jotai'
+import { atom, getDefaultStore, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { parseAbletonUIMessage } from '../model/AbletonUIMessage'
 import * as t from 'io-ts'
 import { atomWithStorage, splitAtom } from 'jotai/utils'
@@ -18,14 +18,6 @@ import { createJSONStorage } from 'jotai/utils'
 import React from 'react'
 
 const store = getDefaultStore()
-
-let isInit = false
-const init = () => {
-  if (!isInit) {
-    isInit = true
-    ProjectListener()
-  }
-}
 
 export const ProjectConfig = t.type({
   name: t.string,
@@ -88,110 +80,63 @@ const atoms = {
   },
 }
 
-const arrangement = () => {
-  const active = store.get(atoms.project.active)
-  return store.get(atoms.project.arrangement(active))
-}
-
-const ProjectListener = () => {
-  store.sub(atoms.importStatus, () => {
-    const status = store.get(atoms.importStatus)
-    if (status === 'finalizing') {
-      const arrangement = initDone(store.get(atoms.initArrangement))
-      store.set(atoms.project.arrangement(store.get(atoms.project.active)), arrangement)
-      store.set(atoms.importStatus, 'done')
-    }
-  })
-
-  store.sub(Midi.dawListenerAtom, () => {
-    store.get(Midi.dawListenerAtom).on('sysex', (sysex) => {
-      console.log('sysex', sysex)
-      const msg = parseAbletonUIMessage(sysex)
-      if (msg !== undefined) {
-        if (msg.type === 'init-project') {
-          store.set(atoms.importStatus, 'importing')
-          store.set(atoms.initArrangement, initArrangement(msg))
-        } else if (msg.type === 'init-track') {
-          store.set(atoms.initArrangement, initTrack(msg))
-        } else if (msg.type === 'init-clip') {
-          store.set(atoms.initArrangement, initClip(msg))
-        } else if (msg.type === 'init-cue') {
-          store.set(atoms.initArrangement, initCue(msg))
-        } else if (msg.type === 'init-done') {
-          store.set(atoms.importStatus, 'finalizing')
-        } else if (msg.type === 'beat') {
-          store.set(atoms.realTime.beats, msg.value)
-        } else if (msg.type === 'sig') {
-          store.set(atoms.realTime.timeSignature, {
-            noteCount: msg.numer,
-            noteLength: msg.denom,
-          })
-        } else if (msg.type === 'bar-beat') {
-          store.set(atoms.realTime.barBeats, msg.value)
-        } else if (msg.type === 'tempo') {
-          store.set(atoms.realTime.tempo, msg.value)
-        } else if (msg.type === 'is-playing') {
-          store.set(atoms.realTime.isPlaying, msg.value)
-        }
-      }
-    })
-  })
-}
-
 const useProjectListener = () => {
   const dawListener = Midi.useDawListener()
 
-  React.useEffect(() => {
-    store.sub(atoms.importStatus, () => {
-      const status = store.get(atoms.importStatus)
-      if (status === 'finalizing') {
-        const arrangement = initDone(store.get(atoms.initArrangement))
-        store.set(atoms.project.arrangement(store.get(atoms.project.active)), arrangement)
-        store.set(atoms.importStatus, 'done')
-      }
-    })
+  const [importStatus, setImportStatus] = useAtom(atoms.importStatus)
+  const active = useAtomValue(atoms.project.active)
+  const setArrangement = useSetAtom(atoms.project.arrangement(active))
+  const setInitArrangement = useSetAtom(atoms.initArrangement)
+  const setBeats = useSetAtom(atoms.realTime.beats)
+  const setBarBeats = useSetAtom(atoms.realTime.barBeats)
+  const setTimeSignature = useSetAtom(atoms.realTime.timeSignature)
+  const setTempo = useSetAtom(atoms.realTime.tempo)
+  const setIsPlaying = useSetAtom(atoms.realTime.isPlaying)
 
+  React.useEffect(() => {
+    if (importStatus === 'finalizing') {
+      const arrangement = initDone(store.get(atoms.initArrangement))
+      setArrangement(arrangement)
+      setImportStatus('done')
+    }
+  }, [importStatus])
+
+  React.useEffect(() => {
     return dawListener.on('sysex', (sysex) => {
       const msg = parseAbletonUIMessage(sysex)
       if (msg !== undefined) {
         if (msg.type === 'init-project') {
-          store.set(atoms.importStatus, 'importing')
-          store.set(atoms.initArrangement, initArrangement(msg))
+          setImportStatus('importing')
+          setInitArrangement(initArrangement(msg))
         } else if (msg.type === 'init-track') {
-          store.set(atoms.initArrangement, initTrack(msg))
+          setInitArrangement(initTrack(msg))
         } else if (msg.type === 'init-clip') {
-          store.set(atoms.initArrangement, initClip(msg))
+          setInitArrangement(initClip(msg))
         } else if (msg.type === 'init-cue') {
-          store.set(atoms.initArrangement, initCue(msg))
+          setInitArrangement(initCue(msg))
         } else if (msg.type === 'init-done') {
           store.set(atoms.importStatus, 'finalizing')
+          setImportStatus('finalizing')
         } else if (msg.type === 'beat') {
-          store.set(atoms.realTime.beats, msg.value)
+          setBeats(msg.value)
         } else if (msg.type === 'sig') {
-          store.set(atoms.realTime.timeSignature, {
+          setTimeSignature({
             noteCount: msg.numer,
             noteLength: msg.denom,
           })
         } else if (msg.type === 'bar-beat') {
-          store.set(atoms.realTime.barBeats, msg.value)
+          setBarBeats(msg.value)
         } else if (msg.type === 'tempo') {
-          store.set(atoms.realTime.tempo, msg.value)
+          setTempo(msg.value)
         } else if (msg.type === 'is-playing') {
-          store.set(atoms.realTime.isPlaying, msg.value)
+          setIsPlaying(msg.value)
         }
       }
     })
   }, [dawListener])
 }
 
-const onStatusChange = (f: (status: ProjectImportStatus) => void) => {
-  return store.sub(atoms.importStatus, () => f(store.get(atoms.importStatus)))
-}
-
 export const ProjectMidi = {
-  init,
   useProjectListener,
   atoms,
-  onStatusChange,
-  arrangement,
 }

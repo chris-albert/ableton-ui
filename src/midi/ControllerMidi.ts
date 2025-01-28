@@ -1,4 +1,3 @@
-import { getDefaultStore } from 'jotai'
 import { ReactReconcilerController } from '../components/controllers/ReactReconcilerController'
 
 const ControllerListener = () => {

@@ -14,8 +14,7 @@ import { MidiPage } from './pages/MidiPage'
 import { ProjectMidi } from './midi/ProjectMidi'
 import { Midi } from './midi/GlobalMidi'
 import { ControllerMidi } from './midi/ControllerMidi'
-import { ReactMidiRenderer } from './react-midi/renderer'
-import { MidiApp } from './components/midi/MidiApp'
+import { ProjectHooks } from './hooks/ProjectHooks'
 
 const darkTheme = createTheme({
   palette: {
@@ -28,21 +27,18 @@ const darkTheme = createTheme({
 
 function App() {
   Midi.init().then((_) => {
-    // ProjectMidi.init()
     ControllerMidi.init()
   })
 
   ProjectMidi.useProjectListener()
 
-  React.useEffect(() => {
-    ProjectMidi.onStatusChange((status) => {
-      if (status === 'importing') {
-        toast.info('Importing new project.')
-      } else if (status === 'done') {
-        toast.success(`Successfully imported project!`)
-      }
-    })
-  }, [])
+  ProjectHooks.useOnStatusChange((status) => {
+    if (status === 'importing') {
+      toast.info('Importing new project.')
+    } else if (status === 'done') {
+      toast.success(`Successfully imported project!`)
+    }
+  })
 
   return (
     <div className='App'>

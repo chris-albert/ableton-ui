@@ -1,11 +1,9 @@
 import React from 'react'
 import { getHexColor, NavigateableClip, UITrack } from '../model/UIStateDisplay'
-import { useActiveClip } from '../hooks/ActiveClipHook'
 import { Box, Typography } from '@mui/material'
 import { TX_MESSAGE } from '../model/AbletonUIMessage'
 import _ from 'lodash'
 import { Midi } from '../midi/GlobalMidi'
-import { useBeat } from '../hooks/RealTimeHooks'
 import { ProjectHooks } from '../hooks/ProjectHooks'
 
 export type ClipNavComponentProps = {
@@ -13,7 +11,7 @@ export type ClipNavComponentProps = {
 }
 
 export const ClipNavComponent: React.FC<ClipNavComponentProps> = ({ track }) => {
-  const activeClip = useActiveClip(track)
+  const activeClip = ProjectHooks.useActiveClip(track)
   const arrangement = ProjectHooks.useArrangement()
   const dawEmitter = Midi.useDawEmitter()
 
