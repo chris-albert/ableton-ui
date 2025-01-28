@@ -78,7 +78,7 @@ const atoms = {
   },
   realTime: {
     beats: atom(0),
-    barBeats: atom(0),
+    barBeats: atom(1),
     timeSignature: atom<TimeSignature>({
       noteCount: 4,
       noteLength: 4,

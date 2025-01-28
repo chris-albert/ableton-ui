@@ -19,6 +19,13 @@ export type UIBlankClip = {
 
 export type UIClip = UIRealClip | UIBlankClip
 
+const isReal = (clip: UIClip): clip is UIRealClip => clip.type === 'real'
+const isBlank = (clip: UIClip): clip is UIBlankClip => clip.type === 'blank'
+export const UIClipsOps = {
+  isReal,
+  isBlank,
+}
+
 export type UITrack = {
   name: string
   color: number
